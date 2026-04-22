@@ -1,0 +1,7 @@
+{
+  "navigationStyle": "custom",
+  "navigationBarBackgroundColor": "#f8f5ee",
+  "usingComponents": {
+    "uni-icons": "../../uni_modules/uni-icons/components/uni-icons/uni-icons"
+  }
+}

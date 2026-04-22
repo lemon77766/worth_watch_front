@@ -1,0 +1,40 @@
+{
+	"pages": [
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "值得看么",
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#f5f0e8",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/login/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarBackgroundColor": "#f8f5ee"
+			}
+		},
+		{
+			"path": "pages/library/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarBackgroundColor": "#f5f0e8"
+			}
+		},
+		{
+			"path": "pages/study/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarBackgroundColor": "#f8f5ee"
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "值得看么",
+		"navigationBarBackgroundColor": "#f5f0e8",
+		"backgroundColor": "#f5f0e8"
+	}
+}

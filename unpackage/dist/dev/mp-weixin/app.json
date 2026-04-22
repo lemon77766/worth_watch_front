@@ -1,0 +1,15 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/login/index",
+    "pages/library/index",
+    "pages/study/index"
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "值得看么",
+    "navigationBarBackgroundColor": "#f5f0e8",
+    "backgroundColor": "#f5f0e8"
+  },
+  "usingComponents": {}
+}
