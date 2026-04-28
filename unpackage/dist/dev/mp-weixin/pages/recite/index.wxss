@@ -1,0 +1,182 @@
+/* 水平间距 */
+/* 水平间距 */
+.page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #2e3328 0%, #232b20 50%, #1a2018 100%);
+  background-attachment: fixed;
+  display: flex;
+  flex-direction: column;
+  padding: 0 48rpx;
+  font-family: "PingFang SC", "Noto Sans SC", -apple-system, sans-serif;
+  /* 确保小程序/H5全屏覆盖 */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+}
+.status-bar {
+  height: 88rpx;
+}
+.top-subtitle {
+  text-align: center;
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.3);
+  letter-spacing: 2rpx;
+  margin-bottom: 24rpx;
+}
+
+/* 导航行 */
+.nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 48rpx;
+}
+.nav-row .nav-btn {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.nav-row .recitation-label {
+  font-size: 20rpx;
+  color: rgba(255, 255, 255, 0.35);
+  letter-spacing: 3rpx;
+}
+
+/* 标题 */
+.poem-header {
+  text-align: center;
+  margin-bottom: 72rpx;
+}
+.poem-header .poem-title {
+  display: block;
+  font-size: 96rpx;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 16rpx;
+  font-family: "STSong", "SimSun", "Songti SC", serif;
+  margin-bottom: 20rpx;
+}
+.poem-header .poem-author {
+  display: block;
+  font-size: 36rpx;
+  color: rgba(255, 255, 255, 0.45);
+  letter-spacing: 4rpx;
+}
+
+/* 诗句 */
+.lines-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+  padding: 0 8rpx;
+}
+.lines-area .poem-line {
+  display: block;
+  font-size: 52rpx;
+  line-height: 100rpx;
+  letter-spacing: 6rpx;
+  font-family: "STSong", "SimSun", "Songti SC", serif;
+  transition: color 0.3s, font-size 0.3s;
+}
+.lines-area .line-active {
+  color: #fff;
+  font-size: 58rpx;
+  font-weight: 600;
+}
+.lines-area .line-dim {
+  color: rgba(255, 255, 255, 0.28);
+}
+
+/* 进度条 */
+.progress-wrap {
+  padding: 48rpx 0 40rpx;
+}
+.progress-wrap .progress-track {
+  width: 100%;
+  height: 3rpx;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 2rpx;
+}
+.progress-wrap .progress-track .progress-fill {
+  height: 100%;
+  background: rgba(255, 255, 255, 0.65);
+  border-radius: 2rpx;
+  transition: width 0.15s linear;
+}
+
+/* 控制区 */
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 80rpx;
+  padding-bottom: 16rpx;
+}
+.controls .ctrl-btn {
+  width: 80rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.controls .ctrl-btn .ctrl-icon-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+.controls .ctrl-btn .ctrl-bar {
+  width: 5rpx;
+  height: 40rpx;
+  background: rgba(255, 255, 255, 0.55);
+  border-radius: 3rpx;
+}
+.controls .ctrl-btn .ctrl-tri {
+  width: 0;
+  height: 0;
+}
+.controls .ctrl-btn .ctrl-tri-left {
+  border-top: 20rpx solid transparent;
+  border-bottom: 20rpx solid transparent;
+  border-right: 32rpx solid rgba(255, 255, 255, 0.55);
+}
+.controls .ctrl-btn .ctrl-tri-right {
+  border-top: 20rpx solid transparent;
+  border-bottom: 20rpx solid transparent;
+  border-left: 32rpx solid rgba(255, 255, 255, 0.55);
+}
+.controls .play-btn {
+  width: 136rpx;
+  height: 136rpx;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 40rpx rgba(0, 0, 0, 0.45);
+}
+.controls .play-btn .tri-play {
+  width: 0;
+  height: 0;
+  border-top: 24rpx solid transparent;
+  border-bottom: 24rpx solid transparent;
+  border-left: 40rpx solid #1a2018;
+  margin-left: 8rpx;
+}
+.controls .play-btn .pause-bars {
+  display: flex;
+  gap: 12rpx;
+}
+.controls .play-btn .pause-bars .pause-bar {
+  width: 10rpx;
+  height: 44rpx;
+  background: #1a2018;
+  border-radius: 5rpx;
+}

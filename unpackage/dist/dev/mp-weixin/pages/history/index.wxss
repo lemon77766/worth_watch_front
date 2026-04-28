@@ -1,0 +1,153 @@
+/* 水平间距 */
+/* 水平间距 */
+.page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: #f8f5ee;
+  font-family: "PingFang SC", "Noto Sans SC", -apple-system, sans-serif;
+}
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 52rpx 36rpx 20rpx;
+}
+.navbar .nav-btn {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  background: rgba(42, 110, 68, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.navbar .nav-title {
+  font-size: 36rpx;
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+/* 总览卡片 */
+.overview-card {
+  margin: 0 40rpx 8rpx;
+  background: #2a6e44;
+  border-radius: 32rpx;
+  padding: 40rpx;
+  display: flex;
+  justify-content: space-around;
+}
+.overview-card .ov-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6rpx;
+}
+.overview-card .ov-item .ov-num {
+  font-size: 56rpx;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+  font-family: "STSong", "SimSun", "Songti SC", serif;
+}
+.overview-card .ov-item .ov-unit {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.7);
+}
+.overview-card .ov-item .ov-label {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 4rpx;
+}
+.scroll-body {
+  flex: 1;
+  overflow: hidden;
+}
+
+/* 时间线 */
+.timeline {
+  padding: 32rpx 40rpx 0;
+}
+.day-group {
+  margin-bottom: 40rpx;
+}
+.day-group .day-hd {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-bottom: 20rpx;
+}
+.day-group .day-hd .day-dot {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+  background: #2a6e44;
+  flex-shrink: 0;
+}
+.day-group .day-hd .day-date {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+  font-family: "STSong", "SimSun", "Songti SC", serif;
+}
+.day-group .day-hd .day-count {
+  font-size: 24rpx;
+  color: #888;
+  margin-left: auto;
+}
+.day-group .day-items {
+  margin-left: 8rpx;
+  border-left: 3rpx solid #e0dbd0;
+  padding-left: 32rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+.history-item {
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 28rpx 32rpx;
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+}
+.history-item .item-icon-wrap {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.history-item .item-info {
+  flex: 1;
+}
+.history-item .item-info .item-title-row {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-bottom: 8rpx;
+}
+.history-item .item-info .item-title-row .item-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+  font-family: "STSong", "SimSun", "Songti SC", serif;
+}
+.history-item .item-info .item-title-row .item-tag {
+  border-radius: 8rpx;
+  padding: 4rpx 14rpx;
+}
+.history-item .item-info .item-title-row .item-tag .item-tag-text {
+  font-size: 22rpx;
+}
+.history-item .item-info .item-sub {
+  font-size: 24rpx;
+  color: #888;
+}
+.history-item .item-duration .duration-text {
+  font-size: 24rpx;
+  color: #888;
+  white-space: nowrap;
+}

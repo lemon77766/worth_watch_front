@@ -21,6 +21,13 @@
   font-weight: 500;
   color: #1a1a1a;
 }
+.navbar .navbar-search {
+  width: 72rpx;
+  height: 72rpx;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
 .scroll-body {
   flex: 1;
   overflow: hidden;

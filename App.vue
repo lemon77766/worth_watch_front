@@ -1,15 +1,15 @@
 <script>
 	export default {
 		onLaunch: function() {
-			console.warn('当前组件仅支持 uni_modules 目录结构 ，请升级 HBuilderX 到 3.1.0 版本以上！')
-			console.log('App Launch')
+			// 如果没有token，跳转到登录页
+			const token = uni.getStorageSync('token')
+			if (!token) {
+				uni.reLaunch({ url: '/pages/login/index' })
+			}
+			// 如果有token，直接进入首页（首页会自动验证token有效性）
 		},
-		onShow: function() {
-			console.log('App Show')
-		},
-		onHide: function() {
-			console.log('App Hide')
-		}
+		onShow: function() {},
+		onHide: function() {}
 	}
 </script>
 

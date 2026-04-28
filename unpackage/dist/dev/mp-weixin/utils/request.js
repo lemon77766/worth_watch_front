@@ -1,0 +1,109 @@
+"use strict";
+const common_vendor = require("../common/vendor.js");
+const BASE_URL = "http://192.168.1.134:8080";
+const request = (options) => {
+  return new Promise((resolve, reject) => {
+    const token = common_vendor.index.getStorageSync("token");
+    const fullUrl = BASE_URL + options.url;
+    common_vendor.index.__f__("log", "at utils/request.js:7", `[→] ${options.method || "GET"} ${options.url}`, options.data || "");
+    common_vendor.index.request({
+      url: fullUrl,
+      method: options.method || "GET",
+      data: options.data || {},
+      header: {
+        "Content-Type": "application/json",
+        ...token ? { Authorization: `Bearer ${token}` } : {}
+      },
+      timeout: 1e5,
+      success: (res) => {
+        if (!res.data) {
+          reject(new Error("empty response"));
+          return;
+        }
+        const { code, message, data } = res.data;
+        if (code === 200) {
+          common_vendor.index.__f__("log", "at utils/request.js:23", `[✓] ${options.url} ←`, JSON.stringify(data).substring(0, 100));
+          resolve(data);
+        } else if (code === 401) {
+          common_vendor.index.removeStorageSync("token");
+          common_vendor.index.reLaunch({ url: "/pages/login/index" });
+          reject(new Error(message));
+        } else {
+          common_vendor.index.__f__("error", "at utils/request.js:30", `[✗] ${options.url}: ${message}`);
+          common_vendor.index.showToast({ title: message || "请求失败", icon: "none" });
+          reject(new Error(message));
+        }
+      },
+      fail: (err) => {
+        common_vendor.index.__f__("error", "at utils/request.js:36", `[✗] ${options.url}: ${err.errMsg}`);
+        reject(err);
+      }
+    });
+  });
+};
+const get = (url, data) => request({ url, method: "GET", data });
+const post = (url, data) => request({ url, method: "POST", data });
+const put = (url, data) => request({ url, method: "PUT", data });
+const login = (code) => post("/api/auth/login", { code });
+const getUserProfile = () => get("/api/user/profile");
+const updateUserProfile = (data) => put("/api/user/profile", data);
+const uploadAvatar = (filePath) => {
+  return new Promise((resolve, reject) => {
+    const token = common_vendor.index.getStorageSync("token");
+    common_vendor.index.__f__("log", "at utils/request.js:55", "[上传头像] 开始上传，文件路径:", filePath);
+    common_vendor.index.__f__("log", "at utils/request.js:56", "[上传头像] 请求地址:", BASE_URL + "/api/user/avatar");
+    common_vendor.index.__f__("log", "at utils/request.js:57", "[上传头像] Token:", token ? "有" : "无");
+    common_vendor.index.uploadFile({
+      url: BASE_URL + "/api/user/avatar",
+      filePath,
+      name: "file",
+      header: {
+        Authorization: token ? `Bearer ${token}` : ""
+      },
+      success: (res) => {
+        common_vendor.index.__f__("log", "at utils/request.js:67", "[上传头像] HTTP状态码:", res.statusCode);
+        common_vendor.index.__f__("log", "at utils/request.js:68", "[上传头像] 响应内容:", res.data);
+        try {
+          const data = JSON.parse(res.data);
+          common_vendor.index.__f__("log", "at utils/request.js:72", "[上传头像] 解析后:", data);
+          if (data.code === 200) {
+            const avatarUrl = typeof data.data === "string" ? data.data : data.data.avatarUrl;
+            common_vendor.index.__f__("log", "at utils/request.js:76", "[上传头像] 上传成功，返回URL:", avatarUrl);
+            resolve(avatarUrl);
+          } else {
+            common_vendor.index.__f__("error", "at utils/request.js:79", "[上传头像] 上传失败:", data.message);
+            reject(new Error(data.message));
+          }
+        } catch (e) {
+          common_vendor.index.__f__("error", "at utils/request.js:83", "[上传头像] JSON解析失败:", e);
+          reject(new Error("响应解析失败"));
+        }
+      },
+      fail: (err) => {
+        common_vendor.index.__f__("error", "at utils/request.js:88", "[上传头像] 请求失败:", err);
+        reject(err);
+      }
+    });
+  });
+};
+const getDailyPoem = () => get("/api/poems/daily");
+const getPoems = (params) => get("/api/poems/search", params);
+const searchPoems = (params) => get("/api/poems/search", params);
+const getPoemDetail = (id) => get(`/api/poems/${id}`);
+const toggleFavorite = (id) => post(`/api/poems/${id}/favorite`);
+const getFavorites = (params) => get("/api/user/favorites", params);
+exports.get = get;
+exports.getDailyPoem = getDailyPoem;
+exports.getFavorites = getFavorites;
+exports.getPoemDetail = getPoemDetail;
+exports.getPoems = getPoems;
+exports.getUserProfile = getUserProfile;
+exports.login = login;
+exports.post = post;
+exports.put = put;
+exports.request = request;
+exports.searchPoems = searchPoems;
+exports.toggleFavorite = toggleFavorite;
+exports.updateUserProfile = updateUserProfile;
+exports.uploadAvatar = uploadAvatar;
+//# sourceMappingURL=../../.sourcemap/mp-weixin/utils/request.js.map

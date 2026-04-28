@@ -12,54 +12,49 @@ if (!Math) {
 function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
   return {
     a: common_vendor.p({
-      type: "bars",
-      size: "24",
-      color: "#2a6e44"
-    }),
-    b: common_vendor.p({
       type: "search",
       size: "24",
       color: "#2a6e44"
     }),
-    c: common_vendor.p({
+    b: common_vendor.p({
       type: "bookmarks",
       size: "26",
       color: "#2a6e44"
+    }),
+    c: common_vendor.p({
+      type: "right",
+      size: "18",
+      color: "#ccc"
     }),
     d: common_vendor.p({
-      type: "right",
-      size: "18",
-      color: "#ccc"
-    }),
-    e: common_vendor.p({
       type: "bookmarks",
       size: "26",
       color: "#2a6e44"
     }),
-    f: common_vendor.p({
+    e: common_vendor.p({
       type: "right",
       size: "18",
       color: "#ccc"
     }),
-    g: common_vendor.p({
+    f: common_vendor.p({
       type: "home",
       size: "24",
       color: "#999"
     }),
-    h: common_vendor.o(($event) => common_vendor.index.reLaunch({
+    g: common_vendor.o(($event) => common_vendor.index.reLaunch({
       url: "/pages/index/index"
     })),
-    i: common_vendor.p({
+    h: common_vendor.p({
       type: "bookmarks",
       size: "22",
       color: "#fff"
     }),
-    j: common_vendor.p({
+    i: common_vendor.p({
       type: "star",
       size: "24",
       color: "#999"
     }),
-    k: common_vendor.p({
+    j: common_vendor.p({
       type: "person",
       size: "24",
       color: "#999"

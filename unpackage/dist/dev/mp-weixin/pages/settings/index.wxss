@@ -1,0 +1,175 @@
+/* 水平间距 */
+/* 水平间距 */
+.page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: #f8f5ee;
+  font-family: "PingFang SC", "Noto Sans SC", -apple-system, sans-serif;
+}
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 52rpx 36rpx 20rpx;
+}
+.navbar .nav-btn {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  background: rgba(42, 110, 68, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.navbar .nav-title {
+  font-size: 36rpx;
+  font-weight: 500;
+  color: #1a1a1a;
+}
+.scroll-body {
+  flex: 1;
+  overflow: hidden;
+}
+
+/* 用户信息卡片 */
+.user-card {
+  margin: 24rpx 40rpx;
+  background: #fff;
+  border-radius: 28rpx;
+  padding: 40rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24rpx;
+}
+.user-card .avatar-btn {
+  position: relative;
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  padding: 0;
+  background: transparent;
+  border: none;
+  line-height: 1;
+}
+.user-card .avatar-btn::after {
+  border: none;
+}
+.user-card .avatar-btn .user-avatar {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  border: 3rpx solid #e0d8c8;
+}
+.user-card .avatar-btn .avatar-edit-badge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: 50%;
+  background: #2a6e44;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.user-card .nickname-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  border-bottom: 2rpx solid #f0ede6;
+  padding-bottom: 12rpx;
+  width: 100%;
+  justify-content: center;
+}
+.user-card .nickname-wrap .nickname-input {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+  text-align: center;
+  min-width: 200rpx;
+}
+.user-card .nickname-wrap .nickname-placeholder {
+  color: #ccc;
+  font-size: 30rpx;
+}
+.user-card .save-status {
+  font-size: 24rpx;
+  color: #2a6e44;
+}
+.group-title {
+  font-size: 24rpx;
+  color: #888;
+  padding: 28rpx 40rpx 12rpx;
+  letter-spacing: 2rpx;
+}
+.group-card {
+  margin: 0 40rpx;
+  background: #fff;
+  border-radius: 28rpx;
+  overflow: hidden;
+}
+.group-card .setting-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28rpx 32rpx;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+.group-card .setting-item:last-child {
+  border-bottom: none;
+}
+.group-card .setting-item .item-left {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+}
+.group-card .setting-item .item-left .item-icon-wrap {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 18rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.group-card .setting-item .item-left .item-label {
+  font-size: 30rpx;
+  color: #1a1a1a;
+}
+.group-card .setting-item .item-right {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+.group-card .setting-item .item-right .item-value {
+  font-size: 26rpx;
+  color: #888;
+}
+
+/* 开关 */
+.toggle {
+  width: 96rpx;
+  height: 52rpx;
+  border-radius: 26rpx;
+  background: #ddd;
+  position: relative;
+  transition: background 0.25s;
+}
+.toggle .toggle-thumb {
+  position: absolute;
+  top: 6rpx;
+  left: 6rpx;
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.2);
+  transition: left 0.25s;
+}
+.toggle-on {
+  background: #2a6e44;
+}
+.toggle-on .toggle-thumb {
+  left: 50rpx;
+}

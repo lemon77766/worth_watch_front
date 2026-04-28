@@ -1,0 +1,284 @@
+/* 水平间距 */
+/* 水平间距 */
+.page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: #f8f5ee;
+  font-family: "PingFang SC", "Noto Sans SC", -apple-system, sans-serif;
+}
+
+/* 导航栏 */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 52rpx 36rpx 20rpx;
+  background: #f8f5ee;
+}
+.navbar .nav-btn {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  background: rgba(42, 110, 68, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.navbar .nav-title {
+  font-size: 36rpx;
+  font-weight: 500;
+  color: #1a1a1a;
+}
+.scroll-body {
+  flex: 1;
+  overflow: hidden;
+}
+
+/* 连续打卡卡片 */
+.streak-card {
+  margin: 24rpx 40rpx 0;
+  background: #eeecea;
+  border-radius: 40rpx;
+  padding: 56rpx 40rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.streak-card .flame-wrap {
+  margin-bottom: 32rpx;
+}
+.streak-card .flame-wrap .flame-bg {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  background: rgba(255, 160, 60, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.streak-card .flame-wrap .flame-bg .flame-icon {
+  font-size: 56rpx;
+}
+.streak-card .streak-label {
+  font-size: 30rpx;
+  color: #999;
+  margin-bottom: 12rpx;
+}
+.streak-card .streak-num-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 8rpx;
+}
+.streak-card .streak-num-row .streak-num {
+  font-size: 120rpx;
+  font-weight: 700;
+  color: #2a6e44;
+  line-height: 1;
+  font-family: "STSong", "SimSun", "Songti SC", serif;
+}
+.streak-card .streak-num-row .streak-unit {
+  font-size: 36rpx;
+  color: #2a6e44;
+  padding-bottom: 16rpx;
+  font-weight: 500;
+}
+
+/* 通用 section */
+.section {
+  padding: 40rpx 40rpx 0;
+}
+.mod-hd {
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+  margin-bottom: 28rpx;
+}
+.mod-bar {
+  width: 8rpx;
+  height: 44rpx;
+  background: #b82e2e;
+  border-radius: 4rpx;
+}
+.mod-title {
+  font-size: 44rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+  font-family: "STSong", "SimSun", "Songti SC", serif;
+}
+
+/* 日历标题行 */
+.cal-hd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28rpx;
+}
+.cal-hd .mod-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+}
+.cal-hd .mod-title-wrap .mod-bar {
+  background: #2a6e44;
+}
+.cal-hd .cal-title {
+  font-size: 44rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+  font-family: "STSong", "SimSun", "Songti SC", serif;
+}
+.cal-hd .cal-nav {
+  display: flex;
+  gap: 16rpx;
+}
+.cal-hd .cal-nav .cal-nav-btn {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 50%;
+  background: rgba(42, 110, 68, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 日历卡片 */
+.cal-card {
+  background: #fff;
+  border-radius: 32rpx;
+  padding: 32rpx 24rpx;
+}
+.cal-card .cal-week-row {
+  display: flex;
+  margin-bottom: 16rpx;
+}
+.cal-card .cal-week-row .cal-week {
+  flex: 1;
+  text-align: center;
+  font-size: 26rpx;
+  color: #999;
+}
+.cal-card .cal-grid {
+  display: flex;
+  flex-wrap: wrap;
+}
+.cal-card .cal-grid .cal-cell {
+  width: 14.2857142857%;
+  display: flex;
+  justify-content: center;
+  padding: 8rpx 0;
+}
+.cal-card .cal-grid .cal-cell .cal-day {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cal-card .cal-grid .cal-cell .cal-day .cal-day-text {
+  font-size: 28rpx;
+  color: #999;
+}
+.cal-card .cal-grid .cal-cell .day-checked {
+  background: #2a6e44;
+}
+.cal-card .cal-grid .cal-cell .day-checked .text-checked {
+  color: #fff;
+  font-weight: 600;
+}
+.cal-card .cal-grid .cal-cell .day-today {
+  border: 3rpx solid #2a6e44;
+  background: transparent;
+}
+.cal-card .cal-grid .cal-cell .day-today .text-today {
+  color: #2a6e44;
+  font-weight: 600;
+}
+
+/* 图例 */
+.legend-row {
+  display: flex;
+  justify-content: center;
+  gap: 48rpx;
+  margin-top: 32rpx;
+}
+.legend-row .legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+}
+.legend-row .legend-item .legend-dot {
+  width: 20rpx;
+  height: 20rpx;
+  border-radius: 50%;
+}
+.legend-row .legend-item .dot-checked {
+  background: #2a6e44;
+}
+.legend-row .legend-item .dot-today {
+  border: 2rpx solid #2a6e44;
+  background: transparent;
+}
+.legend-row .legend-item .dot-empty {
+  background: #ccc;
+}
+.legend-row .legend-item .legend-text {
+  font-size: 26rpx;
+  color: #999;
+}
+
+/* 打卡奖励 */
+.reward-row {
+  display: flex;
+  gap: 20rpx;
+}
+.reward-row .reward-card {
+  flex: 1;
+  background: #f0ede6;
+  border-radius: 28rpx;
+  padding: 32rpx 16rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10rpx;
+}
+.reward-row .reward-card .reward-icon {
+  font-size: 48rpx;
+}
+.reward-row .reward-card .reward-days {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+  font-family: "STSong", "SimSun", "Songti SC", serif;
+}
+.reward-row .reward-card .reward-desc {
+  font-size: 24rpx;
+  color: #999;
+}
+.reward-row .reward-active {
+  background: #f5e8e8;
+  border: 2rpx solid rgba(184, 46, 46, 0.2);
+}
+
+/* 打卡按钮 */
+.checkin-btn {
+  background: #2a6e44;
+  border-radius: 50rpx;
+  height: 100rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6rpx 24rpx rgba(42, 110, 68, 0.3);
+}
+.checkin-btn .checkin-btn-text {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 4rpx;
+  font-family: "STSong", "SimSun", "Songti SC", serif;
+}
+.checked-btn {
+  background: #8aad8a;
+  box-shadow: none;
+}

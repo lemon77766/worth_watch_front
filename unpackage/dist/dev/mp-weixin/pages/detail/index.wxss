@@ -1,0 +1,319 @@
+/* 水平间距 */
+/* 水平间距 */
+.page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: #f8f5ee;
+  font-family: "PingFang SC", "Noto Sans SC", -apple-system, sans-serif;
+}
+
+/* 导航栏 */
+.navbar {
+  display: flex;
+  align-items: center;
+  padding: 106rpx 36rpx 20rpx;
+  background: #f8f5ee;
+  gap: 0;
+}
+.navbar .nav-back {
+  width: 64rpx;
+  height: 64rpx;
+  background: rgba(42, 110, 68, 0.08);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.navbar .nav-title {
+  flex: 1;
+  text-align: center;
+  font-size: 36rpx;
+  font-weight: 500;
+  color: #2a6e44;
+  letter-spacing: 2rpx;
+}
+.navbar .nav-right {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  flex-shrink: 0;
+}
+.navbar .nav-right .nav-avatar {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  background: #2a2a2a;
+  border: 2rpx solid #ddd;
+}
+.scroll-body {
+  flex: 1;
+  overflow: hidden;
+}
+
+/* 诗词卡片 */
+.poem-card {
+  margin: 72rpx 40rpx 0;
+  border-radius: 40rpx;
+  overflow: hidden;
+  position: relative;
+  min-height: 700rpx;
+  background: linear-gradient(180deg, rgba(200, 150, 60, 0.92) 0%, rgba(120, 150, 100, 0.88) 50%, rgba(50, 90, 70, 0.95) 100%);
+  display: flex;
+  flex-direction: column;
+  /* 垂直模式布局 */
+}
+.poem-card .poem-tag {
+  position: absolute;
+  top: 0;
+  right: 32rpx;
+  background: #8b2020;
+  border-radius: 0 0 16rpx 16rpx;
+  padding: 20rpx 20rpx 24rpx;
+  z-index: 2;
+}
+.poem-card .poem-tag .poem-tag-text {
+  color: #fff;
+  font-size: 24rpx;
+  -webkit-writing-mode: vertical-rl;
+          writing-mode: vertical-rl;
+  letter-spacing: 6rpx;
+  line-height: 1.5;
+}
+.poem-card .poem-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60rpx 48rpx 40rpx;
+  z-index: 1;
+}
+.poem-card .poem-body .poem-title {
+  display: block;
+  font-size: 80rpx;
+  font-weight: 700;
+  color: #1a1a1a;
+  letter-spacing: 12rpx;
+  margin-bottom: 40rpx;
+  font-family: "STSong", "SimSun", "Songti SC", serif;
+  text-align: center;
+}
+.poem-card .poem-body .poem-line {
+  display: block;
+  font-size: 36rpx;
+  color: #1a1a1a;
+  line-height: 80rpx;
+  letter-spacing: 4rpx;
+  text-align: center;
+  font-family: "STSong", "SimSun", "Songti SC", serif;
+}
+.poem-card .poem-btns {
+  display: flex;
+  gap: 24rpx;
+  padding: 0 40rpx 40rpx;
+  z-index: 1;
+}
+.poem-card .poem-btns .poem-btn {
+  flex: 1;
+  height: 80rpx;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+}
+.poem-card .poem-btns .poem-btn .poem-btn-text {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+}
+.poem-card .poem-btns .poem-btn-active {
+  background: #2a6e44;
+}
+.poem-card .poem-body-vert {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 60rpx 48rpx 32rpx;
+  z-index: 1;
+  gap: 32rpx;
+}
+.poem-card .poem-body-vert .poem-lines-vert {
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 32rpx;
+}
+.poem-card .poem-body-vert .poem-lines-vert .poem-line-vert {
+  -webkit-writing-mode: vertical-rl;
+          writing-mode: vertical-rl;
+  font-size: 36rpx;
+  color: #1a1a1a;
+  letter-spacing: 6rpx;
+  line-height: 1.6;
+  font-family: "STSong", "SimSun", "Songti SC", serif;
+}
+.poem-card .poem-body-vert .poem-title-vert {
+  -webkit-writing-mode: vertical-rl;
+          writing-mode: vertical-rl;
+  font-size: 80rpx;
+  font-weight: 700;
+  color: #1a1a1a;
+  letter-spacing: 12rpx;
+  font-family: "STSong", "SimSun", "Songti SC", serif;
+  align-self: flex-end;
+}
+
+/* 通用 section */
+.section {
+  padding: 48rpx 40rpx 0;
+}
+.section .mod-hd {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-bottom: 32rpx;
+}
+.section .mod-hd .mod-bar {
+  width: 8rpx;
+  height: 48rpx;
+  border-radius: 4rpx;
+}
+.section .mod-hd .green-bar {
+  background: #2a6e44;
+}
+.section .mod-hd .red-bar {
+  background: #b82e2e;
+}
+.section .mod-hd .blue-bar {
+  background: #4a90d9;
+}
+.section .mod-hd .orange-bar {
+  background: #e6a23c;
+}
+.section .mod-hd .mod-title {
+  font-size: 48rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+  font-family: "STSong", "SimSun", "Songti SC", serif;
+}
+
+/* 注释卡片 */
+.note-card {
+  background: #fff;
+  border-radius: 32rpx;
+  padding: 40rpx 48rpx;
+  position: relative;
+  overflow: hidden;
+}
+.note-card .note-deco {
+  position: absolute;
+  right: 24rpx;
+  bottom: 16rpx;
+  pointer-events: none;
+  opacity: 0.5;
+}
+.note-card .note-item {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 32rpx;
+}
+.note-card .note-item:last-child {
+  margin-bottom: 0;
+}
+.note-card .note-item .note-word {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #2a6e44;
+  font-family: "STSong", "SimSun", "Songti SC", serif;
+  flex-shrink: 0;
+}
+.note-card .note-item .note-def {
+  font-size: 32rpx;
+  color: #1a1a1a;
+  line-height: 48rpx;
+}
+
+/* 赏析 */
+.analysis-text {
+  display: block;
+  font-size: 32rpx;
+  color: #666;
+  line-height: 60rpx;
+  text-indent: 2em;
+}
+
+/* 推荐研习 */
+.rec-title {
+  display: block;
+  font-size: 48rpx;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 32rpx;
+  font-family: "STSong", "SimSun", "Songti SC", serif;
+}
+.rec-row {
+  display: flex;
+  gap: 24rpx;
+}
+.rec-row .rec-card {
+  flex: 1;
+  border-radius: 40rpx;
+  padding: 40rpx 32rpx 48rpx;
+  position: relative;
+  overflow: hidden;
+  min-height: 380rpx;
+  display: flex;
+  flex-direction: column;
+}
+.rec-row .rec-card .rec-icon-wrap {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 32rpx;
+}
+.rec-row .rec-card .rec-name {
+  display: block;
+  font-size: 40rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+  line-height: 56rpx;
+  margin-bottom: 16rpx;
+  font-family: "STSong", "SimSun", "Songti SC", serif;
+}
+.rec-row .rec-card .rec-sub {
+  display: block;
+  font-size: 26rpx;
+  color: #666;
+}
+.rec-row .rec-card .rec-badge {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 80rpx;
+  height: 80rpx;
+  background: #b82e2e;
+  border-radius: 40rpx 0 40rpx 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.rec-row .rec-light {
+  background: #eeece4;
+}
+.rec-row .rec-light .rec-icon-light {
+  background: rgba(42, 110, 68, 0.1);
+}
+.rec-row .rec-green {
+  background: #6a9e72;
+}
+.rec-row .rec-green .rec-icon-green {
+  background: rgba(255, 255, 255, 0.2);
+}

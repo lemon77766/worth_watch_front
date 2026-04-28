@@ -1,9 +1,16 @@
 {
   "pages": [
-    "pages/index/index",
     "pages/login/index",
+    "pages/index/index",
     "pages/library/index",
-    "pages/study/index"
+    "pages/study/index",
+    "pages/detail/index",
+    "pages/recite/index",
+    "pages/checkin/index",
+    "pages/favorites/index",
+    "pages/history/index",
+    "pages/settings/index",
+    "pages/privacy/index"
   ],
   "window": {
     "navigationBarTextStyle": "black",

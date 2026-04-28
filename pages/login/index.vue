@@ -29,10 +29,11 @@
       <button
         class="login-btn"
         :class="{ agreed: agreed }"
+        :disabled="loading"
         @click="handleLogin"
       >
         <text class="wechat-icon">💬</text>
-        <text class="login-text">微信一键登录</text>
+        <text class="login-text">{{ loading ? '登录中...' : '微信一键登录' }}</text>
       </button>
 
       <!-- 协议勾选 -->
@@ -49,14 +50,53 @@
         </view>
       </view>
     </view>
+
+    <!-- 完善信息弹窗 -->
+    <view v-if="showProfileModal" class="modal-mask" @click="showProfileModal = false">
+      <view class="modal-content" @click.stop>
+        <text class="modal-title">完善个人信息</text>
+        <text class="modal-subtitle">让我们更好地认识你</text>
+
+        <button class="modal-avatar-btn" open-type="chooseAvatar" @chooseavatar="onChooseAvatar">
+          <image class="modal-avatar" :src="tempAvatar || '/static/logo.png'" mode="aspectFill" />
+          <view class="modal-avatar-badge">
+            <uni-icons type="camera" size="16" color="#fff" />
+          </view>
+        </button>
+
+        <view class="modal-input-wrap">
+          <text class="modal-label">昵称</text>
+          <input
+            class="modal-input"
+            type="nickname"
+            :value="tempNickname"
+            placeholder="请输入昵称"
+            @input="onNickNameInput"
+          />
+        </view>
+
+        <view class="modal-btns">
+          <view class="modal-btn modal-btn-cancel" @click="skipProfile">跳过</view>
+          <view class="modal-btn modal-btn-confirm" :class="{ disabled: submitting }" @click="submitProfile">{{ submitting ? '提交中...' : '完成' }}</view>
+        </view>
+      </view>
+    </view>
   </view>
 </template>
 
 <script>
+import { updateUserProfile, uploadAvatar, login as apiLogin } from '@/utils/request.js'
+
 export default {
   data() {
     return {
-      agreed: false
+      agreed: false,
+      loading: false,
+      submitting: false,
+      uploading: false,  // 头像正在上传中
+      showProfileModal: false,
+      tempAvatar: '',
+      tempNickname: ''
     }
   },
   methods: {
@@ -65,6 +105,147 @@ export default {
         uni.showToast({ title: '请先同意服务协议与隐私政策', icon: 'none' })
         return
       }
+      console.log('[登录] 开始登录流程')
+      this.loading = true
+      
+      uni.login({
+        provider: 'weixin',
+        success: (loginRes) => {
+          console.log('[登录] uni.login 成功，code:', loginRes.code)
+          
+          apiLogin(loginRes.code).then(data => {
+            console.log('[登录] 登录成功，token:', data.token)
+            uni.setStorageSync('token', data.token)
+            uni.setStorageSync('isNewUser', data.isNewUser)
+            this.loading = false
+            uni.showToast({ title: '登录成功', icon: 'success' })
+            setTimeout(() => this.goHome(), 500)
+          }).catch(() => {
+            console.warn('[登录] 后端返回异常，使用临时 token')
+            this.loading = false
+            uni.setStorageSync('token', 'local_dev_token')
+            uni.showToast({ title: '使用临时登录', icon: 'none' })
+            setTimeout(() => this.goHome(), 500)
+          })
+        },
+        fail: (err) => {
+          console.error('[登录] uni.login 失败:', err)
+          this.loading = false
+          uni.setStorageSync('token', 'local_dev_token')
+          uni.showToast({ title: '非微信环境，使用临时登录', icon: 'none' })
+          setTimeout(() => this.goHome(), 500)
+        }
+      })
+    },
+    goHome() {
+      const isNewUser = uni.getStorageSync('isNewUser')
+      const userInfo = uni.getStorageSync('userInfo')
+      if (isNewUser || !userInfo || !userInfo.nickname) {
+        // 弹出底部弹窗
+        this.showProfileModal = true
+      } else {
+        uni.reLaunch({ url: '/pages/index/index' })
+      }
+    },
+    onChooseAvatar(e) {
+      if (this.submitting) return
+      
+      const avatarUrl = e.detail.avatarUrl
+      console.log('[选择头像] 原始路径:', avatarUrl)
+      
+      this.tempAvatar = avatarUrl
+      
+      // 判断是否为本地临时文件（微信临时路径：wxfile:// 或 http://tmp/）
+      const isLocalFile = avatarUrl && (
+        avatarUrl.startsWith('wxfile://') || 
+        avatarUrl.includes('/tmp/') || 
+        avatarUrl.includes('\\tmp\\')
+      )
+      console.log('[选择头像] 是否本地临时文件:', isLocalFile)
+      
+      // 头像选择后立即上传到服务器
+      if (isLocalFile) {
+        console.log('[选择头像] 开始上传本地文件')
+        this.uploading = true
+        uni.showLoading({ title: '上传头像...' })
+        
+        uploadAvatar(avatarUrl).then(res => {
+          console.log('[选择头像] 上传Promise成功，永久URL:', res)
+          this.tempAvatar = res // 更新为永久URL
+          this.uploading = false
+          uni.hideLoading()
+          uni.showToast({ title: '头像上传成功', icon: 'success' })
+        }).catch(err => {
+          console.error('[选择头像] 上传Promise失败:', err)
+          this.uploading = false
+          this.tempAvatar = '' // 上传失败清空
+          uni.hideLoading()
+          uni.showToast({ title: '头像上传失败', icon: 'none' })
+        })
+      } else {
+        console.log('[选择头像] 已是网络URL或无效路径，跳过上传')
+      }
+    },
+    onNickNameInput(e) {
+      this.tempNickname = e.detail.value
+    },
+    async submitProfile() {
+      if (this.submitting) return
+      
+      console.log('[提交资料] 当前tempAvatar:', this.tempAvatar)
+      console.log('[提交资料] 当前tempNickname:', this.tempNickname)
+      
+      // 判断是否为本地临时文件
+      const isLocalFile = this.tempAvatar && (
+        this.tempAvatar.startsWith('wxfile://') || 
+        this.tempAvatar.includes('/tmp/') || 
+        this.tempAvatar.includes('\\tmp\\')
+      )
+      
+      // 如果头像正在上传中，不允许提交
+      if (this.uploading) {
+        uni.showToast({ title: '头像上传中，请稍候', icon: 'none' })
+        return
+      }
+      
+      // 如果选择了头像但上传失败了，不允许提交
+      if (isLocalFile) {
+        uni.showToast({ title: '头像上传失败，请重新选择', icon: 'none' })
+        return
+      }
+      
+      this.submitting = true
+      uni.showLoading({ title: '提交中...' })
+      
+      try {
+        const requestData = {
+          nickname: this.tempNickname || '',
+          avatarUrl: this.tempAvatar || ''
+        }
+        console.log('[提交资料] 发送的数据:', JSON.stringify(requestData))
+        
+        // 更新用户资料（头像URL已经在 onChooseAvatar 中上传完成）
+        const data = await updateUserProfile(requestData)
+        console.log('[提交资料] 后端返回:', data)
+        
+        uni.setStorageSync('userInfo', {
+          nickname: data.nickname || this.tempNickname,
+          avatarUrl: data.avatarUrl || this.tempAvatar
+        })
+        
+        uni.showToast({ title: '资料完善成功', icon: 'success' })
+      } catch (err) {
+        console.error('[提交资料失败]', err)
+        uni.showToast({ title: '提交失败，请重试', icon: 'none' })
+      } finally {
+        uni.hideLoading()
+        this.submitting = false
+        uni.removeStorageSync('isNewUser')
+        uni.reLaunch({ url: '/pages/index/index' })
+      }
+    },
+    skipProfile() {
+      uni.removeStorageSync('isNewUser')
       uni.reLaunch({ url: '/pages/index/index' })
     }
   }
@@ -268,5 +449,121 @@ $blue: #3b82f6;
       line-height: 38rpx;
     }
   }
+}/* 底部弹窗 */
+.modal-mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;
 }
+
+.modal-content {
+  width: 100%;
+  background: #f8f5ee;
+  border-radius: 40rpx 40rpx 0 0;
+  padding: 48rpx 48rpx 80rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .modal-title {
+    font-size: 40rpx;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 12rpx;
+  }
+
+  .modal-subtitle {
+    font-size: 26rpx;
+    color: #888;
+    margin-bottom: 48rpx;
+  }
+
+  .modal-avatar-btn {
+    position: relative;
+    width: 160rpx;
+    height: 160rpx;
+    border-radius: 50%;
+    padding: 0;
+    background: transparent;
+    border: none;
+    margin-bottom: 48rpx;
+
+    &::after { border: none; }
+
+    .modal-avatar {
+      width: 160rpx;
+      height: 160rpx;
+      border-radius: 50%;
+      border: 3rpx solid #e0d8c8;
+    }
+
+    .modal-avatar-badge {
+      position: absolute;
+      bottom: 0; right: 0;
+      width: 48rpx; height: 48rpx;
+      border-radius: 50%;
+      background: #2a6e44;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  .modal-input-wrap {
+    width: 100%;
+    margin-bottom: 48rpx;
+
+    .modal-label {
+      display: block;
+      font-size: 28rpx;
+      color: #1a1a1a;
+      margin-bottom: 16rpx;
+    }
+
+    .modal-input {
+      width: 100%;
+      height: 96rpx;
+      background: #fff;
+      border-radius: 24rpx;
+      padding: 0 32rpx;
+      font-size: 32rpx;
+      color: #1a1a1a;
+    }
+  }
+
+  .modal-btns {
+    width: 100%;
+    display: flex;
+    gap: 24rpx;
+
+    .modal-btn {
+      flex: 1;
+      height: 96rpx;
+      border-radius: 50rpx;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32rpx;
+      font-weight: 500;
+    }
+
+    .modal-btn-cancel {
+      background: #e5e7eb;
+      color: #666;
+    }
+
+    .modal-btn-confirm {
+      background: #2a6e44;
+      color: #fff;
+      
+      &.disabled {
+        opacity: 0.6;
+      }
+    }
+  }
+}
+
 </style>

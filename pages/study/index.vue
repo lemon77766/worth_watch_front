@@ -2,9 +2,9 @@
   <view class="page">
     <!-- 导航栏 -->
     <view class="navbar">
-      <uni-icons type="bars" size="24" color="#2a6e44" />
-      <text class="navbar-title">研习</text>
       <uni-icons type="search" size="24" color="#2a6e44" />
+      <text class="navbar-title">研习</text>
+      <view style="width:72rpx;" />
     </view>
 
     <scroll-view scroll-y class="scroll-body">
@@ -195,6 +195,14 @@ $font-bold: 'STSong', 'SimSun', 'Songti SC', 'Source Han Serif CN', serif;
     font-size: 36rpx;
     font-weight: 500;
     color: $dark;
+  }
+
+  .navbar-search {
+    width: 72rpx;
+    height: 72rpx;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
   }
 }
 
