@@ -232,7 +232,7 @@
           </view>
           <view class="side-tag"><text class="side-tag-text">{{ poem.dynasty }}</text></view>
           <view class="card-meta"><text class="meta-text">{{ poem.dynasty }} · 诗</text></view>
-          <text class="card-title">{{ shortTitle(poem.title) }}</text>
+          <text class="card-title">{{ poem.title }}</text>
           <text class="card-body">{{ poem.excerpt }}</text>
           <view class="card-footer">
             <text class="card-author">{{ poem.author }}</text>
@@ -709,11 +709,11 @@ export default {
         const list = data.list || data || []
         // 本地头像映射：按名字匹配，再按位置分配
         const avatarMap = {
-          '李白': '/static/author_libai.png',
-          '杜甫': '/static/author_dufu.png',
-          '苏轼': '/static/author_sushi.png'
+          '李白': '/static/author_libai.jpg',
+          '杜甫': '/static/author_dufu.jpg',
+          '苏轼': '/static/author_sushi.jpg'
         }
-        const fallbackAvatars = ['/static/author_libai.png', '/static/author_dufu.png', '/static/author_sushi.png']
+        const fallbackAvatars = ['/static/author_libai.jpg', '/static/author_dufu.jpg', '/static/author_sushi.jpg']
         this.authors = list.map((a, i) => ({
           ...a,
           avatarUrl: avatarMap[a.name] || a.avatarUrl || (i < 3 ? fallbackAvatars[i] : '')

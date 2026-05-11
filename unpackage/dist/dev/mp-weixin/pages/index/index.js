@@ -141,11 +141,11 @@ const _sfc_main = {
         common_vendor.index.__f__("log", "at pages/index/index.vue:708", "[热门作者] 原始返回:", data);
         const list = data.list || data || [];
         const avatarMap = {
-          "李白": "/static/author_libai.png",
-          "杜甫": "/static/author_dufu.png",
-          "苏轼": "/static/author_sushi.png"
+          "李白": "/static/author_libai.jpg",
+          "杜甫": "/static/author_dufu.jpg",
+          "苏轼": "/static/author_sushi.jpg"
         };
-        const fallbackAvatars = ["/static/author_libai.png", "/static/author_dufu.png", "/static/author_sushi.png"];
+        const fallbackAvatars = ["/static/author_libai.jpg", "/static/author_dufu.jpg", "/static/author_sushi.jpg"];
         this.authors = list.map((a, i) => ({
           ...a,
           avatarUrl: avatarMap[a.name] || a.avatarUrl || (i < 3 ? fallbackAvatars[i] : "")
@@ -826,7 +826,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
       }) : {}, {
         f: common_vendor.t(poem.dynasty),
         g: common_vendor.t(poem.dynasty),
-        h: common_vendor.t($options.shortTitle(poem.title)),
+        h: common_vendor.t(poem.title),
         i: common_vendor.t(poem.excerpt),
         j: common_vendor.t(poem.author),
         k: poem.poemId,
