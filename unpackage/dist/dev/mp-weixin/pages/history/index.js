@@ -1,42 +1,107 @@
 "use strict";
 const common_vendor = require("../../common/vendor.js");
+const utils_request = require("../../utils/request.js");
 const _sfc_main = {
   data() {
     return {
       overview: [
-        { num: 128, unit: "天", label: "累计研习" },
-        { num: 412, unit: "首", label: "已学诗词" },
-        { num: 36, unit: "小时", label: "研习时长" }
+        { num: 0, unit: "天", label: "累计研习" },
+        { num: 0, unit: "首", label: "已学诗词" }
       ],
-      history: [
-        {
-          date: "今天 · 4月23日",
-          items: [
-            { title: "春晓", author: "孟浩然", type: "五言绝句", mode: "背诵", duration: "8分钟", iconBg: "#e6f2e9", iconColor: "#2a6e44", tagBg: "#e6f2e9", tagColor: "#2a6e44", id: "chunxiao" },
-            { title: "望庐山瀑布", author: "李白", type: "七言绝句", mode: "赏析", duration: "12分钟", iconBg: "#fdecea", iconColor: "#b82e2e", tagBg: "#2a6e44", tagColor: "#fff", id: "lushan" }
-          ]
-        },
-        {
-          date: "昨天 · 4月22日",
-          items: [
-            { title: "静夜思", author: "李白", type: "五言绝句", mode: "背诵", duration: "6分钟", iconBg: "#e6f2e9", iconColor: "#2a6e44", tagBg: "#e6f2e9", tagColor: "#2a6e44", id: "chunxiao" },
-            { title: "定风波", author: "苏轼", type: "词", mode: "吟诵", duration: "15分钟", iconBg: "#fef3e6", iconColor: "#e07820", tagBg: "#fef3e6", tagColor: "#e07820", id: "chunxiao" },
-            { title: "鹿柴", author: "王维", type: "五言绝句", mode: "赏析", duration: "10分钟", iconBg: "#fdecea", iconColor: "#b82e2e", tagBg: "#2a6e44", tagColor: "#fff", id: "chunxiao" }
-          ]
-        },
-        {
-          date: "4月21日",
-          items: [
-            { title: "水调歌头", author: "苏轼", type: "词", mode: "背诵", duration: "20分钟", iconBg: "#e6f2e9", iconColor: "#2a6e44", tagBg: "#e6f2e9", tagColor: "#2a6e44", id: "chunxiao" },
-            { title: "春望", author: "杜甫", type: "五言律诗", mode: "背诵", duration: "9分钟", iconBg: "#e6f2e9", iconColor: "#2a6e44", tagBg: "#e6f2e9", tagColor: "#2a6e44", id: "chunxiao" }
-          ]
-        }
-      ]
+      history: [],
+      page: 1,
+      pageSize: 20,
+      total: 0,
+      loading: false
     };
   },
+  onLoad() {
+    this.fetchHistory();
+    this.fetchProgress();
+  },
   methods: {
+    async fetchProgress() {
+      try {
+        const data = await utils_request.getStudyProgress();
+        if (data) {
+          this.overview[0].num = data.studyDays || 0;
+          this.overview[1].num = data.learnedCount || 0;
+        }
+      } catch (e) {
+        common_vendor.index.__f__("error", "at pages/history/index.vue:88", "获取研习进度失败", e);
+      }
+    },
+    async fetchHistory() {
+      if (this.loading)
+        return;
+      this.loading = true;
+      try {
+        const data = await utils_request.getStudyHistory({ page: this.page, pageSize: this.pageSize });
+        if (data) {
+          this.total = data.total || 0;
+          const list = data.list || [];
+          const grouped = {};
+          const now = /* @__PURE__ */ new Date();
+          const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+          const yesterday = new Date(now);
+          yesterday.setDate(yesterday.getDate() - 1);
+          const yesterdayStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, "0")}-${String(yesterday.getDate()).padStart(2, "0")}`;
+          list.forEach((item) => {
+            const rawDate = item.studiedAt ? item.studiedAt.split(/[T ]/)[0] : "未知日期";
+            let displayDate = rawDate;
+            if (rawDate === todayStr) {
+              const m = parseInt(rawDate.split("-")[1]);
+              const d = parseInt(rawDate.split("-")[2]);
+              displayDate = `今天 · ${m}月${d}日`;
+            } else if (rawDate === yesterdayStr) {
+              const m = parseInt(rawDate.split("-")[1]);
+              const d = parseInt(rawDate.split("-")[2]);
+              displayDate = `昨天 · ${m}月${d}日`;
+            } else {
+              const m = parseInt(rawDate.split("-")[1]);
+              const d = parseInt(rawDate.split("-")[2]);
+              displayDate = `${m}月${d}日`;
+            }
+            if (!grouped[rawDate]) {
+              grouped[rawDate] = { date: displayDate, items: [] };
+            }
+            grouped[rawDate].items.push({
+              poemId: item.poemId,
+              title: item.title,
+              author: item.author,
+              dynasty: item.dynasty,
+              excerpt: item.excerpt,
+              score: item.score,
+              studiedAt: item.studiedAt,
+              iconBg: "#e6f2e9",
+              iconColor: "#2a6e44",
+              tagBg: "#2a6e44",
+              tagColor: "#fff",
+              mode: "已学完"
+            });
+          });
+          if (this.page === 1) {
+            this.history = Object.values(grouped);
+          } else {
+            this.history = [...this.history, ...Object.values(grouped)];
+          }
+        }
+      } catch (e) {
+        common_vendor.index.__f__("error", "at pages/history/index.vue:147", "获取研习历史失败", e);
+      } finally {
+        this.loading = false;
+      }
+    },
+    loadMore() {
+      if (this.history.length < this.total) {
+        this.page++;
+        this.fetchHistory();
+      }
+    },
     goDetail(item) {
-      common_vendor.index.navigateTo({ url: `/pages/detail/index?id=${item.id}` });
+      if (item.poemId) {
+        common_vendor.index.navigateTo({ url: `/pages/detail/index?id=${item.poemId}` });
+      }
     }
   }
 };
@@ -49,7 +114,7 @@ if (!Math) {
   _easycom_uni_icons();
 }
 function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
-  return {
+  return common_vendor.e({
     a: common_vendor.p({
       type: "left",
       size: "20",
@@ -82,16 +147,18 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
             f: item.tagColor,
             g: item.tagBg,
             h: common_vendor.t(item.author),
-            i: common_vendor.t(item.type),
-            j: common_vendor.t(item.duration),
-            k: item.title,
-            l: common_vendor.o(($event) => $options.goDetail(item), item.title)
+            i: common_vendor.t(item.dynasty),
+            j: item.poemId,
+            k: common_vendor.o(($event) => $options.goDetail(item), item.poemId)
           };
         }),
         d: group.date
       };
-    })
-  };
+    }),
+    e: $data.history.length === 0 && !$data.loading
+  }, $data.history.length === 0 && !$data.loading ? {} : {}, {
+    f: common_vendor.o((...args) => $options.loadMore && $options.loadMore(...args))
+  });
 }
 const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render]]);
 wx.createPage(MiniProgramPage);

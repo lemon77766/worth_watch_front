@@ -151,3 +151,11 @@
   color: #888;
   white-space: nowrap;
 }
+.empty-tip {
+  padding: 80rpx 0;
+  text-align: center;
+}
+.empty-tip .empty-text {
+  font-size: 28rpx;
+  color: #888;
+}

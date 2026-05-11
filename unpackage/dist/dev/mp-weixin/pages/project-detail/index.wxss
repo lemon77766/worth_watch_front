@@ -1,0 +1,161 @@
+/* 水平间距 */
+/* 水平间距 */
+.page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: #f8f5ee;
+}
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 112rpx;
+  padding: 0 24rpx;
+  padding-top: 70rpx;
+  background: #f8f5ee;
+}
+.navbar .navbar-left {
+  width: 80rpx;
+  height: 72rpx;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.navbar .navbar-right {
+  width: 80rpx;
+  height: 72rpx;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.navbar .navbar-title {
+  font-size: 36rpx;
+  font-weight: 500;
+  color: #2a6e44;
+  max-width: 400rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.scroll-body {
+  flex: 1;
+  overflow: hidden;
+}
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 200rpx;
+}
+.empty-state .empty-text {
+  font-size: 36rpx;
+  color: #1a1a1a;
+  margin-top: 32rpx;
+}
+.empty-state .empty-hint {
+  font-size: 28rpx;
+  color: #666666;
+  margin-top: 16rpx;
+}
+
+/* 文库卡片样式 */
+.card {
+  border-radius: 32rpx;
+  padding: 40rpx;
+  margin: 0 40rpx 24rpx;
+  position: relative;
+  overflow: hidden;
+}
+.card .side-tag {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #b82e2e;
+  border-radius: 0 32rpx 0 16rpx;
+  padding: 16rpx 14rpx 20rpx;
+}
+.card .side-tag .side-tag-text {
+  color: #fff;
+  font-size: 22rpx;
+  -webkit-writing-mode: vertical-rl;
+          writing-mode: vertical-rl;
+  letter-spacing: 5rpx;
+}
+.card .card-meta {
+  margin-bottom: 12rpx;
+}
+.card .card-meta .meta-text {
+  font-size: 24rpx;
+  color: #666666;
+}
+.card .card-title {
+  display: block;
+  font-size: 56rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 20rpx;
+  font-family: "STSong", "SimSun", "Songti SC", serif;
+  padding-right: 60rpx;
+}
+.card .card-body {
+  display: block;
+  font-size: 28rpx;
+  color: #555;
+  line-height: 48rpx;
+  margin-bottom: 24rpx;
+  padding-right: 60rpx;
+}
+.card .card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card .card-footer-left {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+.card .card-author {
+  font-size: 24rpx;
+  color: #666666;
+}
+.card .card-add-time {
+  font-size: 24rpx;
+  color: #999;
+}
+.card .delete-btn {
+  width: 64rpx;
+  height: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fdecea;
+  border-radius: 16rpx;
+}
+.card-white {
+  background: #fff;
+}
+.loading-more {
+  text-align: center;
+  padding: 30rpx 0;
+  color: #666666;
+  font-size: 26rpx;
+}
+.fab-btn {
+  position: fixed;
+  right: 40rpx;
+  bottom: 80rpx;
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  background: #2a6e44;
+  padding: 24rpx 40rpx;
+  border-radius: 48rpx;
+  box-shadow: 0 8rpx 32rpx rgba(42, 110, 68, 0.4);
+}
+.fab-btn .fab-text {
+  font-size: 28rpx;
+  color: #fff;
+  font-weight: 500;
+}

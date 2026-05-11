@@ -187,6 +187,13 @@
   color: #fff;
   font-weight: 600;
 }
+.cal-card .cal-grid .cal-cell .day-selected {
+  background: #b82e2e;
+}
+.cal-card .cal-grid .cal-cell .day-selected .text-selected {
+  color: #fff;
+  font-weight: 600;
+}
 .cal-card .cal-grid .cal-cell .day-today {
   border: 3rpx solid #2a6e44;
   background: transparent;
@@ -281,4 +288,73 @@
 .checked-btn {
   background: #8aad8a;
   box-shadow: none;
+}
+
+/* 当日诗词详情 */
+.day-poems {
+  margin-top: 28rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 28rpx 32rpx;
+}
+.day-poems .day-poems-hd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+}
+.day-poems .day-poems-hd .day-poems-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+.day-poems .day-poems-hd .day-poems-close {
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.day-poems .day-poem-list .day-poem-item {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #f0ede6;
+}
+.day-poems .day-poem-list .day-poem-item:last-child {
+  border-bottom: none;
+}
+.day-poems .day-poem-list .day-poem-item .day-poem-icon {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 50%;
+  background: rgba(42, 110, 68, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20rpx;
+  flex-shrink: 0;
+}
+.day-poems .day-poem-list .day-poem-item .day-poem-info {
+  flex: 1;
+}
+.day-poems .day-poem-list .day-poem-item .day-poem-info .day-poem-name {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #1a1a1a;
+  margin-bottom: 4rpx;
+}
+.day-poems .day-poem-list .day-poem-item .day-poem-info .day-poem-author {
+  display: block;
+  font-size: 24rpx;
+  color: #999;
+}
+.day-poems .day-poem-empty {
+  padding: 20rpx 0;
+  text-align: center;
+}
+.day-poems .day-poem-empty .day-poem-empty-text {
+  font-size: 28rpx;
+  color: #999;
 }

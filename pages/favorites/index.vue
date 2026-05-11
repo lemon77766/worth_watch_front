@@ -18,18 +18,6 @@
       </view>
     </view>
 
-    <!-- 分类 Tab -->
-    <view class="tabs">
-      <view
-        v-for="t in tabs" :key="t"
-        class="tab-item" :class="{ active: activeTab === t }"
-        @click="activeTab = t"
-      >
-        <text class="tab-text">{{ t }}</text>
-        <view v-if="activeTab === t" class="tab-line" />
-      </view>
-    </view>
-
     <scroll-view scroll-y class="scroll-body">
       <view class="list">
         <view
@@ -65,11 +53,9 @@ export default {
   data() {
     return {
       activeTab: '全部',
-      tabs: ['全部', '唐诗', '宋词', '古文'],
+      tabs: ['全部'],
       stats: [
-        { num: 0, label: '收藏诗词' },
-        { num: 0, label: '收藏选集' },
-        { num: 0, label: '收藏作者' }
+        { num: 0, label: '收藏诗词' }
       ],
       list: [],
       total: 0
@@ -77,8 +63,7 @@ export default {
   },
   computed: {
     filteredList() {
-      if (this.activeTab === '全部') return this.list
-      return this.list.filter(p => p.category === this.activeTab)
+      return this.list
     }
   },
   onLoad() {
@@ -91,8 +76,7 @@ export default {
         if (res && res.list) {
           this.list = res.list.map(p => ({
             ...p,
-            preview: p.excerpt,
-            cat: this.getCategory(p.dynasty)
+            preview: p.excerpt
           }))
           this.total = res.total
           this.stats[0].num = res.total
@@ -100,11 +84,6 @@ export default {
       } catch (e) {
         console.error('获取收藏列表失败', e)
       }
-    },
-    getCategory(dynasty) {
-      if (['唐'].includes(dynasty)) return '唐诗'
-      if (['宋'].includes(dynasty)) return '宋词'
-      return '古文'
     },
     async removeFav(p) {
       uni.showModal({
@@ -198,24 +177,6 @@ $font-bold: 'STSong', 'SimSun', 'Songti SC', serif;
       color: $gray;
     }
   }
-}
-
-.tabs {
-  display: flex;
-  padding: 24rpx 40rpx 0;
-  gap: 48rpx;
-
-  .tab-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-bottom: 16rpx;
-
-    .tab-text { font-size: 30rpx; color: $gray; }
-    .tab-line { width: 40rpx; height: 4rpx; background: $green; border-radius: 2rpx; margin-top: 8rpx; }
-  }
-
-  .active .tab-text { color: $dark; font-weight: 600; }
 }
 
 .scroll-body { flex: 1; overflow: hidden; }

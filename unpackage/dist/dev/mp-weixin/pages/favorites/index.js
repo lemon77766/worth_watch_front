@@ -5,11 +5,9 @@ const _sfc_main = {
   data() {
     return {
       activeTab: "全部",
-      tabs: ["全部", "唐诗", "宋词", "古文"],
+      tabs: ["全部"],
       stats: [
-        { num: 0, label: "收藏诗词" },
-        { num: 0, label: "收藏选集" },
-        { num: 0, label: "收藏作者" }
+        { num: 0, label: "收藏诗词" }
       ],
       list: [],
       total: 0
@@ -17,9 +15,7 @@ const _sfc_main = {
   },
   computed: {
     filteredList() {
-      if (this.activeTab === "全部")
-        return this.list;
-      return this.list.filter((p) => p.category === this.activeTab);
+      return this.list;
     }
   },
   onLoad() {
@@ -32,22 +28,14 @@ const _sfc_main = {
         if (res && res.list) {
           this.list = res.list.map((p) => ({
             ...p,
-            preview: p.excerpt,
-            cat: this.getCategory(p.dynasty)
+            preview: p.excerpt
           }));
           this.total = res.total;
           this.stats[0].num = res.total;
         }
       } catch (e) {
-        common_vendor.index.__f__("error", "at pages/favorites/index.vue:101", "获取收藏列表失败", e);
+        common_vendor.index.__f__("error", "at pages/favorites/index.vue:85", "获取收藏列表失败", e);
       }
-    },
-    getCategory(dynasty) {
-      if (["唐"].includes(dynasty))
-        return "唐诗";
-      if (["宋"].includes(dynasty))
-        return "宋词";
-      return "古文";
     },
     async removeFav(p) {
       common_vendor.index.showModal({
@@ -62,7 +50,7 @@ const _sfc_main = {
               this.stats[0].num = this.total;
               common_vendor.index.showToast({ title: "已取消收藏", icon: "none" });
             } catch (e) {
-              common_vendor.index.__f__("error", "at pages/favorites/index.vue:122", "取消收藏失败", e);
+              common_vendor.index.__f__("error", "at pages/favorites/index.vue:101", "取消收藏失败", e);
             }
           }
         }
@@ -101,17 +89,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
         c: s.label
       };
     }),
-    e: common_vendor.f($data.tabs, (t, k0, i0) => {
-      return common_vendor.e({
-        a: common_vendor.t(t),
-        b: $data.activeTab === t
-      }, $data.activeTab === t ? {} : {}, {
-        c: t,
-        d: $data.activeTab === t ? 1 : "",
-        e: common_vendor.o(($event) => $data.activeTab = t, t)
-      });
-    }),
-    f: common_vendor.f($options.filteredList, (p, k0, i0) => {
+    e: common_vendor.f($options.filteredList, (p, k0, i0) => {
       return {
         a: common_vendor.t(p.dynasty),
         b: p.tagColor,
@@ -125,7 +103,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
         j: common_vendor.o(($event) => $options.goDetail(p), p.poemId)
       };
     }),
-    g: common_vendor.p({
+    f: common_vendor.p({
       type: "heart-filled",
       size: "22",
       color: "#b82e2e"

@@ -61,12 +61,15 @@
                 :class="{
                   'day-checked': checkedDays.includes(d),
                   'day-today': d === today && month === todayMonth && year === todayYear,
-                  'day-empty': !checkedDays.includes(d) && !(d === today && month === todayMonth && year === todayYear)
+                  'day-empty': !checkedDays.includes(d) && !(d === today && month === todayMonth && year === todayYear),
+                  'day-selected': selectedDay === d
                 }"
+                @click="onDayClick(d)"
               >
                 <text class="cal-day-text" :class="{
                   'text-checked': checkedDays.includes(d),
-                  'text-today': d === today && month === todayMonth && year === todayYear
+                  'text-today': d === today && month === todayMonth && year === todayYear,
+                  'text-selected': selectedDay === d
                 }">{{ d }}</text>
               </view>
             </view>
@@ -88,20 +91,27 @@
             <text class="legend-text">未打卡</text>
           </view>
         </view>
-      </view>
 
-      <!-- 打卡奖励 -->
-      <view class="section">
-        <view class="mod-hd">
-          <view class="mod-bar" />
-          <text class="mod-title">打卡奖励</text>
-        </view>
-        <view class="reward-row">
-          <view class="reward-card" v-for="r in rewards" :key="r.days"
-            :class="{ 'reward-active': streak >= r.days && streak < (rewards[rewards.indexOf(r)+1] ? rewards[rewards.indexOf(r)+1].days : 9999) }">
-            <text class="reward-icon">🎖</text>
-            <text class="reward-days">{{ r.days }}天</text>
-            <text class="reward-desc">{{ r.desc }}</text>
+        <!-- 当日诗词详情 -->
+        <view class="day-poems" v-if="selectedDay">
+          <view class="day-poems-hd">
+            <text class="day-poems-title">{{ month }}月{{ selectedDay }}日 学习记录</text>
+            <view class="day-poems-close" @click="selectedDay = null; selectedPoems = []">
+              <uni-icons type="closeempty" size="18" color="#999" />
+            </view>
+          </view>
+          <view v-if="selectedPoems.length > 0" class="day-poem-list">
+            <view class="day-poem-item" v-for="p in selectedPoems" :key="p.poemId" @click="goToDetail(p.poemId)">
+              <view class="day-poem-icon"><uni-icons type="bookmarks" size="20" color="#2a6e44" /></view>
+              <view class="day-poem-info">
+                <text class="day-poem-name">《{{ p.title }}》</text>
+                <text class="day-poem-author">{{ p.author }}</text>
+              </view>
+              <uni-icons type="right" size="16" color="#ccc" />
+            </view>
+          </view>
+          <view v-else class="day-poem-empty">
+            <text class="day-poem-empty-text">当天无诗词学习记录</text>
           </view>
         </view>
       </view>
@@ -119,18 +129,23 @@
 </template>
 
 <script>
+import { getCheckInHistory, checkIn } from '@/utils/request.js'
+
 export default {
   data() {
     const now = new Date()
     return {
-      streak: 12,
+      streak: 0,
+      totalDays: 0,
       year: now.getFullYear(),
       month: now.getMonth() + 1,
       todayYear: now.getFullYear(),
       todayMonth: now.getMonth() + 1,
       today: now.getDate(),
-      // 模拟已打卡日期（1~11号）
-      checkedDays: [1,2,3,4,5,6,7,8,9,10,11],
+      checkedDays: [],
+      poemDetails: {},
+      selectedDay: null,
+      selectedPoems: [],
       weeks: ['日','一','二','三','四','五','六'],
       rewards: [
         { days: 7,  desc: '50积分' },
@@ -155,20 +170,61 @@ export default {
       return cells
     }
   },
+  onLoad() {
+    this.fetchHistory()
+  },
   methods: {
+    async fetchHistory() {
+      try {
+        const data = await getCheckInHistory(this.year, this.month)
+        if (data) {
+          this.streak = data.continuousDays || 0
+          this.totalDays = data.totalDays || 0
+          // 解析已打卡日期，从 "2026-04-24" 提取日
+          const dates = data.checkedDates || []
+          this.checkedDays = dates.map(d => {
+            const parts = d.split('-')
+            return parseInt(parts[2])
+          })
+          this.poemDetails = data.poemDetails || {}
+          // 清除选中状态
+          this.selectedDay = null
+          this.selectedPoems = []
+        }
+      } catch (e) {
+        console.error('获取打卡历史失败', e)
+      }
+    },
     prevMonth() {
       if (this.month === 1) { this.month = 12; this.year-- }
       else this.month--
+      this.fetchHistory()
     },
     nextMonth() {
       if (this.month === 12) { this.month = 1; this.year++ }
       else this.month++
+      this.fetchHistory()
     },
-    doCheckin() {
+    onDayClick(d) {
+      if (!d || !this.checkedDays.includes(d)) return
+      this.selectedDay = d
+      const key = `${this.year}-${String(this.month).padStart(2, '0')}-${String(d).padStart(2, '0')}`
+      this.selectedPoems = this.poemDetails[key] || []
+    },
+    async doCheckin() {
       if (this.todayChecked) return
-      this.checkedDays.push(this.today)
-      this.streak++
-      uni.showToast({ title: '打卡成功！', icon: 'success' })
+      try {
+        await checkIn()
+        this.checkedDays.push(this.today)
+        this.streak++
+        this.totalDays++
+        uni.showToast({ title: '打卡成功！', icon: 'success' })
+      } catch (e) {
+        console.error('打卡失败', e)
+      }
+    },
+    goToDetail(poemId) {
+      uni.navigateTo({ url: `/pages/detail/index?id=${poemId}` })
     }
   }
 }
@@ -383,6 +439,11 @@ $font-bold: 'STSong', 'SimSun', 'Songti SC', serif;
         .text-checked { color: #fff; font-weight: 600; }
       }
 
+      .day-selected {
+        background: $red;
+        .text-selected { color: #fff; font-weight: 600; }
+      }
+
       .day-today {
         border: 3rpx solid $green;
         background: transparent;
@@ -479,5 +540,85 @@ $font-bold: 'STSong', 'SimSun', 'Songti SC', serif;
 .checked-btn {
   background: #8aad8a;
   box-shadow: none;
+}
+
+/* 当日诗词详情 */
+.day-poems {
+  margin-top: 28rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 28rpx 32rpx;
+
+  .day-poems-hd {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20rpx;
+
+    .day-poems-title {
+      font-size: 30rpx;
+      font-weight: 600;
+      color: $dark;
+    }
+
+    .day-poems-close {
+      width: 48rpx;
+      height: 48rpx;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  .day-poem-list {
+    .day-poem-item {
+      display: flex;
+      align-items: center;
+      padding: 20rpx 0;
+      border-bottom: 1rpx solid #f0ede6;
+
+      &:last-child { border-bottom: none; }
+
+      .day-poem-icon {
+        width: 56rpx;
+        height: 56rpx;
+        border-radius: 50%;
+        background: rgba(42,110,68,0.08);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 20rpx;
+        flex-shrink: 0;
+      }
+
+      .day-poem-info {
+        flex: 1;
+
+        .day-poem-name {
+          display: block;
+          font-size: 30rpx;
+          font-weight: 500;
+          color: $dark;
+          margin-bottom: 4rpx;
+        }
+
+        .day-poem-author {
+          display: block;
+          font-size: 24rpx;
+          color: $gray;
+        }
+      }
+    }
+  }
+
+  .day-poem-empty {
+    padding: 20rpx 0;
+    text-align: center;
+
+    .day-poem-empty-text {
+      font-size: 28rpx;
+      color: $gray;
+    }
+  }
 }
 </style>

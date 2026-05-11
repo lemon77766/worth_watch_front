@@ -2,15 +2,17 @@
   "pages": [
     "pages/login/index",
     "pages/index/index",
-    "pages/library/index",
-    "pages/study/index",
     "pages/detail/index",
     "pages/recite/index",
     "pages/checkin/index",
     "pages/favorites/index",
     "pages/history/index",
     "pages/settings/index",
-    "pages/privacy/index"
+    "pages/privacy/index",
+    "pages/projects/index",
+    "pages/project-detail/index",
+    "pages/author-detail/index",
+    "pages/authors/index"
   ],
   "window": {
     "navigationBarTextStyle": "black",

@@ -69,17 +69,17 @@
   top: 0;
   right: 32rpx;
   background: #8b2020;
-  border-radius: 0 0 16rpx 16rpx;
-  padding: 20rpx 20rpx 24rpx;
+  border-radius: 0 0 12rpx 12rpx;
+  padding: 10rpx 12rpx 14rpx;
   z-index: 2;
 }
 .poem-card .poem-tag .poem-tag-text {
   color: #fff;
-  font-size: 24rpx;
+  font-size: 20rpx;
   -webkit-writing-mode: vertical-rl;
           writing-mode: vertical-rl;
-  letter-spacing: 6rpx;
-  line-height: 1.5;
+  letter-spacing: 4rpx;
+  line-height: 1.3;
 }
 .poem-card .poem-body {
   flex: 1;
@@ -133,6 +133,9 @@
 .poem-card .poem-btns .poem-btn-active {
   background: #2a6e44;
 }
+.poem-card .poem-btns .poem-btn-studied {
+  background: #e6a23c;
+}
 .poem-card .poem-body-vert {
   flex: 1;
   display: flex;
@@ -166,6 +169,27 @@
   letter-spacing: 12rpx;
   font-family: "STSong", "SimSun", "Songti SC", serif;
   align-self: flex-end;
+}
+
+/* 标记学完按钮 */
+.study-done-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  height: 96rpx;
+  background: rgba(230, 162, 60, 0.1);
+  border-radius: 48rpx;
+  border: 2rpx solid #e6a23c;
+}
+.study-done-btn .study-done-text {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #e6a23c;
+}
+.study-done-studied {
+  background: #e6a23c;
+  border-color: #e6a23c;
 }
 
 /* 通用 section */

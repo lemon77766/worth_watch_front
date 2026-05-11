@@ -17,20 +17,6 @@
 			}
 		},
 		{
-			"path": "pages/library/index",
-			"style": {
-				"navigationStyle": "custom",
-				"navigationBarBackgroundColor": "#f5f0e8"
-			}
-		},
-		{
-			"path": "pages/study/index",
-			"style": {
-				"navigationStyle": "custom",
-				"navigationBarBackgroundColor": "#f8f5ee"
-			}
-		},
-		{
 			"path": "pages/detail/index",
 			"style": {
 				"navigationStyle": "custom",
@@ -76,6 +62,34 @@
 		},
 		{
 			"path": "pages/privacy/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarBackgroundColor": "#f8f5ee"
+			}
+		},
+		{
+			"path": "pages/projects/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarBackgroundColor": "#f8f5ee"
+			}
+		},
+		{
+			"path": "pages/project-detail/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarBackgroundColor": "#f8f5ee"
+			}
+		},
+		{
+			"path": "pages/author-detail/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarBackgroundColor": "#f8f5ee"
+			}
+		},
+		{
+			"path": "pages/authors/index",
 			"style": {
 				"navigationStyle": "custom",
 				"navigationBarBackgroundColor": "#f8f5ee"

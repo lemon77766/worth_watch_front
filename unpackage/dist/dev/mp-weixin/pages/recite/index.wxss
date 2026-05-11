@@ -8,7 +8,6 @@
   flex-direction: column;
   padding: 0 48rpx;
   font-family: "PingFang SC", "Noto Sans SC", -apple-system, sans-serif;
-  /* 确保小程序/H5全屏覆盖 */
   position: fixed;
   top: 0;
   left: 0;
@@ -97,19 +96,54 @@
 
 /* 进度条 */
 .progress-wrap {
-  padding: 48rpx 0 40rpx;
+  padding: 32rpx 0 16rpx;
+}
+.progress-wrap .time-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+}
+.progress-wrap .time-row .time-text {
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.4);
+  font-variant-numeric: tabular-nums;
 }
 .progress-wrap .progress-track {
   width: 100%;
-  height: 3rpx;
+  height: 40rpx;
+  /* 加大触摸区域 */
+  display: flex;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+}
+.progress-wrap .progress-track::before {
+  /* 可视细线背景 */
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 4rpx;
   background: rgba(255, 255, 255, 0.12);
   border-radius: 2rpx;
 }
 .progress-wrap .progress-track .progress-fill {
-  height: 100%;
-  background: rgba(255, 255, 255, 0.65);
+  position: absolute;
+  left: 0;
+  height: 4rpx;
+  background: rgba(255, 255, 255, 0.7);
   border-radius: 2rpx;
-  transition: width 0.15s linear;
+  transition: width 0.1s linear;
+}
+.progress-wrap .progress-track .progress-thumb {
+  position: absolute;
+  width: 24rpx;
+  height: 24rpx;
+  border-radius: 50%;
+  background: #fff;
+  transform: translateX(-50%);
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.4);
+  transition: left 0.1s linear;
 }
 
 /* 控制区 */
@@ -179,4 +213,83 @@
   height: 44rpx;
   background: #1a2018;
   border-radius: 5rpx;
+}
+.controls .play-btn .loading-spinner {
+  width: 40rpx;
+  height: 40rpx;
+  border: 4rpx solid #1a2018;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+to {
+    transform: rotate(360deg);
+}
+}
+/* 音色选择 */
+.vcn-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 32rpx;
+}
+.vcn-wrap .vcn-toggle {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  padding: 12rpx 32rpx;
+  border-radius: 32rpx;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1rpx solid rgba(255, 255, 255, 0.15);
+}
+.vcn-wrap .vcn-toggle .vcn-toggle-text {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.7);
+}
+.vcn-wrap .vcn-toggle .vcn-toggle-arrow {
+  width: 0;
+  height: 0;
+  border-left: 10rpx solid transparent;
+  border-right: 10rpx solid transparent;
+  border-top: 10rpx solid rgba(255, 255, 255, 0.5);
+  transition: transform 0.2s;
+}
+.vcn-wrap .vcn-toggle .arrow-open {
+  transform: rotate(180deg);
+}
+.vcn-wrap .vcn-panel {
+  margin-top: 16rpx;
+  background: rgba(30, 40, 28, 0.95);
+  border: 1rpx solid rgba(255, 255, 255, 0.12);
+  border-radius: 20rpx;
+  padding: 8rpx 0;
+  min-width: 400rpx;
+}
+.vcn-wrap .vcn-panel .vcn-item {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 32rpx;
+  gap: 16rpx;
+}
+.vcn-wrap .vcn-panel .vcn-item .vcn-item-name {
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.55);
+}
+.vcn-wrap .vcn-panel .vcn-item .vcn-item-name-active {
+  color: #fff;
+}
+.vcn-wrap .vcn-panel .vcn-item .vcn-item-desc {
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.3);
+  flex: 1;
+}
+.vcn-wrap .vcn-panel .vcn-item .vcn-check {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+  background: rgba(42, 110, 68, 0.9);
+}
+.vcn-wrap .vcn-panel .vcn-item-active {
+  background: rgba(42, 110, 68, 0.25);
 }

@@ -1,0 +1,124 @@
+/* 水平间距 */
+/* 水平间距 */
+.page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: #f8f5ee;
+}
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 112rpx;
+  padding: 0 24rpx;
+  padding-top: 70rpx;
+  background: #f8f5ee;
+}
+.navbar .navbar-left {
+  width: 80rpx;
+  height: 72rpx;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.navbar .navbar-title {
+  font-size: 36rpx;
+  font-weight: 500;
+  color: #2a6e44;
+}
+
+/* 搜索栏 */
+.search-bar {
+  display: flex;
+  align-items: center;
+  margin: 0 40rpx 24rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 16rpx 24rpx;
+}
+.search-bar .search-input {
+  flex: 1;
+  font-size: 30rpx;
+  height: 56rpx;
+}
+.search-bar .search-clear {
+  padding: 8rpx;
+}
+.scroll-body {
+  flex: 1;
+  overflow: hidden;
+}
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 200rpx;
+}
+.empty-state .empty-text {
+  font-size: 36rpx;
+  color: #1a1a1a;
+  margin-top: 32rpx;
+}
+
+/* 作者列表项 */
+.author-item {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  background: #fff;
+  border-radius: 32rpx;
+  padding: 28rpx 32rpx;
+  margin: 0 40rpx 20rpx;
+}
+.author-avatar {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 2rpx solid #e0d8c8;
+}
+.author-avatar-placeholder {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 50%;
+  background: #2a6e44;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.author-avatar-placeholder .avatar-text {
+  font-size: 40rpx;
+  color: #fff;
+  font-weight: 700;
+}
+.author-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+  overflow: hidden;
+}
+.author-info .author-name {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+.author-info .author-dynasty {
+  font-size: 24rpx;
+  color: #999;
+}
+.author-info .author-desc {
+  font-size: 24rpx;
+  color: #666666;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.loading-more {
+  text-align: center;
+  padding: 30rpx 0;
+  color: #666666;
+  font-size: 26rpx;
+}

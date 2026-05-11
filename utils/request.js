@@ -1,4 +1,5 @@
-const BASE_URL = 'http://192.168.1.134:8080'
+const BASE_URL = 'http://192.168.1.109:8080'
+export { BASE_URL }
 
 const request = (options) => {
   return new Promise((resolve, reject) => {
@@ -103,6 +104,26 @@ export const getCheckInHistory = (year, month) => get('/api/user/check-in/histor
 export const getAchievements = () => get('/api/user/achievements')
 export const getFavorites = (params) => get('/api/user/favorites', params)
 export const getFeaturedMilestones = () => get('/api/milestones/featured')
+export const getRecommendDynasties = () => get('/api/poems/dynasties/recommend')
+export const getDailyTask = () => get('/api/poems/daily-task')
+export const submitStudyRecord = (data) => post('/api/study/record', data)
+export const getPoemTts = (id, vcn = 'x4_xiaoyan') => get(`/api/poems/${id}/tts`, { vcn })
+export const getTtsVoices = () => get('/api/poems/tts/voices')
 export const getAuthors = (params) => get('/api/authors', params)
+export const getRecommendPoems = (id) => get(`/api/poems/${id}/recommend`)
+export const getHotAuthors = () => get('/api/authors/hot')
+export const getAuthorDetail = (id) => get(`/api/authors/${id}`)
+
+// 项目/学习合集相关
+export const createProject = (name) => post('/api/projects', { name })
+export const addPoemToProject = (projectId, poemIds) => post(`/api/projects/${projectId}/poems`, { poemIds })
+export const getProjects = () => get('/api/projects')
+export const getCurrentProject = () => get('/api/projects/current')
+export const getProjectDetail = (projectId) => get(`/api/projects/${projectId}`)
+export const getProjectPoems = (projectId, params) => get(`/api/projects/${projectId}/poems`, params)
+export const deleteProject = (projectId) => request({ url: `/api/projects/${projectId}`, method: 'DELETE' })
+export const selectCurrentProject = (projectId) => post(`/api/projects/${projectId}/select`)
+export const removePoemFromProject = (projectId, poemId) => request({ url: `/api/projects/${projectId}/poems/${poemId}`, method: 'DELETE' })
+export const renameProject = (projectId, name) => put(`/api/projects/${projectId}/name`, { name })
 
 export default request

@@ -85,7 +85,7 @@
 </template>
 
 <script>
-import { updateUserProfile, uploadAvatar, login as apiLogin } from '@/utils/request.js'
+import { updateUserProfile, uploadAvatar, login as apiLogin, getUserProfile } from '@/utils/request.js'
 
 export default {
   data() {
@@ -138,14 +138,32 @@ export default {
       })
     },
     goHome() {
-      const isNewUser = uni.getStorageSync('isNewUser')
-      const userInfo = uni.getStorageSync('userInfo')
-      if (isNewUser || !userInfo || !userInfo.nickname) {
-        // 弹出底部弹窗
-        this.showProfileModal = true
-      } else {
-        uni.reLaunch({ url: '/pages/index/index' })
-      }
+      // 先从服务端获取用户资料，判断是否已完善过
+      getUserProfile().then(data => {
+        console.log('[登录] 服务端用户资料:', data)
+        const nickname = data.nickname || data.nickName || ''
+        const avatarUrl = data.avatarUrl || data.avatar || ''
+        if (nickname) {
+          // 服务端已有资料，缓存到本地并直接进入首页
+          const info = { nickname, avatarUrl }
+          uni.setStorageSync('userInfo', info)
+          uni.removeStorageSync('isNewUser')
+          uni.reLaunch({ url: '/pages/index/index' })
+        } else {
+          // 服务端无资料，弹出完善信息弹窗
+          this.showProfileModal = true
+        }
+      }).catch(err => {
+        console.warn('[登录] 获取用户资料失败:', err)
+        // 获取失败时回退到本地判断逻辑
+        const isNewUser = uni.getStorageSync('isNewUser')
+        const userInfo = uni.getStorageSync('userInfo')
+        if (isNewUser || !userInfo || !userInfo.nickname) {
+          this.showProfileModal = true
+        } else {
+          uni.reLaunch({ url: '/pages/index/index' })
+        }
+      })
     },
     onChooseAvatar(e) {
       if (this.submitting) return

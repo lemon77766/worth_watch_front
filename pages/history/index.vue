@@ -17,7 +17,7 @@
       </view>
     </view>
 
-    <scroll-view scroll-y class="scroll-body">
+    <scroll-view scroll-y class="scroll-body" @scrolltolower="loadMore">
       <!-- 时间线 -->
       <view class="timeline">
         <view class="day-group" v-for="group in history" :key="group.date">
@@ -29,7 +29,7 @@
           </view>
           <!-- 该日记录 -->
           <view class="day-items">
-            <view class="history-item" v-for="item in group.items" :key="item.title" @click="goDetail(item)">
+            <view class="history-item" v-for="item in group.items" :key="item.poemId" @click="goDetail(item)">
               <view class="item-icon-wrap" :style="{ background: item.iconBg }">
                 <uni-icons type="bookmarks" size="20" :color="item.iconColor" />
               </view>
@@ -40,13 +40,14 @@
                     <text class="item-tag-text" :style="{ color: item.tagColor }">{{ item.mode }}</text>
                   </view>
                 </view>
-                <text class="item-sub">{{ item.author }} · {{ item.type }}</text>
+                <text class="item-sub">{{ item.author }} · {{ item.dynasty }}</text>
               </view>
-              <view class="item-duration">
-                <text class="duration-text">{{ item.duration }}</text>
-              </view>
+
             </view>
           </view>
+        </view>
+        <view v-if="history.length === 0 && !loading" class="empty-tip">
+          <text class="empty-text">暂无研习记录</text>
         </view>
       </view>
       <view style="height:40rpx;" />
@@ -55,43 +56,109 @@
 </template>
 
 <script>
+import { getStudyHistory, getStudyProgress } from '@/utils/request.js'
+
 export default {
   data() {
     return {
       overview: [
-        { num: 128, unit: '天', label: '累计研习' },
-        { num: 412, unit: '首', label: '已学诗词' },
-        { num: 36,  unit: '小时', label: '研习时长' }
+        { num: 0, unit: '天', label: '累计研习' },
+        { num: 0, unit: '首', label: '已学诗词' }
       ],
-      history: [
-        {
-          date: '今天 · 4月23日',
-          items: [
-            { title: '春晓', author: '孟浩然', type: '五言绝句', mode: '背诵', duration: '8分钟', iconBg: '#e6f2e9', iconColor: '#2a6e44', tagBg: '#e6f2e9', tagColor: '#2a6e44', id: 'chunxiao' },
-            { title: '望庐山瀑布', author: '李白', type: '七言绝句', mode: '赏析', duration: '12分钟', iconBg: '#fdecea', iconColor: '#b82e2e', tagBg: '#2a6e44', tagColor: '#fff', id: 'lushan' }
-          ]
-        },
-        {
-          date: '昨天 · 4月22日',
-          items: [
-            { title: '静夜思', author: '李白', type: '五言绝句', mode: '背诵', duration: '6分钟', iconBg: '#e6f2e9', iconColor: '#2a6e44', tagBg: '#e6f2e9', tagColor: '#2a6e44', id: 'chunxiao' },
-            { title: '定风波', author: '苏轼', type: '词', mode: '吟诵', duration: '15分钟', iconBg: '#fef3e6', iconColor: '#e07820', tagBg: '#fef3e6', tagColor: '#e07820', id: 'chunxiao' },
-            { title: '鹿柴', author: '王维', type: '五言绝句', mode: '赏析', duration: '10分钟', iconBg: '#fdecea', iconColor: '#b82e2e', tagBg: '#2a6e44', tagColor: '#fff', id: 'chunxiao' }
-          ]
-        },
-        {
-          date: '4月21日',
-          items: [
-            { title: '水调歌头', author: '苏轼', type: '词', mode: '背诵', duration: '20分钟', iconBg: '#e6f2e9', iconColor: '#2a6e44', tagBg: '#e6f2e9', tagColor: '#2a6e44', id: 'chunxiao' },
-            { title: '春望', author: '杜甫', type: '五言律诗', mode: '背诵', duration: '9分钟', iconBg: '#e6f2e9', iconColor: '#2a6e44', tagBg: '#e6f2e9', tagColor: '#2a6e44', id: 'chunxiao' }
-          ]
-        }
-      ]
+      history: [],
+      page: 1,
+      pageSize: 20,
+      total: 0,
+      loading: false
     }
   },
+  onLoad() {
+    this.fetchHistory()
+    this.fetchProgress()
+  },
   methods: {
+    async fetchProgress() {
+      try {
+        const data = await getStudyProgress()
+        if (data) {
+          this.overview[0].num = data.studyDays || 0
+          this.overview[1].num = data.learnedCount || 0
+        }
+      } catch (e) {
+        console.error('获取研习进度失败', e)
+      }
+    },
+    async fetchHistory() {
+      if (this.loading) return
+      this.loading = true
+      try {
+        const data = await getStudyHistory({ page: this.page, pageSize: this.pageSize })
+        if (data) {
+          this.total = data.total || 0
+          // 按日期分组
+          const list = data.list || []
+          const grouped = {}
+          const now = new Date()
+          const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
+          const yesterday = new Date(now)
+          yesterday.setDate(yesterday.getDate() - 1)
+          const yesterdayStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`
+          list.forEach(item => {
+            const rawDate = item.studiedAt ? item.studiedAt.split(/[T ]/)[0] : '未知日期'
+            let displayDate = rawDate
+            if (rawDate === todayStr) {
+              const m = parseInt(rawDate.split('-')[1])
+              const d = parseInt(rawDate.split('-')[2])
+              displayDate = `今天 · ${m}月${d}日`
+            } else if (rawDate === yesterdayStr) {
+              const m = parseInt(rawDate.split('-')[1])
+              const d = parseInt(rawDate.split('-')[2])
+              displayDate = `昨天 · ${m}月${d}日`
+            } else {
+              const m = parseInt(rawDate.split('-')[1])
+              const d = parseInt(rawDate.split('-')[2])
+              displayDate = `${m}月${d}日`
+            }
+            if (!grouped[rawDate]) {
+              grouped[rawDate] = { date: displayDate, items: [] }
+            }
+            grouped[rawDate].items.push({
+              poemId: item.poemId,
+              title: item.title,
+              author: item.author,
+              dynasty: item.dynasty,
+              excerpt: item.excerpt,
+              score: item.score,
+              studiedAt: item.studiedAt,
+              iconBg: '#e6f2e9',
+              iconColor: '#2a6e44',
+              tagBg: '#2a6e44',
+              tagColor: '#fff',
+              mode: '已学完'
+            })
+          })
+          if (this.page === 1) {
+            this.history = Object.values(grouped)
+          } else {
+            this.history = [...this.history, ...Object.values(grouped)]
+          }
+        }
+      } catch (e) {
+        console.error('获取研习历史失败', e)
+      } finally {
+        this.loading = false
+      }
+    },
+    loadMore() {
+      if (this.history.length < this.total) {
+        this.page++
+        this.fetchHistory()
+      }
+    },
     goDetail(item) {
-      uni.navigateTo({ url: `/pages/detail/index?id=${item.id}` })
+      if (item.poemId) {
+        uni.navigateTo({ url: `/pages/detail/index?id=${item.poemId}` })
+      }
     }
   }
 }
@@ -275,6 +342,15 @@ $font-bold: 'STSong', 'SimSun', 'Songti SC', serif;
       color: $gray;
       white-space: nowrap;
     }
+  }
+}
+
+.empty-tip {
+  padding: 80rpx 0;
+  text-align: center;
+  .empty-text {
+    font-size: 28rpx;
+    color: $gray;
   }
 }
 </style>

@@ -1,0 +1,150 @@
+/* 水平间距 */
+/* 水平间距 */
+.page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: #f8f5ee;
+}
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 112rpx;
+  padding: 0 24rpx;
+  padding-top: 70rpx;
+  background: #f8f5ee;
+}
+.navbar .navbar-left {
+  width: 80rpx;
+  height: 72rpx;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.navbar .navbar-title {
+  font-size: 36rpx;
+  font-weight: 500;
+  color: #2a6e44;
+}
+.scroll-body {
+  flex: 1;
+  overflow: hidden;
+}
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 200rpx;
+}
+.empty-state .empty-text {
+  font-size: 36rpx;
+  color: #1a1a1a;
+  margin-top: 32rpx;
+}
+.empty-state .empty-hint {
+  font-size: 28rpx;
+  color: #666666;
+  margin-top: 16rpx;
+}
+.project-card {
+  background: #fff;
+  margin: 0 40rpx 24rpx;
+  border-radius: 32rpx;
+  overflow: hidden;
+  /* 操作按钮区 */
+}
+.project-card.is-selected {
+  background: linear-gradient(135deg, #e6f2e9 0%, #fff 100%);
+}
+.project-card .card-main {
+  display: flex;
+  align-items: center;
+  padding: 32rpx 36rpx;
+  overflow: hidden;
+}
+.project-card .project-icon {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 24rpx;
+  background: #e6f2e9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 24rpx;
+  flex-shrink: 0;
+}
+.is-selected .project-card .project-icon {
+  background: #2a6e44;
+}
+.project-card .project-info {
+  flex: 1;
+  overflow: hidden;
+}
+.project-card .project-info .project-name-row {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-bottom: 8rpx;
+}
+.project-card .project-info .project-name {
+  display: block;
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.project-card .project-info .selected-tag {
+  background: #2a6e44;
+  border-radius: 8rpx;
+  padding: 4rpx 12rpx;
+  flex-shrink: 0;
+}
+.project-card .project-info .selected-tag .selected-tag-text {
+  font-size: 22rpx;
+  color: #fff;
+}
+.project-card .project-info .project-meta {
+  display: block;
+  font-size: 26rpx;
+  color: #666666;
+}
+.project-card .arrow-icon {
+  margin-left: 16rpx;
+  flex-shrink: 0;
+}
+.project-card .card-actions {
+  display: flex;
+  border-top: 1rpx solid #f0f0f0;
+}
+.project-card .action-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24rpx 0;
+  background: #fafafa;
+}
+.project-card .action-btn .action-btn-text {
+  font-size: 28rpx;
+}
+.project-card .action-btn.select-btn {
+  border-right: 1rpx solid #f0f0f0;
+}
+.project-card .action-btn.select-btn .action-btn-text {
+  color: #2a6e44;
+}
+.project-card .action-btn.select-btn.is-current .action-btn-text {
+  color: #666666;
+}
+.project-card .action-btn.rename-btn {
+  border-right: 1rpx solid #f0f0f0;
+}
+.project-card .action-btn.rename-btn .action-btn-text {
+  color: #e6a23c;
+}
+.project-card .action-btn.delete-btn .action-btn-text {
+  color: #b82e2e;
+}

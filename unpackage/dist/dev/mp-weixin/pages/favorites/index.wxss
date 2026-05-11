@@ -51,32 +51,6 @@
   font-size: 24rpx;
   color: #888;
 }
-.tabs {
-  display: flex;
-  padding: 24rpx 40rpx 0;
-  gap: 48rpx;
-}
-.tabs .tab-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-bottom: 16rpx;
-}
-.tabs .tab-item .tab-text {
-  font-size: 30rpx;
-  color: #888;
-}
-.tabs .tab-item .tab-line {
-  width: 40rpx;
-  height: 4rpx;
-  background: #2a6e44;
-  border-radius: 2rpx;
-  margin-top: 8rpx;
-}
-.tabs .active .tab-text {
-  color: #1a1a1a;
-  font-weight: 600;
-}
 .scroll-body {
   flex: 1;
   overflow: hidden;

@@ -5,8 +5,6 @@ const utils_request = require("./utils/request.js");
 if (!Math) {
   "./pages/login/index.js";
   "./pages/index/index.js";
-  "./pages/library/index.js";
-  "./pages/study/index.js";
   "./pages/detail/index.js";
   "./pages/recite/index.js";
   "./pages/checkin/index.js";
@@ -14,6 +12,10 @@ if (!Math) {
   "./pages/history/index.js";
   "./pages/settings/index.js";
   "./pages/privacy/index.js";
+  "./pages/projects/index.js";
+  "./pages/project-detail/index.js";
+  "./pages/author-detail/index.js";
+  "./pages/authors/index.js";
 }
 const _sfc_main = {
   onLaunch: function() {

@@ -5,7 +5,7 @@
       <view class="nav-back" @click="uni.navigateBack()">
         <uni-icons type="left" size="22" color="#2a6e44" />
       </view>
-      <view class="nav-avatar" />
+      <view class="nav-avatar" @click="goToMine" />
       <text class="nav-title">值得看么</text>
       <view class="nav-right">
         <uni-icons :type="faved ? 'heart-filled' : 'heart'" size="22" :color="faved ? '#b82e2e' : '#2a6e44'" @click="toggleFav" />
@@ -105,25 +105,34 @@
         <text class="analysis-text">{{ poem.authorDescription }}</text>
       </view>
 
-      <!-- 推荐研习 -->
+      <!-- 标记学完 -->
       <view class="section">
+        <view class="study-done-btn" :class="{ 'study-done-studied': studied }" @click="markStudied">
+          <uni-icons :type="studied ? 'checkmarkempty' : 'flag'" size="20" :color="studied ? '#fff' : '#e6a23c'" />
+          <text class="study-done-text" :style="{ color: studied ? '#fff' : '#e6a23c' }">
+            {{ studied ? '已学完' : '标记学完' }}
+          </text>
+        </view>
+      </view>
+
+      <!-- 推荐研习 -->
+      <view class="section" v-if="recommendList.length">
         <text class="rec-title">推荐研习</text>
         <view class="rec-row">
-          <view class="rec-card rec-light" @click="goPoem('lushan')">
-            <view class="rec-icon-wrap rec-icon-light">
-              <uni-icons type="bookmarks" size="28" color="#2a6e44" />
+          <view
+            class="rec-card"
+            :class="i % 2 === 0 ? 'rec-light' : 'rec-green'"
+            v-for="(item, i) in recommendList"
+            :key="item.poemId"
+            @click="goPoem(item.poemId)"
+          >
+            <view class="rec-icon-wrap" :class="i % 2 === 0 ? 'rec-icon-light' : 'rec-icon-green'">
+              <uni-icons type="bookmarks" size="28" :color="i % 2 === 0 ? '#2a6e44' : '#fff'" />
             </view>
-            <text class="rec-name">望庐山瀑布</text>
-            <text class="rec-sub">李白·浪漫主义</text>
-          </view>
-          <view class="rec-card rec-green">
-            <view class="rec-icon-wrap rec-icon-green">
-              <uni-icons type="bookmarks" size="28" color="#fff" />
-            </view>
-            <text class="rec-name" style="color:#fff;">唐诗三百首</text>
-            <text class="rec-sub" style="color:rgba(255,255,255,0.8);">深度解读专辑</text>
-            <view class="rec-badge">
-              <uni-icons type="bookmark" size="18" color="#fff" />
+            <text class="rec-name" :style="i % 2 !== 0 ? 'color:#fff;' : ''">{{ item.title }}</text>
+            <text class="rec-sub" :style="i % 2 !== 0 ? 'color:rgba(255,255,255,0.8);' : ''">{{ item.dynasty }}·{{ item.author }}</text>
+            <view class="rec-badge" v-if="item.isLearned">
+              <uni-icons type="checkmarkempty" size="16" color="#fff" />
             </view>
           </view>
         </view>
@@ -135,13 +144,15 @@
 </template>
 
 <script>
-import { getPoemDetail, toggleFavorite } from '@/utils/request.js'
+import { getPoemDetail, toggleFavorite, submitStudyRecord, getRecommendPoems } from '@/utils/request.js'
 
 export default {
   data() {
     return {
       faved: false,
       isVertical: false,
+      studied: false,
+      recommendList: [],
       poem: {
         poemId: null,
         title: '',
@@ -161,9 +172,16 @@ export default {
   onLoad(options) {
     if (options && options.id) {
       this.fetchPoemDetail(options.id)
+      // 读取本地学完状态
+      const studiedMap = uni.getStorageSync('studiedPoems') || {}
+      this.studied = !!studiedMap[options.id]
     }
   },
   methods: {
+    goToMine() {
+      uni.$emit('goToMine')
+      uni.navigateBack()
+    },
     async fetchPoemDetail(id) {
       try {
         const data = await getPoemDetail(id)
@@ -173,6 +191,15 @@ export default {
         }
       } catch (e) {
         console.error('获取诗词详情失败', e)
+      }
+      // 获取推荐诗词
+      try {
+        const list = await getRecommendPoems(id)
+        if (list && list.length) {
+          this.recommendList = list
+        }
+      } catch (e) {
+        console.error('获取推荐诗词失败', e)
       }
     },
     async toggleFav() {
@@ -195,6 +222,24 @@ export default {
     },
     goPoem(id) {
       uni.navigateTo({ url: `/pages/detail/index?id=${id}` })
+    },
+    async markStudied() {
+      if (this.studied) return
+      if (!this.poem.poemId) return
+      try {
+        await submitStudyRecord({
+          type: 'poem',
+          targetId: String(this.poem.poemId)
+        })
+        this.studied = true
+        // 保存学完状态到本地
+        const studiedMap = uni.getStorageSync('studiedPoems') || {}
+        studiedMap[this.poem.poemId] = true
+        uni.setStorageSync('studiedPoems', studiedMap)
+        uni.showToast({ title: '已标记学完', icon: 'success' })
+      } catch (e) {
+        console.error('提交学习记录失败', e)
+      }
     }
   }
 }
@@ -282,16 +327,16 @@ $font-bold: 'STSong', 'SimSun', 'Songti SC', serif;
     position: absolute;
     top: 0; right: 32rpx;
     background: #8b2020;
-    border-radius: 0 0 16rpx 16rpx;
-    padding: 20rpx 20rpx 24rpx;
+    border-radius: 0 0 12rpx 12rpx;
+    padding: 10rpx 12rpx 14rpx;
     z-index: 2;
 
     .poem-tag-text {
       color: #fff;
-      font-size: 24rpx;
+      font-size: 20rpx;
       writing-mode: vertical-rl;
-      letter-spacing: 6rpx;
-      line-height: 1.5;
+      letter-spacing: 4rpx;
+      line-height: 1.3;
     }
   }
 
@@ -352,6 +397,10 @@ $font-bold: 'STSong', 'SimSun', 'Songti SC', serif;
     .poem-btn-active {
       background: $green;
     }
+
+    .poem-btn-studied {
+      background: #e6a23c;
+    }
   }
 
   /* 垂直模式布局 */
@@ -390,6 +439,29 @@ $font-bold: 'STSong', 'SimSun', 'Songti SC', serif;
       align-self: flex-end;
     }
   }
+}
+
+/* 标记学完按钮 */
+.study-done-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  height: 96rpx;
+  background: rgba(230, 162, 60, 0.1);
+  border-radius: 48rpx;
+  border: 2rpx solid #e6a23c;
+
+  .study-done-text {
+    font-size: 32rpx;
+    font-weight: 600;
+    color: #e6a23c;
+  }
+}
+
+.study-done-studied {
+  background: #e6a23c;
+  border-color: #e6a23c;
 }
 
 /* 通用 section */
