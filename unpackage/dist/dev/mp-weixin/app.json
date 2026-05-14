@@ -9,6 +9,7 @@
     "pages/history/index",
     "pages/settings/index",
     "pages/privacy/index",
+    "pages/service-agreement/index",
     "pages/projects/index",
     "pages/project-detail/index",
     "pages/author-detail/index",

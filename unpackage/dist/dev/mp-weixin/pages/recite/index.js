@@ -18,7 +18,7 @@ const _sfc_main = {
         lines: []
       },
       audioCtx: null,
-      vcn: "",
+      vcn: "x4_xiaolu",
       vcnOptions: [],
       audioLoading: false,
       showVcnPanel: false
@@ -31,7 +31,7 @@ const _sfc_main = {
     }
   },
   onLoad(options) {
-    this.fetchVoices();
+    this.voicesReady = this.fetchVoices();
     if (options && options.id) {
       this.fetchPoem(options.id);
     }
@@ -42,8 +42,8 @@ const _sfc_main = {
         const data = await utils_request.getTtsVoices();
         if (data && data.length) {
           this.vcnOptions = data.map((v) => ({ value: v.code, label: v.name, desc: v.description }));
-          if (!this.vcn && this.vcnOptions.length) {
-            const xiaolu = this.vcnOptions.find((v) => v.label === "小露");
+          if (this.vcnOptions.length) {
+            const xiaolu = this.vcnOptions.find((v) => v.label === "小露") || this.vcnOptions.find((v) => v.value === "x4_xiaolu");
             this.vcn = xiaolu ? xiaolu.value : this.vcnOptions[0].value;
           }
         }
@@ -71,6 +71,9 @@ const _sfc_main = {
     async playTts() {
       if (!this.poem.poemId)
         return;
+      if (this.voicesReady) {
+        await this.voicesReady;
+      }
       this.audioLoading = true;
       try {
         this.stopAudio();
@@ -121,13 +124,13 @@ const _sfc_main = {
           this.playing = false;
         });
         this.audioCtx.onError((err) => {
-          common_vendor.index.__f__("error", "at pages/recite/index.vue:216", "TTS播放失败", err);
+          common_vendor.index.__f__("error", "at pages/recite/index.vue:220", "TTS播放失败", err);
           this.playing = false;
           this.audioLoading = false;
           common_vendor.index.showToast({ title: "播放失败", icon: "none" });
         });
       } catch (e) {
-        common_vendor.index.__f__("error", "at pages/recite/index.vue:222", "TTS请求失败", e);
+        common_vendor.index.__f__("error", "at pages/recite/index.vue:226", "TTS请求失败", e);
         this.audioLoading = false;
       }
     },

@@ -79,7 +79,7 @@ const _sfc_main = {
   },
   watch: {
     currentTab(newTab) {
-      common_vendor.index.__f__("log", "at pages/index/index.vue:642", "[首页] 切换Tab:", newTab);
+      common_vendor.index.__f__("log", "at pages/index/index.vue:639", "[首页] 切换Tab:", newTab);
       if (newTab === "library" && this.poemsList.length === 0) {
         this.fetchPoems();
       }
@@ -98,7 +98,7 @@ const _sfc_main = {
     this.fetchRecommendDynasties();
     this.fetchAchievements();
     common_vendor.index.$on("onProjectPoemRemoved", (data) => {
-      common_vendor.index.__f__("log", "at pages/index/index.vue:662", "[首页] 收到合集诗词移除事件", data);
+      common_vendor.index.__f__("log", "at pages/index/index.vue:659", "[首页] 收到合集诗词移除事件", data);
       if (this.selectedProject && this.selectedProject.projectId === data.projectId) {
         this.selectedProject.poemCount = data.poemCount;
       }
@@ -138,7 +138,7 @@ const _sfc_main = {
     async fetchHotAuthors() {
       try {
         const data = await utils_request.getHotAuthors();
-        common_vendor.index.__f__("log", "at pages/index/index.vue:708", "[热门作者] 原始返回:", data);
+        common_vendor.index.__f__("log", "at pages/index/index.vue:705", "[热门作者] 原始返回:", data);
         const list = data.list || data || [];
         const avatarMap = {
           "李白": "/static/author_libai.jpg",
@@ -154,23 +154,23 @@ const _sfc_main = {
           this.authorTabs = ["全部", ...list.map((a) => a.name)];
         }
       } catch (err) {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:726", "[热门作者] 获取失败:", err);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:723", "[热门作者] 获取失败:", err);
       }
     },
     async fetchRecommendDynasties() {
       try {
         const data = await utils_request.getRecommendDynasties();
-        common_vendor.index.__f__("log", "at pages/index/index.vue:732", "[推荐朝代] 原始返回:", data);
+        common_vendor.index.__f__("log", "at pages/index/index.vue:729", "[推荐朝代] 原始返回:", data);
         const list = data.list || data || [];
         this.recommendDynasties = list;
       } catch (err) {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:736", "[推荐朝代] 获取失败:", err);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:733", "[推荐朝代] 获取失败:", err);
       }
     },
     async fetchDailyTask() {
       try {
         const data = await utils_request.getDailyTask();
-        common_vendor.index.__f__("log", "at pages/index/index.vue:742", "[每日课业] 原始返回:", JSON.stringify(data));
+        common_vendor.index.__f__("log", "at pages/index/index.vue:739", "[每日课业] 原始返回:", JSON.stringify(data));
         const poems = data.poems || data.list || data || [];
         let learnedIds = /* @__PURE__ */ new Set();
         try {
@@ -181,34 +181,34 @@ const _sfc_main = {
               learnedIds.add(item.poemId);
           });
         } catch (e) {
-          common_vendor.index.__f__("error", "at pages/index/index.vue:753", "[每日课业] 获取研习历史失败:", e);
+          common_vendor.index.__f__("error", "at pages/index/index.vue:750", "[每日课业] 获取研习历史失败:", e);
         }
         this.dailyTaskPoems = poems.map((p) => ({
           ...p,
           isLearned: learnedIds.has(p.poemId)
         }));
-        common_vendor.index.__f__("log", "at pages/index/index.vue:759", "[每日课业] 处理后:", JSON.stringify(this.dailyTaskPoems.map((p) => ({ poemId: p.poemId, title: p.title, isLearned: p.isLearned }))));
+        common_vendor.index.__f__("log", "at pages/index/index.vue:756", "[每日课业] 处理后:", JSON.stringify(this.dailyTaskPoems.map((p) => ({ poemId: p.poemId, title: p.title, isLearned: p.isLearned }))));
       } catch (err) {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:761", "[每日课业] 获取失败:", err);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:758", "[每日课业] 获取失败:", err);
       }
     },
     async fetchStudyProgress() {
       try {
         const data = await utils_request.getStudyProgress();
-        common_vendor.index.__f__("log", "at pages/index/index.vue:767", "[研习进度] 原始返回:", data);
+        common_vendor.index.__f__("log", "at pages/index/index.vue:764", "[研习进度] 原始返回:", data);
         this.studyProgress = {
           studyDays: data.studyDays || 0,
           learnedCount: data.learnedCount || 0,
           todayLearnedCount: data.todayLearnedCount || 0
         };
       } catch (err) {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:774", "[研习进度] 获取失败:", err);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:771", "[研习进度] 获取失败:", err);
       }
     },
     async fetchAchievements() {
       try {
         const data = await utils_request.getAchievements();
-        common_vendor.index.__f__("log", "at pages/index/index.vue:780", "[成就] 原始返回:", JSON.stringify(data));
+        common_vendor.index.__f__("log", "at pages/index/index.vue:777", "[成就] 原始返回:", JSON.stringify(data));
         const list = (data.achievements || data.list || []).map((item) => {
           const unlocked = item.isUnlocked === true || item.isUnlocked === 1 || item.unlocked === true || item.unlocked === 1 || item.status === "UNLOCKED";
           return {
@@ -221,9 +221,9 @@ const _sfc_main = {
           unlockedCount: data.unlockedCount || list.filter((a) => a.isUnlocked).length,
           list
         };
-        common_vendor.index.__f__("log", "at pages/index/index.vue:794", "[成就] 处理后:", JSON.stringify(this.achievements));
+        common_vendor.index.__f__("log", "at pages/index/index.vue:791", "[成就] 处理后:", JSON.stringify(this.achievements));
       } catch (err) {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:796", "[成就] 获取失败:", err);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:793", "[成就] 获取失败:", err);
       }
     },
     showAchievementInfo(item) {
@@ -239,20 +239,20 @@ const _sfc_main = {
         this.mineStats.favCount = favRes.total || 0;
         this.mineStats.studyDays = progressRes.studyDays || 0;
       } catch (err) {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:812", "[我的统计] 获取失败:", err);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:809", "[我的统计] 获取失败:", err);
       }
     },
     async fetchUserProfile() {
       try {
         const data = await utils_request.getUserProfile();
-        common_vendor.index.__f__("log", "at pages/index/index.vue:818", "[获取用户信息] 成功:", data);
+        common_vendor.index.__f__("log", "at pages/index/index.vue:815", "[获取用户信息] 成功:", data);
         this.userInfo = {
           nickname: data.nickname,
           avatarUrl: data.avatarUrl
         };
         common_vendor.index.setStorageSync("userInfo", this.userInfo);
       } catch (err) {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:826", "[获取用户信息] 失败:", err);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:823", "[获取用户信息] 失败:", err);
         const localUserInfo = common_vendor.index.getStorageSync("userInfo");
         if (localUserInfo) {
           this.userInfo = localUserInfo;
@@ -262,30 +262,30 @@ const _sfc_main = {
     async fetchDailyPoem() {
       try {
         const data = await utils_request.getDailyPoem();
-        common_vendor.index.__f__("log", "at pages/index/index.vue:837", "[获取每日推荐] 成功:", data);
+        common_vendor.index.__f__("log", "at pages/index/index.vue:834", "[获取每日推荐] 成功:", data);
         this.dailyPoem = data;
       } catch (err) {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:840", "[获取每日推荐] 失败:", err);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:837", "[获取每日推荐] 失败:", err);
       }
     },
     async fetchCurrentProject() {
-      common_vendor.index.__f__("log", "at pages/index/index.vue:844", "[研习Tab] 开始获取当前选中项目...");
+      common_vendor.index.__f__("log", "at pages/index/index.vue:841", "[研习Tab] 开始获取当前选中项目...");
       try {
         const current = await utils_request.getCurrentProject();
-        common_vendor.index.__f__("log", "at pages/index/index.vue:847", "[研习Tab] API返回数据:", JSON.stringify(current));
+        common_vendor.index.__f__("log", "at pages/index/index.vue:844", "[研习Tab] API返回数据:", JSON.stringify(current));
         if (current && current.projectId) {
           this.selectedProject = current;
           this.selectedProjectId = current.projectId;
           this.selectedProjectName = current.name;
-          common_vendor.index.__f__("log", "at pages/index/index.vue:853", "[研习Tab] 设置选中合集:", current.name, "poemCount:", current.poemCount);
+          common_vendor.index.__f__("log", "at pages/index/index.vue:850", "[研习Tab] 设置选中合集:", current.name, "poemCount:", current.poemCount);
         } else {
           this.selectedProject = null;
           this.selectedProjectId = null;
           this.selectedProjectName = "";
-          common_vendor.index.__f__("log", "at pages/index/index.vue:858", "[研习Tab] 暂无选中的合集");
+          common_vendor.index.__f__("log", "at pages/index/index.vue:855", "[研习Tab] 暂无选中的合集");
         }
       } catch (err) {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:861", "[研习Tab] 获取当前合集失败:", err);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:858", "[研习Tab] 获取当前合集失败:", err);
         this.selectedProject = null;
         this.selectedProjectId = null;
         this.selectedProjectName = "";
@@ -309,12 +309,12 @@ const _sfc_main = {
         if (this.activeLibTab === "作者" && this.activeAuthor !== "全部") {
           params.q = this.activeAuthor;
         }
-        common_vendor.index.__f__("log", "at pages/index/index.vue:885", "[获取诗词列表] 参数:", params);
+        common_vendor.index.__f__("log", "at pages/index/index.vue:882", "[获取诗词列表] 参数:", params);
         const data = await utils_request.getPoems(params);
-        common_vendor.index.__f__("log", "at pages/index/index.vue:887", "[获取诗词列表] 成功:", data);
+        common_vendor.index.__f__("log", "at pages/index/index.vue:884", "[获取诗词列表] 成功:", data);
         this.poemsList = data.list || [];
       } catch (err) {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:890", "[获取诗词列表] 失败:", err);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:887", "[获取诗词列表] 失败:", err);
       } finally {
         this.poemsLoading = false;
       }
@@ -392,13 +392,13 @@ const _sfc_main = {
       const poemPromise = utils_request.searchPoems({ q: this.searchKeyword, page: 1, pageSize: 50 }).then((data) => {
         this.searchResults = data.list || [];
       }).catch((err) => {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:968", "[搜索诗词] 失败:", err);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:965", "[搜索诗词] 失败:", err);
       });
       const authorPromise = utils_request.getAuthors({ q: this.searchKeyword }).then((data) => {
-        common_vendor.index.__f__("log", "at pages/index/index.vue:971", "[搜索作者] 成功:", data);
+        common_vendor.index.__f__("log", "at pages/index/index.vue:968", "[搜索作者] 成功:", data);
         this.searchAuthors = data.list || data || [];
       }).catch((err) => {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:974", "[搜索作者] 失败:", err);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:971", "[搜索作者] 失败:", err);
       });
       await Promise.all([poemPromise, authorPromise]);
     },
@@ -474,7 +474,7 @@ const _sfc_main = {
         common_vendor.index.$emit("onProjectUpdated");
       } catch (err) {
         common_vendor.index.hideLoading();
-        common_vendor.index.__f__("error", "at pages/index/index.vue:1048", "[批量添加] 失败:", err);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:1045", "[批量添加] 失败:", err);
         common_vendor.index.showToast({ title: "添加失败", icon: "none" });
       }
     },
@@ -493,7 +493,7 @@ const _sfc_main = {
         common_vendor.index.showToast({ title: "请先选择诗词", icon: "none" });
         return;
       }
-      common_vendor.index.__f__("log", "at pages/index/index.vue:1068", "[批量添加] 合集名称:", this.collectionName, "诗词ID:", this.selectedPoems);
+      common_vendor.index.__f__("log", "at pages/index/index.vue:1065", "[批量添加] 合集名称:", this.collectionName, "诗词ID:", this.selectedPoems);
       common_vendor.index.showToast({
         title: `已添加到"${this.collectionName}"`,
         icon: "success"
@@ -515,7 +515,7 @@ const _sfc_main = {
       this.projectsLoading = true;
       try {
         const data = await utils_request.getProjects();
-        common_vendor.index.__f__("log", "at pages/index/index.vue:1092", "[首页] getProjects 原始返回:", JSON.stringify(data));
+        common_vendor.index.__f__("log", "at pages/index/index.vue:1089", "[首页] getProjects 原始返回:", JSON.stringify(data));
         if (Array.isArray(data)) {
           this.projects = data;
         } else if (data && Array.isArray(data.list)) {
@@ -534,9 +534,9 @@ const _sfc_main = {
             this.projects = [data];
           }
         }
-        common_vendor.index.__f__("log", "at pages/index/index.vue:1111", "[首页] 合集列表:", this.projects, "数量:", this.projects.length);
+        common_vendor.index.__f__("log", "at pages/index/index.vue:1108", "[首页] 合集列表:", this.projects, "数量:", this.projects.length);
       } catch (err) {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:1113", "[首页] 获取合集失败:", err);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:1110", "[首页] 获取合集失败:", err);
         this.projects = [];
       } finally {
         this.projectsLoading = false;
@@ -561,7 +561,7 @@ const _sfc_main = {
       try {
         common_vendor.index.showLoading({ title: "添加中..." });
         await utils_request.addPoemToProject(this.selectedProjectId, this.selectedPoems);
-        common_vendor.index.__f__("log", "at pages/index/index.vue:1138", "[首页] 添加诗词到合集成功");
+        common_vendor.index.__f__("log", "at pages/index/index.vue:1135", "[首页] 添加诗词到合集成功");
         common_vendor.index.hideLoading();
         common_vendor.index.showToast({ title: "添加成功", icon: "success" });
         this.showCollectionDialog = false;
@@ -571,7 +571,7 @@ const _sfc_main = {
         common_vendor.index.$emit("onProjectUpdated");
       } catch (err) {
         common_vendor.index.hideLoading();
-        common_vendor.index.__f__("error", "at pages/index/index.vue:1149", "[首页] 添加失败:", err);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:1146", "[首页] 添加失败:", err);
         common_vendor.index.showToast({ title: "添加失败", icon: "none" });
       }
     },
@@ -584,11 +584,11 @@ const _sfc_main = {
       try {
         common_vendor.index.showLoading({ title: "创建中..." });
         const project = await utils_request.createProject(this.collectionName.trim());
-        common_vendor.index.__f__("log", "at pages/index/index.vue:1162", "[首页] 创建合集成功:", project);
+        common_vendor.index.__f__("log", "at pages/index/index.vue:1159", "[首页] 创建合集成功:", project);
         common_vendor.index.hideLoading();
         const projectId = project.projectId || project.id || project;
         await utils_request.addPoemToProject(projectId, this.selectedPoems);
-        common_vendor.index.__f__("log", "at pages/index/index.vue:1167", "[首页] 添加诗词到新合集成功");
+        common_vendor.index.__f__("log", "at pages/index/index.vue:1164", "[首页] 添加诗词到新合集成功");
         common_vendor.index.showToast({ title: "创建并添加成功", icon: "success" });
         this.showCollectionDialog = false;
         this.batchMode = false;
@@ -597,7 +597,7 @@ const _sfc_main = {
         common_vendor.index.$emit("onProjectUpdated");
       } catch (err) {
         common_vendor.index.hideLoading();
-        common_vendor.index.__f__("error", "at pages/index/index.vue:1177", "[首页] 创建/添加失败:", err);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:1174", "[首页] 创建/添加失败:", err);
         common_vendor.index.showToast({ title: "操作失败", icon: "none" });
       }
     },

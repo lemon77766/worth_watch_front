@@ -27,6 +27,7 @@ const _sfc_main = {
       otherItems: [
         { label: "清除缓存", icon: "trash", iconBg: "#f0f0f0", iconColor: "#888", value: "12.3MB" },
         { label: "关于我们", icon: "info", iconBg: "#f0f0f0", iconColor: "#888", value: "v1.0.0" },
+        { label: "服务协议", icon: "paperplane", iconBg: "#f0f0f0", iconColor: "#888", value: "" },
         { label: "隐私协议", icon: "locked", iconBg: "#f0f0f0", iconColor: "#888", value: "" }
       ]
     };
@@ -46,7 +47,7 @@ const _sfc_main = {
     // 微信选择头像回调
     onChooseAvatar(e) {
       const avatarUrl = e.detail.avatarUrl;
-      common_vendor.index.__f__("log", "at pages/settings/index.vue:163", "[用户信息] 选择头像:", avatarUrl);
+      common_vendor.index.__f__("log", "at pages/settings/index.vue:164", "[用户信息] 选择头像:", avatarUrl);
       this.userInfo.avatarUrl = avatarUrl;
       this.saveToServer();
     },
@@ -71,13 +72,13 @@ const _sfc_main = {
           nickname: data.nickname,
           avatarUrl: data.avatarUrl
         });
-        common_vendor.index.__f__("log", "at pages/settings/index.vue:188", "[用户信息] 保存成功:", data);
+        common_vendor.index.__f__("log", "at pages/settings/index.vue:189", "[用户信息] 保存成功:", data);
         setTimeout(() => {
           this.saveStatus = "";
         }, 2e3);
       }).catch((err) => {
         this.saveStatus = "保存失败";
-        common_vendor.index.__f__("error", "at pages/settings/index.vue:192", "[用户信息] 保存失败:", err);
+        common_vendor.index.__f__("error", "at pages/settings/index.vue:193", "[用户信息] 保存失败:", err);
         setTimeout(() => {
           this.saveStatus = "";
         }, 2e3);
@@ -99,6 +100,10 @@ const _sfc_main = {
       }
       if (item.label === "隐私协议") {
         common_vendor.index.navigateTo({ url: "/pages/privacy/index" });
+        return;
+      }
+      if (item.label === "服务协议") {
+        common_vendor.index.navigateTo({ url: "/pages/service-agreement/index" });
         return;
       }
       common_vendor.index.showToast({ title: item.label, icon: "none" });

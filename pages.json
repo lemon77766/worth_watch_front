@@ -68,6 +68,13 @@
 			}
 		},
 		{
+			"path": "pages/service-agreement/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarBackgroundColor": "#f8f5ee"
+			}
+		},
+		{
 			"path": "pages/projects/index",
 			"style": {
 				"navigationStyle": "custom",

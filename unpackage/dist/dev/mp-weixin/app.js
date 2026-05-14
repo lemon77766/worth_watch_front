@@ -12,6 +12,7 @@ if (!Math) {
   "./pages/history/index.js";
   "./pages/settings/index.js";
   "./pages/privacy/index.js";
+  "./pages/service-agreement/index.js";
   "./pages/projects/index.js";
   "./pages/project-detail/index.js";
   "./pages/author-detail/index.js";

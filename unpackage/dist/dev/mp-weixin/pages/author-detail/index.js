@@ -16,18 +16,19 @@ const _sfc_main = {
   onLoad(options) {
     if (options.id) {
       this.authorId = options.id;
-      this.fetchAuthorDetail();
-      this.fetchPoems();
+      this.fetchAuthorDetail().then(() => {
+        this.fetchPoems();
+      });
     }
   },
   methods: {
     async fetchAuthorDetail() {
       try {
         const data = await utils_request.getAuthorDetail(this.authorId);
-        common_vendor.index.__f__("log", "at pages/author-detail/index.vue:98", "[作者详情] 成功:", data);
+        common_vendor.index.__f__("log", "at pages/author-detail/index.vue:99", "[作者详情] 成功:", data);
         this.author = data || {};
       } catch (err) {
-        common_vendor.index.__f__("error", "at pages/author-detail/index.vue:101", "[作者详情] 失败:", err);
+        common_vendor.index.__f__("error", "at pages/author-detail/index.vue:102", "[作者详情] 失败:", err);
         common_vendor.index.showToast({ title: "获取作者信息失败", icon: "none" });
       }
     },
@@ -51,7 +52,7 @@ const _sfc_main = {
           this.noMore = true;
         }
       } catch (err) {
-        common_vendor.index.__f__("error", "at pages/author-detail/index.vue:124", "[作者诗词] 获取失败:", err);
+        common_vendor.index.__f__("error", "at pages/author-detail/index.vue:125", "[作者诗词] 获取失败:", err);
       } finally {
         this.poemsLoading = false;
       }

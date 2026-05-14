@@ -79,9 +79,6 @@
             <text class="tag-red-text">今日推荐</text>
           </view>
 
-          <view class="banner-watermark">
-            <text class="banner-watermark-text">LIVING SCROLL</text>
-          </view>
           <view class="banner-body">
             <text class="banner-title">{{ shortTitle(dailyPoem.title) }}</text>
             <text class="banner-author">{{ dailyPoem.author }}·{{ dailyPoem.dynasty }}</text>

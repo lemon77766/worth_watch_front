@@ -87,8 +87,9 @@ export default {
   onLoad(options) {
     if (options.id) {
       this.authorId = options.id
-      this.fetchAuthorDetail()
-      this.fetchPoems()
+      this.fetchAuthorDetail().then(() => {
+        this.fetchPoems()
+      })
     }
   },
   methods: {

@@ -106,7 +106,7 @@ export default {
         lines: []
       },
       audioCtx: null,
-      vcn: '',
+      vcn: 'x4_xiaolu',
       vcnOptions: [],
       audioLoading: false,
       showVcnPanel: false
@@ -119,7 +119,7 @@ export default {
     }
   },
   onLoad(options) {
-    this.fetchVoices()
+    this.voicesReady = this.fetchVoices()
     if (options && options.id) {
       this.fetchPoem(options.id)
     }
@@ -130,8 +130,8 @@ export default {
         const data = await getTtsVoices()
         if (data && data.length) {
           this.vcnOptions = data.map(v => ({ value: v.code, label: v.name, desc: v.description }))
-          if (!this.vcn && this.vcnOptions.length) {
-            const xiaolu = this.vcnOptions.find(v => v.label === '小露')
+          if (this.vcnOptions.length) {
+            const xiaolu = this.vcnOptions.find(v => v.label === '小露') || this.vcnOptions.find(v => v.value === 'x4_xiaolu')
             this.vcn = xiaolu ? xiaolu.value : this.vcnOptions[0].value
           }
         }
@@ -158,6 +158,10 @@ export default {
     },
     async playTts() {
       if (!this.poem.poemId) return
+      // 等待音色列表加载完成，确保默认音色已设置
+      if (this.voicesReady) {
+        await this.voicesReady
+      }
       this.audioLoading = true
       try {
         this.stopAudio()

@@ -148,6 +148,13 @@ const _sfc_main = {
     skipProfile() {
       common_vendor.index.removeStorageSync("isNewUser");
       common_vendor.index.reLaunch({ url: "/pages/index/index" });
+    },
+    goAgreement(type) {
+      if (type === "service") {
+        common_vendor.index.navigateTo({ url: "/pages/service-agreement/index" });
+      } else {
+        common_vendor.index.navigateTo({ url: "/pages/privacy/index" });
+      }
     }
   }
 };
@@ -175,24 +182,26 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
   } : {}, {
     g: $data.agreed ? 1 : "",
     h: common_vendor.o(($event) => $data.agreed = !$data.agreed),
-    i: $data.showProfileModal
+    i: common_vendor.o(($event) => $options.goAgreement("service")),
+    j: common_vendor.o(($event) => $options.goAgreement("privacy")),
+    k: $data.showProfileModal
   }, $data.showProfileModal ? {
-    j: $data.tempAvatar || "/static/logo.png",
-    k: common_vendor.p({
+    l: $data.tempAvatar || "/static/logo.png",
+    m: common_vendor.p({
       type: "camera",
       size: "16",
       color: "#fff"
     }),
-    l: common_vendor.o((...args) => $options.onChooseAvatar && $options.onChooseAvatar(...args)),
-    m: $data.tempNickname,
-    n: common_vendor.o((...args) => $options.onNickNameInput && $options.onNickNameInput(...args)),
-    o: common_vendor.o((...args) => $options.skipProfile && $options.skipProfile(...args)),
-    p: common_vendor.t($data.submitting ? "提交中..." : "完成"),
-    q: $data.submitting ? 1 : "",
-    r: common_vendor.o((...args) => $options.submitProfile && $options.submitProfile(...args)),
-    s: common_vendor.o(() => {
+    n: common_vendor.o((...args) => $options.onChooseAvatar && $options.onChooseAvatar(...args)),
+    o: $data.tempNickname,
+    p: common_vendor.o((...args) => $options.onNickNameInput && $options.onNickNameInput(...args)),
+    q: common_vendor.o((...args) => $options.skipProfile && $options.skipProfile(...args)),
+    r: common_vendor.t($data.submitting ? "提交中..." : "完成"),
+    s: $data.submitting ? 1 : "",
+    t: common_vendor.o((...args) => $options.submitProfile && $options.submitProfile(...args)),
+    v: common_vendor.o(() => {
     }),
-    t: common_vendor.o(($event) => $data.showProfileModal = false)
+    w: common_vendor.o(($event) => $data.showProfileModal = false)
   } : {});
 }
 const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render]]);

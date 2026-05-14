@@ -1,4 +1,4 @@
-const BASE_URL = 'http://192.168.43.218:8080'
+const BASE_URL = 'http://shicihui.site'
 export { BASE_URL }
 
 const request = (options) => {
@@ -107,7 +107,7 @@ export const getFeaturedMilestones = () => get('/api/milestones/featured')
 export const getRecommendDynasties = () => get('/api/poems/dynasties/recommend')
 export const getDailyTask = () => get('/api/poems/daily-task')
 export const submitStudyRecord = (data) => post('/api/study/record', data)
-export const getPoemTts = (id, vcn = 'x4_xiaoyan') => get(`/api/poems/${id}/tts`, { vcn })
+export const getPoemTts = (id, vcn = 'x4_xiaolu') => get(`/api/poems/${id}/tts`, { vcn })
 export const getTtsVoices = () => get('/api/poems/tts/voices')
 export const getAuthors = (params) => get('/api/authors', params)
 export const getRecommendPoems = (id) => get(`/api/poems/${id}/recommend`)

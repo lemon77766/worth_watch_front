@@ -140,6 +140,7 @@ export default {
       otherItems: [
         { label: '清除缓存', icon: 'trash', iconBg: '#f0f0f0', iconColor: '#888', value: '12.3MB' },
         { label: '关于我们', icon: 'info', iconBg: '#f0f0f0', iconColor: '#888', value: 'v1.0.0' },
+        { label: '服务协议', icon: 'paperplane', iconBg: '#f0f0f0', iconColor: '#888', value: '' },
         { label: '隐私协议', icon: 'locked', iconBg: '#f0f0f0', iconColor: '#888', value: '' }
       ]
     }
@@ -209,6 +210,10 @@ export default {
       }
       if (item.label === '隐私协议') {
         uni.navigateTo({ url: '/pages/privacy/index' })
+        return
+      }
+      if (item.label === '服务协议') {
+        uni.navigateTo({ url: '/pages/service-agreement/index' })
         return
       }
       uni.showToast({ title: item.label, icon: 'none' })

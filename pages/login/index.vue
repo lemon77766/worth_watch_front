@@ -43,9 +43,9 @@
         </view>
         <view class="agreement-text-wrap">
           <text class="agree-text">我已阅读并同意 </text>
-          <text class="agree-link">服务协议</text>
+          <text class="agree-link" @click.stop="goAgreement('service')">服务协议</text>
           <text class="agree-text"> 与 </text>
-          <text class="agree-link">隐私政策</text>
+          <text class="agree-link" @click.stop="goAgreement('privacy')">隐私政策</text>
           <text class="agree-text">。未注册手机号登录后将自动注册。</text>
         </view>
       </view>
@@ -265,6 +265,13 @@ export default {
     skipProfile() {
       uni.removeStorageSync('isNewUser')
       uni.reLaunch({ url: '/pages/index/index' })
+    },
+    goAgreement(type) {
+      if (type === 'service') {
+        uni.navigateTo({ url: '/pages/service-agreement/index' })
+      } else {
+        uni.navigateTo({ url: '/pages/privacy/index' })
+      }
     }
   }
 }
