@@ -30,15 +30,9 @@
           <!-- 该日记录 -->
           <view class="day-items">
             <view class="history-item" v-for="item in group.items" :key="item.poemId" @click="goDetail(item)">
-              <view class="item-icon-wrap" :style="{ background: item.iconBg }">
-                <uni-icons type="bookmarks" size="20" :color="item.iconColor" />
-              </view>
               <view class="item-info">
                 <view class="item-title-row">
                   <text class="item-title">{{ item.title }}</text>
-                  <view class="item-tag" :style="{ background: item.tagBg }">
-                    <text class="item-tag-text" :style="{ color: item.tagColor }">{{ item.mode }}</text>
-                  </view>
                 </view>
                 <text class="item-sub">{{ item.author }} · {{ item.dynasty }}</text>
               </view>

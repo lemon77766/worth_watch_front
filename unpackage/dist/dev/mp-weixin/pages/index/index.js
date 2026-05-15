@@ -24,6 +24,7 @@ const _sfc_main = {
       searched: false,
       authors: [],
       recommendDynasties: [],
+      hotPoems: [],
       libTabs: ["朝代", "体裁", "作者"],
       dynastyTabs: ["全部", "唐代", "宋代", "先秦", "近现代", "魏晋", "五代", "元代", "两汉", "南北朝", "清代", "明代", "金朝", "隋代"],
       categoryTabs: ["全部", "诗", "词", "曲", "文"],
@@ -79,7 +80,7 @@ const _sfc_main = {
   },
   watch: {
     currentTab(newTab) {
-      common_vendor.index.__f__("log", "at pages/index/index.vue:639", "[首页] 切换Tab:", newTab);
+      common_vendor.index.__f__("log", "at pages/index/index.vue:664", "[首页] 切换Tab:", newTab);
       if (newTab === "library" && this.poemsList.length === 0) {
         this.fetchPoems();
       }
@@ -96,9 +97,10 @@ const _sfc_main = {
     this.fetchDailyPoem();
     this.fetchHotAuthors();
     this.fetchRecommendDynasties();
+    this.fetchHotPoems();
     this.fetchAchievements();
     common_vendor.index.$on("onProjectPoemRemoved", (data) => {
-      common_vendor.index.__f__("log", "at pages/index/index.vue:659", "[首页] 收到合集诗词移除事件", data);
+      common_vendor.index.__f__("log", "at pages/index/index.vue:685", "[首页] 收到合集诗词移除事件", data);
       if (this.selectedProject && this.selectedProject.projectId === data.projectId) {
         this.selectedProject.poemCount = data.poemCount;
       }
@@ -138,7 +140,7 @@ const _sfc_main = {
     async fetchHotAuthors() {
       try {
         const data = await utils_request.getHotAuthors();
-        common_vendor.index.__f__("log", "at pages/index/index.vue:705", "[热门作者] 原始返回:", data);
+        common_vendor.index.__f__("log", "at pages/index/index.vue:731", "[热门作者] 原始返回:", data);
         const list = data.list || data || [];
         const avatarMap = {
           "李白": "/static/author_libai.jpg",
@@ -154,23 +156,32 @@ const _sfc_main = {
           this.authorTabs = ["全部", ...list.map((a) => a.name)];
         }
       } catch (err) {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:723", "[热门作者] 获取失败:", err);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:749", "[热门作者] 获取失败:", err);
       }
     },
     async fetchRecommendDynasties() {
       try {
         const data = await utils_request.getRecommendDynasties();
-        common_vendor.index.__f__("log", "at pages/index/index.vue:729", "[推荐朝代] 原始返回:", data);
+        common_vendor.index.__f__("log", "at pages/index/index.vue:755", "[推荐朝代] 原始返回:", data);
         const list = data.list || data || [];
         this.recommendDynasties = list;
       } catch (err) {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:733", "[推荐朝代] 获取失败:", err);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:759", "[推荐朝代] 获取失败:", err);
+      }
+    },
+    async fetchHotPoems() {
+      try {
+        const data = await utils_request.getHotPoems();
+        common_vendor.index.__f__("log", "at pages/index/index.vue:765", "[热门诗词] 原始返回:", data);
+        this.hotPoems = data.list || data || [];
+      } catch (err) {
+        common_vendor.index.__f__("error", "at pages/index/index.vue:768", "[热门诗词] 获取失败:", err);
       }
     },
     async fetchDailyTask() {
       try {
         const data = await utils_request.getDailyTask();
-        common_vendor.index.__f__("log", "at pages/index/index.vue:739", "[每日课业] 原始返回:", JSON.stringify(data));
+        common_vendor.index.__f__("log", "at pages/index/index.vue:774", "[每日课业] 原始返回:", JSON.stringify(data));
         const poems = data.poems || data.list || data || [];
         let learnedIds = /* @__PURE__ */ new Set();
         try {
@@ -181,34 +192,34 @@ const _sfc_main = {
               learnedIds.add(item.poemId);
           });
         } catch (e) {
-          common_vendor.index.__f__("error", "at pages/index/index.vue:750", "[每日课业] 获取研习历史失败:", e);
+          common_vendor.index.__f__("error", "at pages/index/index.vue:785", "[每日课业] 获取研习历史失败:", e);
         }
         this.dailyTaskPoems = poems.map((p) => ({
           ...p,
           isLearned: learnedIds.has(p.poemId)
         }));
-        common_vendor.index.__f__("log", "at pages/index/index.vue:756", "[每日课业] 处理后:", JSON.stringify(this.dailyTaskPoems.map((p) => ({ poemId: p.poemId, title: p.title, isLearned: p.isLearned }))));
+        common_vendor.index.__f__("log", "at pages/index/index.vue:791", "[每日课业] 处理后:", JSON.stringify(this.dailyTaskPoems.map((p) => ({ poemId: p.poemId, title: p.title, isLearned: p.isLearned }))));
       } catch (err) {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:758", "[每日课业] 获取失败:", err);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:793", "[每日课业] 获取失败:", err);
       }
     },
     async fetchStudyProgress() {
       try {
         const data = await utils_request.getStudyProgress();
-        common_vendor.index.__f__("log", "at pages/index/index.vue:764", "[研习进度] 原始返回:", data);
+        common_vendor.index.__f__("log", "at pages/index/index.vue:799", "[研习进度] 原始返回:", data);
         this.studyProgress = {
           studyDays: data.studyDays || 0,
           learnedCount: data.learnedCount || 0,
           todayLearnedCount: data.todayLearnedCount || 0
         };
       } catch (err) {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:771", "[研习进度] 获取失败:", err);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:806", "[研习进度] 获取失败:", err);
       }
     },
     async fetchAchievements() {
       try {
         const data = await utils_request.getAchievements();
-        common_vendor.index.__f__("log", "at pages/index/index.vue:777", "[成就] 原始返回:", JSON.stringify(data));
+        common_vendor.index.__f__("log", "at pages/index/index.vue:812", "[成就] 原始返回:", JSON.stringify(data));
         const list = (data.achievements || data.list || []).map((item) => {
           const unlocked = item.isUnlocked === true || item.isUnlocked === 1 || item.unlocked === true || item.unlocked === 1 || item.status === "UNLOCKED";
           return {
@@ -221,9 +232,9 @@ const _sfc_main = {
           unlockedCount: data.unlockedCount || list.filter((a) => a.isUnlocked).length,
           list
         };
-        common_vendor.index.__f__("log", "at pages/index/index.vue:791", "[成就] 处理后:", JSON.stringify(this.achievements));
+        common_vendor.index.__f__("log", "at pages/index/index.vue:826", "[成就] 处理后:", JSON.stringify(this.achievements));
       } catch (err) {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:793", "[成就] 获取失败:", err);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:828", "[成就] 获取失败:", err);
       }
     },
     showAchievementInfo(item) {
@@ -239,20 +250,20 @@ const _sfc_main = {
         this.mineStats.favCount = favRes.total || 0;
         this.mineStats.studyDays = progressRes.studyDays || 0;
       } catch (err) {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:809", "[我的统计] 获取失败:", err);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:844", "[我的统计] 获取失败:", err);
       }
     },
     async fetchUserProfile() {
       try {
         const data = await utils_request.getUserProfile();
-        common_vendor.index.__f__("log", "at pages/index/index.vue:815", "[获取用户信息] 成功:", data);
+        common_vendor.index.__f__("log", "at pages/index/index.vue:850", "[获取用户信息] 成功:", data);
         this.userInfo = {
           nickname: data.nickname,
           avatarUrl: data.avatarUrl
         };
         common_vendor.index.setStorageSync("userInfo", this.userInfo);
       } catch (err) {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:823", "[获取用户信息] 失败:", err);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:858", "[获取用户信息] 失败:", err);
         const localUserInfo = common_vendor.index.getStorageSync("userInfo");
         if (localUserInfo) {
           this.userInfo = localUserInfo;
@@ -262,30 +273,30 @@ const _sfc_main = {
     async fetchDailyPoem() {
       try {
         const data = await utils_request.getDailyPoem();
-        common_vendor.index.__f__("log", "at pages/index/index.vue:834", "[获取每日推荐] 成功:", data);
+        common_vendor.index.__f__("log", "at pages/index/index.vue:869", "[获取每日推荐] 成功:", data);
         this.dailyPoem = data;
       } catch (err) {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:837", "[获取每日推荐] 失败:", err);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:872", "[获取每日推荐] 失败:", err);
       }
     },
     async fetchCurrentProject() {
-      common_vendor.index.__f__("log", "at pages/index/index.vue:841", "[研习Tab] 开始获取当前选中项目...");
+      common_vendor.index.__f__("log", "at pages/index/index.vue:876", "[研习Tab] 开始获取当前选中项目...");
       try {
         const current = await utils_request.getCurrentProject();
-        common_vendor.index.__f__("log", "at pages/index/index.vue:844", "[研习Tab] API返回数据:", JSON.stringify(current));
+        common_vendor.index.__f__("log", "at pages/index/index.vue:879", "[研习Tab] API返回数据:", JSON.stringify(current));
         if (current && current.projectId) {
           this.selectedProject = current;
           this.selectedProjectId = current.projectId;
           this.selectedProjectName = current.name;
-          common_vendor.index.__f__("log", "at pages/index/index.vue:850", "[研习Tab] 设置选中合集:", current.name, "poemCount:", current.poemCount);
+          common_vendor.index.__f__("log", "at pages/index/index.vue:885", "[研习Tab] 设置选中合集:", current.name, "poemCount:", current.poemCount);
         } else {
           this.selectedProject = null;
           this.selectedProjectId = null;
           this.selectedProjectName = "";
-          common_vendor.index.__f__("log", "at pages/index/index.vue:855", "[研习Tab] 暂无选中的合集");
+          common_vendor.index.__f__("log", "at pages/index/index.vue:890", "[研习Tab] 暂无选中的合集");
         }
       } catch (err) {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:858", "[研习Tab] 获取当前合集失败:", err);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:893", "[研习Tab] 获取当前合集失败:", err);
         this.selectedProject = null;
         this.selectedProjectId = null;
         this.selectedProjectName = "";
@@ -309,12 +320,12 @@ const _sfc_main = {
         if (this.activeLibTab === "作者" && this.activeAuthor !== "全部") {
           params.q = this.activeAuthor;
         }
-        common_vendor.index.__f__("log", "at pages/index/index.vue:882", "[获取诗词列表] 参数:", params);
+        common_vendor.index.__f__("log", "at pages/index/index.vue:917", "[获取诗词列表] 参数:", params);
         const data = await utils_request.getPoems(params);
-        common_vendor.index.__f__("log", "at pages/index/index.vue:884", "[获取诗词列表] 成功:", data);
+        common_vendor.index.__f__("log", "at pages/index/index.vue:919", "[获取诗词列表] 成功:", data);
         this.poemsList = data.list || [];
       } catch (err) {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:887", "[获取诗词列表] 失败:", err);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:922", "[获取诗词列表] 失败:", err);
       } finally {
         this.poemsLoading = false;
       }
@@ -392,13 +403,13 @@ const _sfc_main = {
       const poemPromise = utils_request.searchPoems({ q: this.searchKeyword, page: 1, pageSize: 50 }).then((data) => {
         this.searchResults = data.list || [];
       }).catch((err) => {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:965", "[搜索诗词] 失败:", err);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:1000", "[搜索诗词] 失败:", err);
       });
       const authorPromise = utils_request.getAuthors({ q: this.searchKeyword }).then((data) => {
-        common_vendor.index.__f__("log", "at pages/index/index.vue:968", "[搜索作者] 成功:", data);
+        common_vendor.index.__f__("log", "at pages/index/index.vue:1003", "[搜索作者] 成功:", data);
         this.searchAuthors = data.list || data || [];
       }).catch((err) => {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:971", "[搜索作者] 失败:", err);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:1006", "[搜索作者] 失败:", err);
       });
       await Promise.all([poemPromise, authorPromise]);
     },
@@ -474,7 +485,7 @@ const _sfc_main = {
         common_vendor.index.$emit("onProjectUpdated");
       } catch (err) {
         common_vendor.index.hideLoading();
-        common_vendor.index.__f__("error", "at pages/index/index.vue:1045", "[批量添加] 失败:", err);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:1080", "[批量添加] 失败:", err);
         common_vendor.index.showToast({ title: "添加失败", icon: "none" });
       }
     },
@@ -493,7 +504,7 @@ const _sfc_main = {
         common_vendor.index.showToast({ title: "请先选择诗词", icon: "none" });
         return;
       }
-      common_vendor.index.__f__("log", "at pages/index/index.vue:1065", "[批量添加] 合集名称:", this.collectionName, "诗词ID:", this.selectedPoems);
+      common_vendor.index.__f__("log", "at pages/index/index.vue:1100", "[批量添加] 合集名称:", this.collectionName, "诗词ID:", this.selectedPoems);
       common_vendor.index.showToast({
         title: `已添加到"${this.collectionName}"`,
         icon: "success"
@@ -515,7 +526,7 @@ const _sfc_main = {
       this.projectsLoading = true;
       try {
         const data = await utils_request.getProjects();
-        common_vendor.index.__f__("log", "at pages/index/index.vue:1089", "[首页] getProjects 原始返回:", JSON.stringify(data));
+        common_vendor.index.__f__("log", "at pages/index/index.vue:1124", "[首页] getProjects 原始返回:", JSON.stringify(data));
         if (Array.isArray(data)) {
           this.projects = data;
         } else if (data && Array.isArray(data.list)) {
@@ -534,9 +545,9 @@ const _sfc_main = {
             this.projects = [data];
           }
         }
-        common_vendor.index.__f__("log", "at pages/index/index.vue:1108", "[首页] 合集列表:", this.projects, "数量:", this.projects.length);
+        common_vendor.index.__f__("log", "at pages/index/index.vue:1143", "[首页] 合集列表:", this.projects, "数量:", this.projects.length);
       } catch (err) {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:1110", "[首页] 获取合集失败:", err);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:1145", "[首页] 获取合集失败:", err);
         this.projects = [];
       } finally {
         this.projectsLoading = false;
@@ -561,7 +572,7 @@ const _sfc_main = {
       try {
         common_vendor.index.showLoading({ title: "添加中..." });
         await utils_request.addPoemToProject(this.selectedProjectId, this.selectedPoems);
-        common_vendor.index.__f__("log", "at pages/index/index.vue:1135", "[首页] 添加诗词到合集成功");
+        common_vendor.index.__f__("log", "at pages/index/index.vue:1170", "[首页] 添加诗词到合集成功");
         common_vendor.index.hideLoading();
         common_vendor.index.showToast({ title: "添加成功", icon: "success" });
         this.showCollectionDialog = false;
@@ -571,7 +582,7 @@ const _sfc_main = {
         common_vendor.index.$emit("onProjectUpdated");
       } catch (err) {
         common_vendor.index.hideLoading();
-        common_vendor.index.__f__("error", "at pages/index/index.vue:1146", "[首页] 添加失败:", err);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:1181", "[首页] 添加失败:", err);
         common_vendor.index.showToast({ title: "添加失败", icon: "none" });
       }
     },
@@ -584,11 +595,11 @@ const _sfc_main = {
       try {
         common_vendor.index.showLoading({ title: "创建中..." });
         const project = await utils_request.createProject(this.collectionName.trim());
-        common_vendor.index.__f__("log", "at pages/index/index.vue:1159", "[首页] 创建合集成功:", project);
+        common_vendor.index.__f__("log", "at pages/index/index.vue:1194", "[首页] 创建合集成功:", project);
         common_vendor.index.hideLoading();
         const projectId = project.projectId || project.id || project;
         await utils_request.addPoemToProject(projectId, this.selectedPoems);
-        common_vendor.index.__f__("log", "at pages/index/index.vue:1164", "[首页] 添加诗词到新合集成功");
+        common_vendor.index.__f__("log", "at pages/index/index.vue:1199", "[首页] 添加诗词到新合集成功");
         common_vendor.index.showToast({ title: "创建并添加成功", icon: "success" });
         this.showCollectionDialog = false;
         this.batchMode = false;
@@ -597,7 +608,7 @@ const _sfc_main = {
         common_vendor.index.$emit("onProjectUpdated");
       } catch (err) {
         common_vendor.index.hideLoading();
-        common_vendor.index.__f__("error", "at pages/index/index.vue:1174", "[首页] 创建/添加失败:", err);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:1209", "[首页] 创建/添加失败:", err);
         common_vendor.index.showToast({ title: "操作失败", icon: "none" });
       }
     },
@@ -713,15 +724,30 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     D: common_vendor.o(($event) => $options.goToDetail($data.dailyPoem.poemId)),
     E: "url(" + $data.dailyPoem.coverImage + ")"
   } : {}, {
-    F: $data.recommendDynasties.length > 0
-  }, $data.recommendDynasties.length > 0 ? {
-    G: common_vendor.t($data.recommendDynasties[0].dynasty),
-    H: common_vendor.t($data.recommendDynasties[0].dynasty),
-    I: common_vendor.t($data.recommendDynasties[0].poemCount),
-    J: common_vendor.t($data.recommendDynasties[0].dynasty),
-    K: common_vendor.o(($event) => $options.onRecommendDynastyClick($data.recommendDynasties[0]))
+    F: $data.hotPoems.length > 0
+  }, $data.hotPoems.length > 0 ? {
+    G: common_vendor.f($data.hotPoems, (poem, i, i0) => {
+      return {
+        a: common_vendor.t(i + 1),
+        b: i < 3 ? 1 : "",
+        c: common_vendor.t(poem.title),
+        d: common_vendor.t(poem.author),
+        e: common_vendor.t(poem.dynasty),
+        f: common_vendor.t(poem.studyCount),
+        g: poem.poemId,
+        h: common_vendor.o(($event) => $options.goToDetail(poem.poemId), poem.poemId)
+      };
+    })
   } : {}, {
-    L: common_vendor.f($data.recommendDynasties.slice(1, 3), (d, i, i0) => {
+    H: $data.recommendDynasties.length > 0
+  }, $data.recommendDynasties.length > 0 ? {
+    I: common_vendor.t($data.recommendDynasties[0].dynasty),
+    J: common_vendor.t($data.recommendDynasties[0].dynasty),
+    K: common_vendor.t($data.recommendDynasties[0].poemCount),
+    L: common_vendor.t($data.recommendDynasties[0].dynasty),
+    M: common_vendor.o(($event) => $options.onRecommendDynastyClick($data.recommendDynasties[0]))
+  } : {}, {
+    N: common_vendor.f($data.recommendDynasties.slice(1, 3), (d, i, i0) => {
       return {
         a: "76214786-2-" + i0,
         b: common_vendor.t(d.dynasty),
@@ -730,18 +756,18 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
         e: common_vendor.o(($event) => $options.onRecommendDynastyClick(d), i)
       };
     }),
-    M: common_vendor.p({
+    O: common_vendor.p({
       type: "bookmarks",
       size: "28",
       color: "#2a6e44"
     }),
-    N: common_vendor.p({
+    P: common_vendor.p({
       type: "right",
       size: "14",
       color: "#999"
     }),
-    O: common_vendor.o((...args) => $options.goToAuthors && $options.goToAuthors(...args)),
-    P: common_vendor.f($data.authors, (a, k0, i0) => {
+    Q: common_vendor.o((...args) => $options.goToAuthors && $options.goToAuthors(...args)),
+    R: common_vendor.f($data.authors, (a, k0, i0) => {
       return common_vendor.e({
         a: a.avatarUrl
       }, a.avatarUrl ? {
@@ -753,15 +779,15 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
         f: common_vendor.o(($event) => $options.onHotAuthorClick(a), a.authorId || a.name)
       });
     }),
-    Q: common_vendor.p({
+    S: common_vendor.p({
       type: "right",
       size: "22",
       color: "#fff"
     })
   }) : {}, {
-    R: $data.currentTab === "library"
+    T: $data.currentTab === "library"
   }, $data.currentTab === "library" ? common_vendor.e({
-    S: common_vendor.f($data.libTabs, (t, k0, i0) => {
+    U: common_vendor.f($data.libTabs, (t, k0, i0) => {
       return common_vendor.e({
         a: common_vendor.t(t),
         b: $data.activeLibTab === t
@@ -771,15 +797,15 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
         e: common_vendor.o(($event) => $options.onLibTabChange(t), t)
       });
     }),
-    T: common_vendor.p({
+    V: common_vendor.p({
       type: $data.batchMode ? "checkbox" : "checkbox-unchecked",
       size: "22",
       color: $data.batchMode ? "#fff" : "#2a6e44"
     }),
-    U: common_vendor.o((...args) => $options.toggleBatchMode && $options.toggleBatchMode(...args)),
-    V: $data.activeLibTab === "朝代"
+    W: common_vendor.o((...args) => $options.toggleBatchMode && $options.toggleBatchMode(...args)),
+    X: $data.activeLibTab === "朝代"
   }, $data.activeLibTab === "朝代" ? {
-    W: common_vendor.f($data.dynastyTabs, (d, k0, i0) => {
+    Y: common_vendor.f($data.dynastyTabs, (d, k0, i0) => {
       return {
         a: common_vendor.t(d),
         b: d,
@@ -788,9 +814,9 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
       };
     })
   } : {}, {
-    X: $data.activeLibTab === "体裁"
+    Z: $data.activeLibTab === "体裁"
   }, $data.activeLibTab === "体裁" ? {
-    Y: common_vendor.f($data.categoryTabs, (c, k0, i0) => {
+    aa: common_vendor.f($data.categoryTabs, (c, k0, i0) => {
       return {
         a: common_vendor.t(c),
         b: c,
@@ -799,9 +825,9 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
       };
     })
   } : {}, {
-    Z: $data.activeLibTab === "作者"
+    ab: $data.activeLibTab === "作者"
   }, $data.activeLibTab === "作者" ? {
-    aa: common_vendor.f($data.authorTabs, (a, k0, i0) => {
+    ac: common_vendor.f($data.authorTabs, (a, k0, i0) => {
       return {
         a: common_vendor.t(a),
         b: a,
@@ -810,7 +836,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
       };
     })
   } : {}, {
-    ab: common_vendor.f($data.poemsList, (poem, k0, i0) => {
+    ad: common_vendor.f($data.poemsList, (poem, k0, i0) => {
       return common_vendor.e($data.batchMode ? common_vendor.e({
         a: $data.selectedPoems.includes(poem.poemId)
       }, $data.selectedPoems.includes(poem.poemId) ? {
@@ -834,32 +860,32 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
         m: common_vendor.o(($event) => $data.batchMode ? $options.togglePoemSelection(poem.poemId) : $options.goToDetail(poem.poemId), poem.poemId)
       });
     }),
-    ac: $data.batchMode,
-    ad: $data.poemsLoading
+    ae: $data.batchMode,
+    af: $data.poemsLoading
   }, $data.poemsLoading ? {} : {}, {
-    ae: !$data.poemsLoading && $data.poemsList.length === 0
+    ag: !$data.poemsLoading && $data.poemsList.length === 0
   }, !$data.poemsLoading && $data.poemsList.length === 0 ? {} : {}) : {}, {
-    af: $data.currentTab === "study"
+    ah: $data.currentTab === "study"
   }, $data.currentTab === "study" ? common_vendor.e({
-    ag: common_vendor.t($data.studyProgress.studyDays),
-    ah: common_vendor.t($data.studyProgress.learnedCount),
-    ai: common_vendor.t($data.studyProgress.todayLearnedCount),
-    aj: common_vendor.o((...args) => $options.goToProjects && $options.goToProjects(...args)),
-    ak: common_vendor.t($data.selectedProjectName || "学习合集"),
-    al: common_vendor.t($data.selectedProjectName || "选择学习合集"),
-    am: common_vendor.t($data.selectedProject ? $data.selectedProject.poemCount + " 首诗词 · 点击查看诗词" : '点击上方"更换计划"选择学习合集'),
-    an: $data.selectedProject
+    ai: common_vendor.t($data.studyProgress.studyDays),
+    aj: common_vendor.t($data.studyProgress.learnedCount),
+    ak: common_vendor.t($data.studyProgress.todayLearnedCount),
+    al: common_vendor.o((...args) => $options.goToProjects && $options.goToProjects(...args)),
+    am: common_vendor.t($data.selectedProjectName || "学习合集"),
+    an: common_vendor.t($data.selectedProjectName || "选择学习合集"),
+    ao: common_vendor.t($data.selectedProject ? $data.selectedProject.poemCount + " 首诗词 · 点击查看诗词" : '点击上方"更换计划"选择学习合集'),
+    ap: $data.selectedProject
   }, $data.selectedProject ? {
-    ao: common_vendor.t($data.selectedProject.poemCount ? Math.round(($data.selectedProject.learnedCount || 0) / $data.selectedProject.poemCount * 100) : 0),
-    ap: common_vendor.t($data.selectedProject.learnedCount || 0),
-    aq: common_vendor.t($data.selectedProject.poemCount)
+    aq: common_vendor.t($data.selectedProject.poemCount ? Math.round(($data.selectedProject.learnedCount || 0) / $data.selectedProject.poemCount * 100) : 0),
+    ar: common_vendor.t($data.selectedProject.learnedCount || 0),
+    as: common_vendor.t($data.selectedProject.poemCount)
   } : {}, {
-    ar: $data.selectedProject
+    at: $data.selectedProject
   }, $data.selectedProject ? {
-    as: ($data.selectedProject.poemCount ? Math.round(($data.selectedProject.learnedCount || 0) / $data.selectedProject.poemCount * 100) : 0) + "%"
+    av: ($data.selectedProject.poemCount ? Math.round(($data.selectedProject.learnedCount || 0) / $data.selectedProject.poemCount * 100) : 0) + "%"
   } : {}, {
-    at: common_vendor.o((...args) => $options.goToProjectDetail && $options.goToProjectDetail(...args)),
-    av: common_vendor.f($data.dailyTaskPoems, (p, i, i0) => {
+    aw: common_vendor.o((...args) => $options.goToProjectDetail && $options.goToProjectDetail(...args)),
+    ax: common_vendor.f($data.dailyTaskPoems, (p, i, i0) => {
       return common_vendor.e({
         a: p.isLearned
       }, p.isLearned ? {
@@ -898,13 +924,13 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
         r: common_vendor.o(($event) => $options.goToDetail(p.poemId), p.poemId || i)
       });
     }),
-    aw: $data.dailyTaskPoems.length === 0
+    ay: $data.dailyTaskPoems.length === 0
   }, $data.dailyTaskPoems.length === 0 ? {} : {}, {
-    ax: common_vendor.t($data.achievements.unlockedCount),
-    ay: common_vendor.t($data.achievements.total),
-    az: $data.achievements.list.length > 0
+    az: common_vendor.t($data.achievements.unlockedCount),
+    aA: common_vendor.t($data.achievements.total),
+    aB: $data.achievements.list.length > 0
   }, $data.achievements.list.length > 0 ? {
-    aA: common_vendor.f($data.achievements.list, (item, k0, i0) => {
+    aC: common_vendor.f($data.achievements.list, (item, k0, i0) => {
       return common_vendor.e({
         a: common_vendor.t(item.title),
         b: common_vendor.n(item.isUnlocked ? "badge-text-on" : "badge-text-off"),
@@ -932,16 +958,16 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
       });
     })
   } : {}) : {}, {
-    aB: $data.currentTab === "mine"
+    aD: $data.currentTab === "mine"
   }, $data.currentTab === "mine" ? common_vendor.e({
-    aC: $data.userInfo && $data.userInfo.avatarUrl
+    aE: $data.userInfo && $data.userInfo.avatarUrl
   }, $data.userInfo && $data.userInfo.avatarUrl ? {
-    aD: $data.userInfo.avatarUrl
+    aF: $data.userInfo.avatarUrl
   } : {}, {
-    aE: common_vendor.t($data.userInfo && $data.userInfo.nickname || "未设置昵称"),
-    aF: common_vendor.t($data.mineStats.favCount),
-    aG: common_vendor.t($data.mineStats.studyDays),
-    aH: common_vendor.f($data.menuItems, (item, k0, i0) => {
+    aG: common_vendor.t($data.userInfo && $data.userInfo.nickname || "未设置昵称"),
+    aH: common_vendor.t($data.mineStats.favCount),
+    aI: common_vendor.t($data.mineStats.studyDays),
+    aJ: common_vendor.f($data.menuItems, (item, k0, i0) => {
       return {
         a: "76214786-12-" + i0,
         b: common_vendor.p({
@@ -956,111 +982,111 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
         g: common_vendor.o(($event) => $options.onMenu(item), item.label)
       };
     }),
-    aI: common_vendor.p({
+    aK: common_vendor.p({
       type: "right",
       size: "16",
       color: "#ccc"
     }),
-    aJ: common_vendor.p({
+    aL: common_vendor.p({
       type: "redo",
       size: "18",
       color: "#b82e2e"
     }),
-    aK: common_vendor.o((...args) => $options.onLogout && $options.onLogout(...args))
+    aM: common_vendor.o((...args) => $options.onLogout && $options.onLogout(...args))
   }) : {}, {
-    aL: $data.currentTab === "home"
+    aN: $data.currentTab === "home"
   }, $data.currentTab === "home" ? {
-    aM: common_vendor.p({
+    aO: common_vendor.p({
       type: "home",
       size: "22",
       color: "#fff"
     })
   } : {
-    aN: common_vendor.p({
+    aP: common_vendor.p({
       type: "home",
       size: "24",
       color: "#999"
     })
   }, {
-    aO: $data.currentTab === "home" ? 1 : "",
-    aP: $data.currentTab === "home" ? 1 : "",
-    aQ: common_vendor.o(($event) => $data.currentTab = "home"),
-    aR: $data.currentTab === "library"
+    aQ: $data.currentTab === "home" ? 1 : "",
+    aR: $data.currentTab === "home" ? 1 : "",
+    aS: common_vendor.o(($event) => $data.currentTab = "home"),
+    aT: $data.currentTab === "library"
   }, $data.currentTab === "library" ? {
-    aS: common_vendor.p({
+    aU: common_vendor.p({
       type: "list",
       size: "22",
       color: "#fff"
     })
   } : {
-    aT: common_vendor.p({
+    aV: common_vendor.p({
       type: "list",
       size: "24",
       color: "#999"
     })
   }, {
-    aU: $data.currentTab === "library" ? 1 : "",
-    aV: $data.currentTab === "library" ? 1 : "",
-    aW: common_vendor.o(($event) => $data.currentTab = "library"),
-    aX: $data.currentTab === "study"
+    aW: $data.currentTab === "library" ? 1 : "",
+    aX: $data.currentTab === "library" ? 1 : "",
+    aY: common_vendor.o(($event) => $data.currentTab = "library"),
+    aZ: $data.currentTab === "study"
   }, $data.currentTab === "study" ? {
-    aY: common_vendor.p({
+    ba: common_vendor.p({
       type: "compose",
       size: "22",
       color: "#fff"
     })
   } : {
-    aZ: common_vendor.p({
+    bb: common_vendor.p({
       type: "compose",
       size: "24",
       color: "#999"
     })
   }, {
-    ba: $data.currentTab === "study" ? 1 : "",
-    bb: $data.currentTab === "study" ? 1 : "",
-    bc: common_vendor.o(($event) => $data.currentTab = "study"),
-    bd: $data.currentTab === "mine"
+    bc: $data.currentTab === "study" ? 1 : "",
+    bd: $data.currentTab === "study" ? 1 : "",
+    be: common_vendor.o(($event) => $data.currentTab = "study"),
+    bf: $data.currentTab === "mine"
   }, $data.currentTab === "mine" ? {
-    be: common_vendor.p({
+    bg: common_vendor.p({
       type: "person",
       size: "22",
       color: "#fff"
     })
   } : {
-    bf: common_vendor.p({
+    bh: common_vendor.p({
       type: "person",
       size: "24",
       color: "#999"
     })
   }, {
-    bg: $data.currentTab === "mine" ? 1 : "",
-    bh: $data.currentTab === "mine" ? 1 : "",
-    bi: common_vendor.o(($event) => $data.currentTab = "mine"),
-    bj: $data.batchMode ? 1 : "",
-    bk: $data.batchMode
+    bi: $data.currentTab === "mine" ? 1 : "",
+    bj: $data.currentTab === "mine" ? 1 : "",
+    bk: common_vendor.o(($event) => $data.currentTab = "mine"),
+    bl: $data.batchMode ? 1 : "",
+    bm: $data.batchMode
   }, $data.batchMode ? common_vendor.e({
-    bl: common_vendor.t($data.selectedPoems.length),
-    bm: common_vendor.t($data.batchTargetProjectName ? " → " + $data.batchTargetProjectName : ""),
-    bn: common_vendor.o((...args) => $options.toggleBatchMode && $options.toggleBatchMode(...args)),
-    bo: $data.batchTargetProjectId
+    bn: common_vendor.t($data.selectedPoems.length),
+    bo: common_vendor.t($data.batchTargetProjectName ? " → " + $data.batchTargetProjectName : ""),
+    bp: common_vendor.o((...args) => $options.toggleBatchMode && $options.toggleBatchMode(...args)),
+    bq: $data.batchTargetProjectId
   }, $data.batchTargetProjectId ? {
-    bp: common_vendor.t($data.batchTargetProjectName),
-    bq: common_vendor.o((...args) => $options.confirmBatchAddToProject && $options.confirmBatchAddToProject(...args))
+    br: common_vendor.t($data.batchTargetProjectName),
+    bs: common_vendor.o((...args) => $options.confirmBatchAddToProject && $options.confirmBatchAddToProject(...args))
   } : {
-    br: common_vendor.o((...args) => $options.showCollectionInput && $options.showCollectionInput(...args))
+    bt: common_vendor.o((...args) => $options.showCollectionInput && $options.showCollectionInput(...args))
   }) : {}, {
-    bs: $data.showCollectionDialog
+    bv: $data.showCollectionDialog
   }, $data.showCollectionDialog ? common_vendor.e({
-    bt: common_vendor.t($data.selectedPoems.length),
-    bv: common_vendor.p({
+    bw: common_vendor.t($data.selectedPoems.length),
+    bx: common_vendor.p({
       type: "close",
       size: "20",
       color: "#999"
     }),
-    bw: common_vendor.o((...args) => $options.cancelCollection && $options.cancelCollection(...args)),
-    bx: $data.projectsLoading
+    by: common_vendor.o((...args) => $options.cancelCollection && $options.cancelCollection(...args)),
+    bz: $data.projectsLoading
   }, $data.projectsLoading ? {} : $data.projects.length === 0 ? {} : {
-    bz: common_vendor.f($data.projects, (project, k0, i0) => {
+    bB: common_vendor.f($data.projects, (project, k0, i0) => {
       return common_vendor.e({
         a: "76214786-24-" + i0,
         b: common_vendor.p({
@@ -1085,40 +1111,40 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
       });
     })
   }, {
-    by: $data.projects.length === 0,
-    bA: $data.collectionName,
-    bB: common_vendor.o(($event) => $data.collectionName = $event.detail.value),
-    bC: common_vendor.o((...args) => $options.createAndAdd && $options.createAndAdd(...args)),
-    bD: $data.selectedProjectId
+    bA: $data.projects.length === 0,
+    bC: $data.collectionName,
+    bD: common_vendor.o(($event) => $data.collectionName = $event.detail.value),
+    bE: common_vendor.o((...args) => $options.createAndAdd && $options.createAndAdd(...args)),
+    bF: $data.selectedProjectId
   }, $data.selectedProjectId ? {
-    bE: common_vendor.o((...args) => $options.confirmAddToProject && $options.confirmAddToProject(...args))
+    bG: common_vendor.o((...args) => $options.confirmAddToProject && $options.confirmAddToProject(...args))
   } : {}, {
-    bF: common_vendor.o(() => {
+    bH: common_vendor.o(() => {
     }),
-    bG: common_vendor.o((...args) => $options.cancelCollection && $options.cancelCollection(...args))
+    bI: common_vendor.o((...args) => $options.cancelCollection && $options.cancelCollection(...args))
   }) : {}, {
-    bH: $data.showAchievementPopup && $data.selectedAchievement
+    bJ: $data.showAchievementPopup && $data.selectedAchievement
   }, $data.showAchievementPopup && $data.selectedAchievement ? common_vendor.e({
-    bI: common_vendor.t($data.selectedAchievement.title),
-    bJ: common_vendor.n($data.selectedAchievement.isUnlocked ? "badge-text-on" : "badge-text-off"),
-    bK: common_vendor.n($data.selectedAchievement.isUnlocked ? "badge-on" : "badge-off"),
-    bL: $data.selectedAchievement.isUnlocked
+    bK: common_vendor.t($data.selectedAchievement.title),
+    bL: common_vendor.n($data.selectedAchievement.isUnlocked ? "badge-text-on" : "badge-text-off"),
+    bM: common_vendor.n($data.selectedAchievement.isUnlocked ? "badge-on" : "badge-off"),
+    bN: $data.selectedAchievement.isUnlocked
   }, $data.selectedAchievement.isUnlocked ? {
-    bM: common_vendor.p({
+    bO: common_vendor.p({
       type: "checkmarkempty",
       size: "16",
       color: "#b82e2e"
     })
   } : {}, {
-    bN: common_vendor.t($data.selectedAchievement.description),
-    bO: $data.selectedAchievement.isUnlocked && $data.selectedAchievement.unlockedAt
+    bP: common_vendor.t($data.selectedAchievement.description),
+    bQ: $data.selectedAchievement.isUnlocked && $data.selectedAchievement.unlockedAt
   }, $data.selectedAchievement.isUnlocked && $data.selectedAchievement.unlockedAt ? {
-    bP: common_vendor.t($data.selectedAchievement.unlockedAt)
+    bR: common_vendor.t($data.selectedAchievement.unlockedAt)
   } : {}, {
-    bQ: common_vendor.o(($event) => $data.showAchievementPopup = false),
-    bR: common_vendor.o(() => {
+    bS: common_vendor.o(($event) => $data.showAchievementPopup = false),
+    bT: common_vendor.o(() => {
     }),
-    bS: common_vendor.o(($event) => $data.showAchievementPopup = false)
+    bU: common_vendor.o(($event) => $data.showAchievementPopup = false)
   }) : {});
 }
 const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render]]);

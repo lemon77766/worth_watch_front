@@ -1,4 +1,4 @@
-const BASE_URL = 'http://shicihui.site'
+const BASE_URL = 'http://192.168.1.119:8080'
 export { BASE_URL }
 
 const request = (options) => {
@@ -112,6 +112,7 @@ export const getTtsVoices = () => get('/api/poems/tts/voices')
 export const getAuthors = (params) => get('/api/authors', params)
 export const getRecommendPoems = (id) => get(`/api/poems/${id}/recommend`)
 export const getHotAuthors = () => get('/api/authors/hot')
+export const getHotPoems = () => get('/api/study/hot')
 export const getAuthorDetail = (id) => get(`/api/authors/${id}`)
 
 // 项目/学习合集相关

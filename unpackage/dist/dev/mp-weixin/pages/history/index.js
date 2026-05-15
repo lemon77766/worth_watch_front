@@ -28,7 +28,7 @@ const _sfc_main = {
           this.overview[1].num = data.learnedCount || 0;
         }
       } catch (e) {
-        common_vendor.index.__f__("error", "at pages/history/index.vue:88", "获取研习进度失败", e);
+        common_vendor.index.__f__("error", "at pages/history/index.vue:82", "获取研习进度失败", e);
       }
     },
     async fetchHistory() {
@@ -87,7 +87,7 @@ const _sfc_main = {
           }
         }
       } catch (e) {
-        common_vendor.index.__f__("error", "at pages/history/index.vue:147", "获取研习历史失败", e);
+        common_vendor.index.__f__("error", "at pages/history/index.vue:141", "获取研习历史失败", e);
       } finally {
         this.loading = false;
       }
@@ -135,21 +135,11 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
         b: common_vendor.t(group.items.length),
         c: common_vendor.f(group.items, (item, k1, i1) => {
           return {
-            a: "b1d34d02-1-" + i0 + "-" + i1,
-            b: common_vendor.p({
-              type: "bookmarks",
-              size: "20",
-              color: item.iconColor
-            }),
-            c: item.iconBg,
-            d: common_vendor.t(item.title),
-            e: common_vendor.t(item.mode),
-            f: item.tagColor,
-            g: item.tagBg,
-            h: common_vendor.t(item.author),
-            i: common_vendor.t(item.dynasty),
-            j: item.poemId,
-            k: common_vendor.o(($event) => $options.goDetail(item), item.poemId)
+            a: common_vendor.t(item.title),
+            b: common_vendor.t(item.author),
+            c: common_vendor.t(item.dynasty),
+            d: item.poemId,
+            e: common_vendor.o(($event) => $options.goDetail(item), item.poemId)
           };
         }),
         d: group.date

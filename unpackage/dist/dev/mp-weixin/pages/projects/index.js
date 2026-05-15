@@ -16,10 +16,10 @@ const _sfc_main = {
       this.loading = true;
       try {
         const data = await utils_request.getProjects();
-        common_vendor.index.__f__("log", "at pages/projects/index.vue:85", "[获取学习合集] 成功:", data);
+        common_vendor.index.__f__("log", "at pages/projects/index.vue:101", "[获取学习合集] 成功:", data);
         this.projects = data || [];
       } catch (err) {
-        common_vendor.index.__f__("error", "at pages/projects/index.vue:88", "[获取学习合集] 失败:", err);
+        common_vendor.index.__f__("error", "at pages/projects/index.vue:104", "[获取学习合集] 失败:", err);
         common_vendor.index.showToast({ title: "获取合集失败", icon: "none" });
       } finally {
         this.loading = false;
@@ -37,15 +37,14 @@ const _sfc_main = {
       common_vendor.index.navigateBack();
     },
     async onSelectAsCurrent(project) {
-      if (project.isSelected) {
+      if (project.isSelected)
         return;
-      }
       try {
         await utils_request.selectCurrentProject(project.projectId);
-        common_vendor.index.__f__("log", "at pages/projects/index.vue:111", "[选择合集] 选中成功:", project.name);
+        common_vendor.index.__f__("log", "at pages/projects/index.vue:124", "[选择合集] 选中成功:", project.name);
         this.fetchProjects();
       } catch (err) {
-        common_vendor.index.__f__("error", "at pages/projects/index.vue:116", "[选择合集] 选中失败:", err);
+        common_vendor.index.__f__("error", "at pages/projects/index.vue:127", "[选择合集] 选中失败:", err);
         common_vendor.index.showToast({ title: "选择合集失败", icon: "none" });
       }
     },
@@ -58,11 +57,11 @@ const _sfc_main = {
           if (res.confirm) {
             try {
               await utils_request.deleteProject(project.projectId);
-              common_vendor.index.__f__("log", "at pages/projects/index.vue:129", "[删除合集] 删除成功:", project.name);
+              common_vendor.index.__f__("log", "at pages/projects/index.vue:140", "[删除合集] 删除成功:", project.name);
               common_vendor.index.showToast({ title: "删除成功", icon: "success" });
               this.projects = this.projects.filter((p) => p.projectId !== project.projectId);
             } catch (err) {
-              common_vendor.index.__f__("error", "at pages/projects/index.vue:134", "[删除合集] 删除失败:", err);
+              common_vendor.index.__f__("error", "at pages/projects/index.vue:144", "[删除合集] 删除失败:", err);
               common_vendor.index.showToast({ title: "删除失败", icon: "none" });
             }
           }
@@ -83,16 +82,15 @@ const _sfc_main = {
               common_vendor.index.showToast({ title: "名称不能为空", icon: "none" });
               return;
             }
-            if (newName === project.name) {
+            if (newName === project.name)
               return;
-            }
             try {
               await utils_request.renameProject(project.projectId, newName);
-              common_vendor.index.__f__("log", "at pages/projects/index.vue:161", "[改名合集] 改名成功:", newName);
+              common_vendor.index.__f__("log", "at pages/projects/index.vue:168", "[改名合集] 改名成功:", newName);
               common_vendor.index.showToast({ title: "改名成功", icon: "success" });
               project.name = newName;
             } catch (err) {
-              common_vendor.index.__f__("error", "at pages/projects/index.vue:166", "[改名合集] 改名失败:", err);
+              common_vendor.index.__f__("error", "at pages/projects/index.vue:172", "[改名合集] 改名失败:", err);
               common_vendor.index.showToast({ title: "改名失败", icon: "none" });
             }
           }
@@ -125,39 +123,66 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     c: !$data.loading && $data.projects.length === 0
   }, !$data.loading && $data.projects.length === 0 ? {
     d: common_vendor.p({
-      type: "bookmark",
-      size: "80",
-      color: "#ccc"
+      type: "star",
+      size: "48",
+      color: "#2a6e44"
     })
   } : {}, {
-    e: common_vendor.f($data.projects, (project, k0, i0) => {
+    e: common_vendor.f($data.projects, (project, index, i0) => {
       return common_vendor.e({
-        a: "46c4d245-2-" + i0,
-        b: common_vendor.p({
-          type: "star",
-          size: "32",
-          color: project.isSelected ? "#fff" : "#2a6e44"
-        }),
+        a: common_vendor.t(index + 1),
+        b: project.isSelected ? 1 : "",
         c: common_vendor.t(project.name),
         d: project.isSelected
       }, project.isSelected ? {} : {}, {
-        e: common_vendor.t(project.poemCount),
-        f: common_vendor.t($options.formatDate(project.createdAt)),
+        e: "46c4d245-2-" + i0,
+        f: common_vendor.t(project.poemCount),
         g: "46c4d245-3-" + i0,
-        h: common_vendor.o(($event) => $options.onViewPoems(project), project.projectId),
-        i: common_vendor.t(project.isSelected ? "已选中" : "选中"),
-        j: project.isSelected ? 1 : "",
-        k: common_vendor.o(($event) => $options.onSelectAsCurrent(project), project.projectId),
-        l: common_vendor.o(($event) => $options.onRenameProject(project), project.projectId),
-        m: common_vendor.o(($event) => $options.onDeleteProject(project), project.projectId),
-        n: project.projectId,
-        o: project.isSelected ? 1 : ""
+        h: common_vendor.t($options.formatDate(project.createdAt)),
+        i: "46c4d245-4-" + i0,
+        j: common_vendor.o(($event) => $options.onViewPoems(project), project.projectId),
+        k: "46c4d245-5-" + i0,
+        l: common_vendor.p({
+          type: project.isSelected ? "checkmarkempty" : "flag",
+          size: "16",
+          color: project.isSelected ? "#999" : "#2a6e44"
+        }),
+        m: common_vendor.t(project.isSelected ? "已选中" : "选中"),
+        n: project.isSelected ? 1 : "",
+        o: project.isSelected ? 1 : "",
+        p: common_vendor.o(($event) => $options.onSelectAsCurrent(project), project.projectId),
+        q: "46c4d245-6-" + i0,
+        r: common_vendor.o(($event) => $options.onRenameProject(project), project.projectId),
+        s: "46c4d245-7-" + i0,
+        t: common_vendor.o(($event) => $options.onDeleteProject(project), project.projectId),
+        v: project.projectId,
+        w: project.isSelected ? 1 : ""
       });
     }),
     f: common_vendor.p({
+      type: "paperplane",
+      size: "14",
+      color: "#999"
+    }),
+    g: common_vendor.p({
+      type: "calendar",
+      size: "14",
+      color: "#999"
+    }),
+    h: common_vendor.p({
       type: "right",
       size: "16",
       color: "#ccc"
+    }),
+    i: common_vendor.p({
+      type: "compose",
+      size: "16",
+      color: "#e6a23c"
+    }),
+    j: common_vendor.p({
+      type: "trash",
+      size: "16",
+      color: "#b82e2e"
     })
   });
 }

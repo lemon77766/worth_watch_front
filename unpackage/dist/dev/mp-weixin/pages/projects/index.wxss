@@ -24,58 +24,81 @@
 }
 .navbar .navbar-title {
   font-size: 36rpx;
-  font-weight: 500;
-  color: #2a6e44;
+  font-weight: 600;
+  color: #1a1a1a;
 }
 .scroll-body {
   flex: 1;
   overflow: hidden;
+  padding: 0 32rpx;
 }
+
+/* 空状态 */
 .empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-top: 200rpx;
 }
+.empty-state .empty-icon-wrap {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  background: rgba(42, 110, 68, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 32rpx;
+}
 .empty-state .empty-text {
-  font-size: 36rpx;
+  font-size: 34rpx;
+  font-weight: 500;
   color: #1a1a1a;
-  margin-top: 32rpx;
 }
 .empty-state .empty-hint {
-  font-size: 28rpx;
-  color: #666666;
-  margin-top: 16rpx;
+  font-size: 26rpx;
+  color: #888;
+  margin-top: 12rpx;
 }
+
+/* 合集卡片 */
 .project-card {
   background: #fff;
-  margin: 0 40rpx 24rpx;
-  border-radius: 32rpx;
+  border-radius: 28rpx;
+  margin-bottom: 24rpx;
   overflow: hidden;
+  box-shadow: 0 2rpx 16rpx rgba(0, 0, 0, 0.04);
   /* 操作按钮区 */
 }
 .project-card.is-selected {
-  background: linear-gradient(135deg, #e6f2e9 0%, #fff 100%);
+  border-left: 6rpx solid #2a6e44;
 }
 .project-card .card-main {
   display: flex;
   align-items: center;
-  padding: 32rpx 36rpx;
-  overflow: hidden;
+  padding: 32rpx 28rpx;
 }
-.project-card .project-icon {
-  width: 96rpx;
-  height: 96rpx;
-  border-radius: 24rpx;
-  background: #e6f2e9;
+.project-card .project-index {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 20rpx;
+  background: #f0ede6;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-right: 24rpx;
   flex-shrink: 0;
 }
-.is-selected .project-card .project-icon {
+.project-card .project-index .index-text {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #888;
+}
+.project-card .project-index.index-active {
   background: #2a6e44;
+}
+.project-card .project-index.index-active .index-text {
+  color: #fff;
 }
 .project-card .project-info {
   flex: 1;
@@ -85,11 +108,10 @@
   display: flex;
   align-items: center;
   gap: 16rpx;
-  margin-bottom: 8rpx;
+  margin-bottom: 10rpx;
 }
 .project-card .project-info .project-name {
-  display: block;
-  font-size: 36rpx;
+  font-size: 34rpx;
   font-weight: 600;
   color: #1a1a1a;
   overflow: hidden;
@@ -97,54 +119,72 @@
   white-space: nowrap;
 }
 .project-card .project-info .selected-tag {
-  background: #2a6e44;
+  background: rgba(42, 110, 68, 0.1);
   border-radius: 8rpx;
-  padding: 4rpx 12rpx;
+  padding: 4rpx 14rpx;
   flex-shrink: 0;
 }
 .project-card .project-info .selected-tag .selected-tag-text {
-  font-size: 22rpx;
-  color: #fff;
+  font-size: 20rpx;
+  color: #2a6e44;
+  font-weight: 500;
+}
+.project-card .project-info .project-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
 }
 .project-card .project-info .project-meta {
-  display: block;
-  font-size: 26rpx;
-  color: #666666;
+  font-size: 24rpx;
+  color: #888;
 }
-.project-card .arrow-icon {
-  margin-left: 16rpx;
+.project-card .project-info .meta-dot {
+  font-size: 22rpx;
+  color: #ccc;
+  margin: 0 4rpx;
+}
+.project-card .arrow-wrap {
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 12rpx;
   flex-shrink: 0;
 }
 .project-card .card-actions {
   display: flex;
-  border-top: 1rpx solid #f0f0f0;
+  align-items: center;
+  border-top: 1rpx solid #f5f2ec;
+  background: #fdfbf7;
+  padding: 0 8rpx;
+}
+.project-card .action-divider {
+  width: 1rpx;
+  height: 36rpx;
+  background: #eee;
 }
 .project-card .action-btn {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24rpx 0;
-  background: #fafafa;
+  gap: 8rpx;
+  padding: 22rpx 0;
 }
 .project-card .action-btn .action-btn-text {
-  font-size: 28rpx;
-}
-.project-card .action-btn.select-btn {
-  border-right: 1rpx solid #f0f0f0;
+  font-size: 26rpx;
+  font-weight: 500;
 }
 .project-card .action-btn.select-btn .action-btn-text {
   color: #2a6e44;
 }
-.project-card .action-btn.select-btn.is-current .action-btn-text {
-  color: #666666;
+.project-card .action-btn.select-btn .action-btn-text.is-current {
+  color: #888;
 }
-.project-card .action-btn.rename-btn {
-  border-right: 1rpx solid #f0f0f0;
-}
-.project-card .action-btn.rename-btn .action-btn-text {
+.project-card .action-btn .rename-text {
   color: #e6a23c;
 }
-.project-card .action-btn.delete-btn .action-btn-text {
+.project-card .action-btn .delete-text {
   color: #b82e2e;
 }

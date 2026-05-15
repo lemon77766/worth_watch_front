@@ -1,6 +1,6 @@
 "use strict";
 const common_vendor = require("../common/vendor.js");
-const BASE_URL = "http://shicihui.site";
+const BASE_URL = "http://192.168.1.119:8080";
 const request = (options) => {
   return new Promise((resolve, reject) => {
     const token = common_vendor.index.getStorageSync("token");
@@ -104,6 +104,7 @@ const getTtsVoices = () => get("/api/poems/tts/voices");
 const getAuthors = (params) => get("/api/authors", params);
 const getRecommendPoems = (id) => get(`/api/poems/${id}/recommend`);
 const getHotAuthors = () => get("/api/authors/hot");
+const getHotPoems = () => get("/api/study/hot");
 const getAuthorDetail = (id) => get(`/api/authors/${id}`);
 const createProject = (name) => post("/api/projects", { name });
 const addPoemToProject = (projectId, poemIds) => post(`/api/projects/${projectId}/poems`, { poemIds });
@@ -129,6 +130,7 @@ exports.getDailyPoem = getDailyPoem;
 exports.getDailyTask = getDailyTask;
 exports.getFavorites = getFavorites;
 exports.getHotAuthors = getHotAuthors;
+exports.getHotPoems = getHotPoems;
 exports.getPoemDetail = getPoemDetail;
 exports.getPoems = getPoems;
 exports.getProjectPoems = getProjectPoems;

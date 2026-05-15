@@ -13,33 +13,44 @@
     <scroll-view scroll-y class="scroll-body">
       <!-- 空状态 -->
       <view v-if="!loading && projects.length === 0" class="empty-state">
-        <uni-icons type="bookmark" size="80" color="#ccc" />
+        <view class="empty-icon-wrap">
+          <uni-icons type="star" size="48" color="#2a6e44" />
+        </view>
         <text class="empty-text">暂无学习合集</text>
         <text class="empty-hint">在文库页选择诗词后可创建</text>
       </view>
 
       <!-- 合集卡片 -->
       <view
-        v-for="project in projects"
+        v-for="(project, index) in projects"
         :key="project.projectId"
         class="project-card"
         :class="{ 'is-selected': project.isSelected }"
       >
-        <!-- 卡片主体：查看合集中的诗词 -->
+        <!-- 卡片主体 -->
         <view class="card-main" @click="onViewPoems(project)">
-          <view class="project-icon">
-            <uni-icons type="star" size="32" :color="project.isSelected ? '#fff' : '#2a6e44'" />
+          <!-- 序号装饰 -->
+          <view class="project-index" :class="{ 'index-active': project.isSelected }">
+            <text class="index-text">{{ index + 1 }}</text>
           </view>
           <view class="project-info">
             <view class="project-name-row">
               <text class="project-name">{{ project.name }}</text>
               <view v-if="project.isSelected" class="selected-tag">
-                <text class="selected-tag-text">已选中</text>
+                <text class="selected-tag-text">当前</text>
               </view>
             </view>
-            <text class="project-meta">{{ project.poemCount }} 首诗词 · {{ formatDate(project.createdAt) }}</text>
+            <view class="project-meta-row">
+              <uni-icons type="paperplane" size="14" color="#999" />
+              <text class="project-meta">{{ project.poemCount }} 首诗词</text>
+              <text class="meta-dot">·</text>
+              <uni-icons type="calendar" size="14" color="#999" />
+              <text class="project-meta">{{ formatDate(project.createdAt) }}</text>
+            </view>
           </view>
-          <uni-icons type="right" size="16" color="#ccc" class="arrow-icon" />
+          <view class="arrow-wrap">
+            <uni-icons type="right" size="16" color="#ccc" />
+          </view>
         </view>
         <!-- 操作按钮区 -->
         <view class="card-actions">
@@ -48,18 +59,23 @@
             :class="{ 'is-current': project.isSelected }"
             @click="onSelectAsCurrent(project)"
           >
-            <text class="action-btn-text">{{ project.isSelected ? '已选中' : '选中' }}</text>
+            <uni-icons :type="project.isSelected ? 'checkmarkempty' : 'flag'" size="16" :color="project.isSelected ? '#999' : '#2a6e44'" />
+            <text class="action-btn-text" :class="{ 'is-current': project.isSelected }">{{ project.isSelected ? '已选中' : '选中' }}</text>
           </view>
+          <view class="action-divider" />
           <view class="action-btn rename-btn" @click="onRenameProject(project)">
-            <text class="action-btn-text">改名</text>
+            <uni-icons type="compose" size="16" color="#e6a23c" />
+            <text class="action-btn-text rename-text">改名</text>
           </view>
+          <view class="action-divider" />
           <view class="action-btn delete-btn" @click="onDeleteProject(project)">
-            <text class="action-btn-text">删除</text>
+            <uni-icons type="trash" size="16" color="#b82e2e" />
+            <text class="action-btn-text delete-text">删除</text>
           </view>
         </view>
       </view>
 
-      <view style="height: 40rpx;" />
+      <view style="height: 60rpx;" />
     </scroll-view>
   </view>
 </template>
@@ -102,15 +118,10 @@ export default {
       uni.navigateBack()
     },
     async onSelectAsCurrent(project) {
-      // 如果已经是当前选中的，不做处理
-      if (project.isSelected) {
-        return
-      }
+      if (project.isSelected) return
       try {
         await selectCurrentProject(project.projectId)
         console.log('[选择合集] 选中成功:', project.name)
-        
-        // 刷新列表，更新选中状态
         this.fetchProjects()
       } catch (err) {
         console.error('[选择合集] 选中失败:', err)
@@ -128,7 +139,6 @@ export default {
               await deleteProject(project.projectId)
               console.log('[删除合集] 删除成功:', project.name)
               uni.showToast({ title: '删除成功', icon: 'success' })
-              // 从列表中移除
               this.projects = this.projects.filter(p => p.projectId !== project.projectId)
             } catch (err) {
               console.error('[删除合集] 删除失败:', err)
@@ -139,7 +149,6 @@ export default {
       })
     },
     onRenameProject(project) {
-      // 使用微信小程序内置的编辑对话框
       uni.showModal({
         title: '修改合集名称',
         editable: true,
@@ -153,14 +162,11 @@ export default {
               uni.showToast({ title: '名称不能为空', icon: 'none' })
               return
             }
-            if (newName === project.name) {
-              return
-            }
+            if (newName === project.name) return
             try {
               await renameProject(project.projectId, newName)
               console.log('[改名合集] 改名成功:', newName)
               uni.showToast({ title: '改名成功', icon: 'success' })
-              // 更新本地数据
               project.name = newName
             } catch (err) {
               console.error('[改名合集] 改名失败:', err)
@@ -171,7 +177,6 @@ export default {
       })
     },
     onViewPoems(project) {
-      // 点击卡片主体 = 跳转到诗词列表页
       uni.navigateTo({
         url: `/pages/project-detail/index?projectId=${project.projectId}&name=${encodeURIComponent(project.name)}`
       })
@@ -185,7 +190,7 @@ $green: #2a6e44;
 $red: #b82e2e;
 $bg: #f8f5ee;
 $dark: #1a1a1a;
-$gray: #666666;
+$gray: #888;
 
 .page {
   display: flex;
@@ -213,65 +218,89 @@ $gray: #666666;
 
   .navbar-title {
     font-size: 36rpx;
-    font-weight: 500;
-    color: $green;
+    font-weight: 600;
+    color: $dark;
   }
 }
 
 .scroll-body {
   flex: 1;
   overflow: hidden;
+  padding: 0 32rpx;
 }
 
+/* 空状态 */
 .empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-top: 200rpx;
 
+  .empty-icon-wrap {
+    width: 160rpx;
+    height: 160rpx;
+    border-radius: 50%;
+    background: rgba(42, 110, 68, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 32rpx;
+  }
+
   .empty-text {
-    font-size: 36rpx;
+    font-size: 34rpx;
+    font-weight: 500;
     color: $dark;
-    margin-top: 32rpx;
   }
 
   .empty-hint {
-    font-size: 28rpx;
+    font-size: 26rpx;
     color: $gray;
-    margin-top: 16rpx;
+    margin-top: 12rpx;
   }
 }
 
+/* 合集卡片 */
 .project-card {
   background: #fff;
-  margin: 0 40rpx 24rpx;
-  border-radius: 32rpx;
+  border-radius: 28rpx;
+  margin-bottom: 24rpx;
   overflow: hidden;
+  box-shadow: 0 2rpx 16rpx rgba(0, 0, 0, 0.04);
 
   &.is-selected {
-    background: linear-gradient(135deg, #e6f2e9 0%, #fff 100%);
+    border-left: 6rpx solid $green;
   }
 
   .card-main {
     display: flex;
     align-items: center;
-    padding: 32rpx 36rpx;
-    overflow: hidden;
+    padding: 32rpx 28rpx;
   }
 
-  .project-icon {
-    width: 96rpx;
-    height: 96rpx;
-    border-radius: 24rpx;
-    background: #e6f2e9;
+  .project-index {
+    width: 64rpx;
+    height: 64rpx;
+    border-radius: 20rpx;
+    background: #f0ede6;
     display: flex;
     align-items: center;
     justify-content: center;
     margin-right: 24rpx;
     flex-shrink: 0;
 
-    .is-selected & {
+    .index-text {
+      font-size: 28rpx;
+      font-weight: 700;
+      color: $gray;
+    }
+
+    &.index-active {
       background: $green;
+
+      .index-text {
+        color: #fff;
+      }
     }
   }
 
@@ -283,12 +312,11 @@ $gray: #666666;
       display: flex;
       align-items: center;
       gap: 16rpx;
-      margin-bottom: 8rpx;
+      margin-bottom: 10rpx;
     }
 
     .project-name {
-      display: block;
-      font-size: 36rpx;
+      font-size: 34rpx;
       font-weight: 600;
       color: $dark;
       overflow: hidden;
@@ -297,33 +325,59 @@ $gray: #666666;
     }
 
     .selected-tag {
-      background: $green;
+      background: rgba(42, 110, 68, 0.1);
       border-radius: 8rpx;
-      padding: 4rpx 12rpx;
+      padding: 4rpx 14rpx;
       flex-shrink: 0;
 
       .selected-tag-text {
-        font-size: 22rpx;
-        color: #fff;
+        font-size: 20rpx;
+        color: $green;
+        font-weight: 500;
       }
     }
 
+    .project-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 6rpx;
+    }
+
     .project-meta {
-      display: block;
-      font-size: 26rpx;
+      font-size: 24rpx;
       color: $gray;
+    }
+
+    .meta-dot {
+      font-size: 22rpx;
+      color: #ccc;
+      margin: 0 4rpx;
     }
   }
 
-  .arrow-icon {
-    margin-left: 16rpx;
+  .arrow-wrap {
+    width: 48rpx;
+    height: 48rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 12rpx;
     flex-shrink: 0;
   }
 
   /* 操作按钮区 */
   .card-actions {
     display: flex;
-    border-top: 1rpx solid #f0f0f0;
+    align-items: center;
+    border-top: 1rpx solid #f5f2ec;
+    background: #fdfbf7;
+    padding: 0 8rpx;
+  }
+
+  .action-divider {
+    width: 1rpx;
+    height: 36rpx;
+    background: #eee;
   }
 
   .action-btn {
@@ -331,37 +385,28 @@ $gray: #666666;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 24rpx 0;
-    background: #fafafa;
+    gap: 8rpx;
+    padding: 22rpx 0;
 
     .action-btn-text {
-      font-size: 28rpx;
+      font-size: 26rpx;
+      font-weight: 500;
     }
 
-    &.select-btn {
-      border-right: 1rpx solid #f0f0f0;
+    &.select-btn .action-btn-text {
+      color: $green;
 
-      .action-btn-text {
-        color: $green;
-      }
-
-      &.is-current .action-btn-text {
+      &.is-current {
         color: $gray;
       }
     }
 
-    &.rename-btn {
-      border-right: 1rpx solid #f0f0f0;
-
-      .action-btn-text {
-        color: #e6a23c;
-      }
+    .rename-text {
+      color: #e6a23c;
     }
 
-    &.delete-btn {
-      .action-btn-text {
-        color: $red;
-      }
+    .delete-text {
+      color: $red;
     }
   }
 }

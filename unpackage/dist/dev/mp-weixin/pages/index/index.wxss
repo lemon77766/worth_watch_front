@@ -422,6 +422,68 @@
   line-height: 40rpx;
 }
 
+/* 热门诗词 */
+.hot-poems-scroll {
+  white-space: nowrap;
+}
+.hot-poems-row {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+.hot-poem-card {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 24rpx 28rpx;
+}
+.hot-poem-card .hot-poem-rank {
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: 12rpx;
+  background: #e8e4da;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  font-weight: 700;
+  color: #999;
+  flex-shrink: 0;
+}
+.hot-poem-card .hot-poem-rank.rank-top {
+  background: #2a6e44;
+  color: #fff;
+}
+.hot-poem-card .hot-poem-info {
+  flex: 1;
+  min-width: 0;
+}
+.hot-poem-card .hot-poem-info .hot-poem-title {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.hot-poem-card .hot-poem-info .hot-poem-meta {
+  display: block;
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 6rpx;
+}
+.hot-poem-card .hot-poem-count {
+  font-size: 22rpx;
+  color: #2a6e44;
+  background: rgba(42, 110, 68, 0.08);
+  padding: 6rpx 16rpx;
+  border-radius: 20rpx;
+  flex-shrink: 0;
+}
+
 /* 热门作者 */
 .author-row {
   display: flex;

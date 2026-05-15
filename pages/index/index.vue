@@ -97,6 +97,30 @@
         <text>加载中...</text>
       </view>
 
+      <!-- 热门诗词 -->
+      <view class="section" v-if="hotPoems.length > 0">
+        <view class="section-hd">
+          <text class="section-title">热门诗词</text>
+        </view>
+        <scroll-view scroll-x class="hot-poems-scroll">
+          <view class="hot-poems-row">
+            <view
+              class="hot-poem-card"
+              v-for="(poem, i) in hotPoems"
+              :key="poem.poemId"
+              @click="goToDetail(poem.poemId)"
+            >
+              <view class="hot-poem-rank" :class="{ 'rank-top': i < 3 }">{{ i + 1 }}</view>
+              <view class="hot-poem-info">
+                <text class="hot-poem-title">{{ poem.title }}</text>
+                <text class="hot-poem-meta">{{ poem.author }} · {{ poem.dynasty }}</text>
+              </view>
+              <text class="hot-poem-count">{{ poem.studyCount }}人研习</text>
+            </view>
+          </view>
+        </scroll-view>
+      </view>
+
       <!-- 热门选集 -->
       <view class="section">
         <view class="section-hd">
@@ -556,7 +580,7 @@
 </template>
 
 <script>
-import { getUserProfile, getDailyPoem, getPoems, searchPoems, createProject, addPoemToProject, getCurrentProject, getProjects, getHotAuthors, getAuthors, getRecommendDynasties, getDailyTask, getStudyProgress, getAchievements, getFavorites, getStudyHistory } from '@/utils/request.js'
+import { getUserProfile, getDailyPoem, getPoems, searchPoems, createProject, addPoemToProject, getCurrentProject, getProjects, getHotAuthors, getHotPoems, getAuthors, getRecommendDynasties, getDailyTask, getStudyProgress, getAchievements, getFavorites, getStudyHistory } from '@/utils/request.js'
 
 export default {
   computed: {
@@ -581,6 +605,7 @@ export default {
       searched: false,
       authors: [],
       recommendDynasties: [],
+      hotPoems: [],
       libTabs: ['朝代', '体裁', '作者'],
       dynastyTabs: ['全部', '唐代', '宋代', '先秦', '近现代', '魏晋', '五代', '元代', '两汉', '南北朝', '清代', '明代', '金朝', '隋代'],
       categoryTabs: ['全部', '诗', '词', '曲', '文'],
@@ -653,6 +678,7 @@ export default {
     this.fetchDailyPoem()
     this.fetchHotAuthors()
     this.fetchRecommendDynasties()
+    this.fetchHotPoems()
     this.fetchAchievements()
     // 监听合集诗词被移除事件
     uni.$on('onProjectPoemRemoved', (data) => {
@@ -731,6 +757,15 @@ export default {
         this.recommendDynasties = list
       } catch (err) {
         console.error('[推荐朝代] 获取失败:', err)
+      }
+    },
+    async fetchHotPoems() {
+      try {
+        const data = await getHotPoems()
+        console.log('[热门诗词] 原始返回:', data)
+        this.hotPoems = data.list || data || []
+      } catch (err) {
+        console.error('[热门诗词] 获取失败:', err)
       }
     },
     async fetchDailyTask() {
@@ -1667,6 +1702,76 @@ $font-bold: 'STSong', 'SimSun', 'Songti SC', 'Source Han Serif CN', serif;
       color: $gray;
       line-height: 40rpx;
     }
+  }
+}
+
+/* 热门诗词 */
+.hot-poems-scroll {
+  white-space: nowrap;
+}
+
+.hot-poems-row {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.hot-poem-card {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 24rpx 28rpx;
+
+  .hot-poem-rank {
+    width: 44rpx;
+    height: 44rpx;
+    border-radius: 12rpx;
+    background: #e8e4da;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24rpx;
+    font-weight: 700;
+    color: #999;
+    flex-shrink: 0;
+
+    &.rank-top {
+      background: #2a6e44;
+      color: #fff;
+    }
+  }
+
+  .hot-poem-info {
+    flex: 1;
+    min-width: 0;
+
+    .hot-poem-title {
+      display: block;
+      font-size: 30rpx;
+      font-weight: 600;
+      color: #1a1a1a;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .hot-poem-meta {
+      display: block;
+      font-size: 24rpx;
+      color: #999;
+      margin-top: 6rpx;
+    }
+  }
+
+  .hot-poem-count {
+    font-size: 22rpx;
+    color: #2a6e44;
+    background: rgba(42, 110, 68, 0.08);
+    padding: 6rpx 16rpx;
+    border-radius: 20rpx;
+    flex-shrink: 0;
   }
 }
 
