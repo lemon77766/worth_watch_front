@@ -47,7 +47,7 @@
             class="card card-white search-card"
             @click="goToDetail(poem.poemId); showSearch = false"
           >
-            <text class="card-title">{{ shortTitle(poem.title) }}</text>
+            <text class="card-title" :style="{ fontSize: titleSize(poem.title, 'card') }">{{ poem.title }}</text>
             <text class="card-body">{{ poem.excerpt }}</text>
             <text class="card-author">{{ poem.author }} · {{ poem.dynasty }}</text>
           </view>
@@ -80,7 +80,7 @@
           </view>
 
           <view class="banner-body">
-            <text class="banner-title">{{ shortTitle(dailyPoem.title) }}</text>
+            <text class="banner-title" :style="{ fontSize: titleSize(dailyPoem.title, 'banner') }">{{ dailyPoem.title }}</text>
             <text class="banner-author">{{ dailyPoem.author }}·{{ dailyPoem.dynasty }}</text>
             <text class="banner-poem" v-for="(line, index) in (dailyPoem.content || '').split('\n')" :key="index">{{ line }}</text>
           </view>
@@ -253,7 +253,7 @@
           </view>
           <view class="side-tag"><text class="side-tag-text">{{ poem.dynasty }}</text></view>
           <view class="card-meta"><text class="meta-text">{{ poem.dynasty }} · 诗</text></view>
-          <text class="card-title">{{ poem.title }}</text>
+          <text class="card-title" :style="{ fontSize: titleSize(poem.title, 'card') }">{{ poem.title }}</text>
           <text class="card-body">{{ poem.excerpt }}</text>
           <view class="card-footer">
             <text class="card-author">{{ poem.author }}</text>
@@ -1011,6 +1011,21 @@ export default {
       if (!title) return ''
       return title.length > maxLen ? title.slice(0, maxLen) + '……' : title
     },
+    titleSize(title, mode = 'card') {
+      if (!title) return mode === 'banner' ? '96rpx' : '56rpx'
+      const len = title.length
+      if (mode === 'banner') {
+        if (len <= 3) return '96rpx'
+        if (len <= 5) return '72rpx'
+        if (len <= 7) return '56rpx'
+        return '44rpx'
+      }
+      // card mode
+      if (len <= 3) return '56rpx'
+      if (len <= 5) return '48rpx'
+      if (len <= 7) return '40rpx'
+      return '34rpx'
+    },
     goToDetail(poemId) {
       uni.navigateTo({ url: `/pages/detail/index?id=${poemId}` })
     },
@@ -1496,12 +1511,13 @@ $font-bold: 'STSong', 'SimSun', 'Songti SC', 'Source Han Serif CN', serif;
     align-items: center;
 
     .banner-title {
-      font-size: 96rpx;
       font-weight: 700;
       color: $green;
       letter-spacing: 10rpx;
-      line-height: 1.1;
+      line-height: 1.2;
       font-family: $font-bold;
+      text-align: center;
+      word-break: break-all;
     }
 
     .banner-author {
@@ -1976,18 +1992,14 @@ $font-bold: 'STSong', 'SimSun', 'Songti SC', 'Source Han Serif CN', serif;
 
   .card-title {
     display: block;
-    font-size: 56rpx;
     font-weight: 600;
     color: $dark;
     margin-bottom: 20rpx;
     font-family: $font-bold;
     padding-right: 60rpx;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    line-height: 1.3;
+    word-break: break-all;
   }
-
-  .card-title-xl { font-size: 72rpx; }
 
   .card-body {
     display: block;

@@ -1,4 +1,4 @@
-const BASE_URL = 'http://192.168.1.119:8080'
+const BASE_URL = 'https://bighorse.top'
 export { BASE_URL }
 
 const request = (options) => {

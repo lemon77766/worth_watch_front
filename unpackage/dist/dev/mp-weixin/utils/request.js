@@ -1,6 +1,6 @@
 "use strict";
 const common_vendor = require("../common/vendor.js");
-const BASE_URL = "http://192.168.1.119:8080";
+const BASE_URL = "https://bighorse.top";
 const request = (options) => {
   return new Promise((resolve, reject) => {
     const token = common_vendor.index.getStorageSync("token");
