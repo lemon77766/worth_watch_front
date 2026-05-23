@@ -3,7 +3,6 @@ Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
 const common_vendor = require("./common/vendor.js");
 const utils_request = require("./utils/request.js");
 if (!Math) {
-  "./pages/login/index.js";
   "./pages/index/index.js";
   "./pages/detail/index.js";
   "./pages/recite/index.js";
@@ -17,13 +16,10 @@ if (!Math) {
   "./pages/project-detail/index.js";
   "./pages/author-detail/index.js";
   "./pages/authors/index.js";
+  "./pages/login/index.js";
 }
 const _sfc_main = {
   onLaunch: function() {
-    const token = common_vendor.index.getStorageSync("token");
-    if (!token) {
-      common_vendor.index.reLaunch({ url: "/pages/login/index" });
-    }
   },
   onShow: function() {
   },

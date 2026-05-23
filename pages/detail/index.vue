@@ -204,6 +204,10 @@ export default {
     },
     async toggleFav() {
       if (!this.poem.poemId) return
+      if (!uni.getStorageSync('token')) {
+        this.promptLogin()
+        return
+      }
       try {
         const res = await toggleFavorite(this.poem.poemId)
         if (res) {
@@ -226,6 +230,10 @@ export default {
     async markStudied() {
       if (this.studied) return
       if (!this.poem.poemId) return
+      if (!uni.getStorageSync('token')) {
+        this.promptLogin()
+        return
+      }
       try {
         await submitStudyRecord({
           type: 'poem',
@@ -240,6 +248,18 @@ export default {
       } catch (e) {
         console.error('提交学习记录失败', e)
       }
+    },
+    promptLogin() {
+      uni.showModal({
+        title: '提示',
+        content: '请先登录后再操作',
+        confirmText: '去登录',
+        success: (res) => {
+          if (res.confirm) {
+            uni.navigateTo({ url: '/pages/login/index' })
+          }
+        }
+      })
     }
   }
 }

@@ -58,6 +58,10 @@ const _sfc_main = {
     async toggleFav() {
       if (!this.poem.poemId)
         return;
+      if (!common_vendor.index.getStorageSync("token")) {
+        this.promptLogin();
+        return;
+      }
       try {
         const res = await utils_request.toggleFavorite(this.poem.poemId);
         if (res) {
@@ -66,7 +70,7 @@ const _sfc_main = {
           common_vendor.index.showToast({ title: res.message || (this.faved ? "已收藏" : "已取消收藏"), icon: "none" });
         }
       } catch (e) {
-        common_vendor.index.__f__("error", "at pages/detail/index.vue:215", "收藏失败", e);
+        common_vendor.index.__f__("error", "at pages/detail/index.vue:219", "收藏失败", e);
       }
     },
     toggleMode(mode) {
@@ -82,6 +86,10 @@ const _sfc_main = {
         return;
       if (!this.poem.poemId)
         return;
+      if (!common_vendor.index.getStorageSync("token")) {
+        this.promptLogin();
+        return;
+      }
       try {
         await utils_request.submitStudyRecord({
           type: "poem",
@@ -93,8 +101,20 @@ const _sfc_main = {
         common_vendor.index.setStorageSync("studiedPoems", studiedMap);
         common_vendor.index.showToast({ title: "已标记学完", icon: "success" });
       } catch (e) {
-        common_vendor.index.__f__("error", "at pages/detail/index.vue:241", "提交学习记录失败", e);
+        common_vendor.index.__f__("error", "at pages/detail/index.vue:249", "提交学习记录失败", e);
       }
+    },
+    promptLogin() {
+      common_vendor.index.showModal({
+        title: "提示",
+        content: "请先登录后再操作",
+        confirmText: "去登录",
+        success: (res) => {
+          if (res.confirm) {
+            common_vendor.index.navigateTo({ url: "/pages/login/index" });
+          }
+        }
+      });
     }
   }
 };

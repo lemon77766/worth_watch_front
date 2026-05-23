@@ -61,8 +61,8 @@
     <!-- 顶部导航栏（共用） -->
     <view class="navbar">
       <view class="navbar-left">
-        <image v-if="userInfo && userInfo.avatarUrl" class="navbar-avatar" :src="userInfo.avatarUrl" mode="aspectFill" @click="currentTab = 'mine'" />
-        <view v-else class="navbar-avatar" @click="currentTab = 'mine'" />
+        <image v-if="userInfo && userInfo.avatarUrl" class="navbar-avatar" :src="userInfo.avatarUrl" mode="aspectFill" @click="onMineTabClick" />
+        <view v-else class="navbar-avatar" @click="onMineTabClick" />
         <uni-icons type="search" size="24" color="#2a6e44" @click="openSearch" />
       </view>
       <text class="navbar-title">{{ navTitle }}</text>
@@ -380,57 +380,72 @@
 
     <!-- 我的页内容 -->
     <scroll-view v-if="currentTab === 'mine'" scroll-y class="scroll-body">
-      <!-- 用户信息区 -->
-      <view class="mine-user-area">
-        <view class="mine-avatar-wrap">
-          <image v-if="userInfo && userInfo.avatarUrl" class="mine-avatar" :src="userInfo.avatarUrl" mode="aspectFill" />
-          <view v-else class="mine-avatar" />
-          <view class="mine-cert-tag">
-            <text class="mine-cert-text">雅士｜认证</text>
-          </view>
+      <!-- 未登录状态 -->
+      <view v-if="!isLoggedIn" class="mine-login-area">
+        <view class="mine-login-icon">
+          <uni-icons type="person" size="64" color="#2a6e44" />
         </view>
-        <text class="mine-username">{{ userInfo && userInfo.nickname || '未设置昵称' }}</text>
-        <view class="mine-stats-row">
-          <view class="mine-stat-card">
-            <text class="mine-stat-label">收藏文章</text>
-            <view class="mine-stat-num-row">
-              <text class="mine-stat-num">{{ mineStats.favCount }}</text>
-              <text class="mine-stat-unit">篇</text>
-            </view>
-          </view>
-          <view class="mine-stat-card">
-            <text class="mine-stat-label">研习天数</text>
-            <view class="mine-stat-num-row">
-              <text class="mine-stat-num">{{ mineStats.studyDays }}</text>
-              <text class="mine-stat-unit">日</text>
-            </view>
-          </view>
+        <text class="mine-login-title">登录后解锁更多功能</text>
+        <text class="mine-login-desc">收藏诗词、记录研习、打卡签到</text>
+        <view class="mine-login-btn" @click="goLogin">
+          <text class="mine-login-btn-text">微信一键登录</text>
         </view>
       </view>
 
-      <!-- 功能菜单 -->
-      <view class="mine-menu-list">
-        <view class="mine-menu-item" v-for="item in menuItems" :key="item.label" @click="onMenu(item)">
-          <view class="mine-menu-icon-wrap" :style="{ background: item.iconBg }">
-            <uni-icons :type="item.icon" size="22" :color="item.iconColor" />
+      <!-- 已登录状态 -->
+      <view v-else>
+        <!-- 用户信息区 -->
+        <view class="mine-user-area">
+          <view class="mine-avatar-wrap">
+            <image v-if="userInfo && userInfo.avatarUrl" class="mine-avatar" :src="userInfo.avatarUrl" mode="aspectFill" />
+            <view v-else class="mine-avatar" />
+            <view class="mine-cert-tag">
+              <text class="mine-cert-text">雅士｜认证</text>
+            </view>
           </view>
-          <text class="mine-menu-label">{{ item.label }}</text>
-          <uni-icons type="right" size="16" color="#ccc" />
+          <text class="mine-username">{{ userInfo && userInfo.nickname || '未设置昵称' }}</text>
+          <view class="mine-stats-row">
+            <view class="mine-stat-card">
+              <text class="mine-stat-label">收藏文章</text>
+              <view class="mine-stat-num-row">
+                <text class="mine-stat-num">{{ mineStats.favCount }}</text>
+                <text class="mine-stat-unit">篇</text>
+              </view>
+            </view>
+            <view class="mine-stat-card">
+              <text class="mine-stat-label">研习天数</text>
+              <view class="mine-stat-num-row">
+                <text class="mine-stat-num">{{ mineStats.studyDays }}</text>
+                <text class="mine-stat-unit">日</text>
+              </view>
+            </view>
+          </view>
         </view>
-      </view>
 
-      <!-- 底部诗句 + 退出 -->
-      <view class="mine-footer">
-        <view class="mine-divider-wrap">
-          <view class="mine-divider-line" />
-          <view class="mine-divider-dot" />
+        <!-- 功能菜单 -->
+        <view class="mine-menu-list">
+          <view class="mine-menu-item" v-for="item in menuItems" :key="item.label" @click="onMenu(item)">
+            <view class="mine-menu-icon-wrap" :style="{ background: item.iconBg }">
+              <uni-icons :type="item.icon" size="22" :color="item.iconColor" />
+            </view>
+            <text class="mine-menu-label">{{ item.label }}</text>
+            <uni-icons type="right" size="16" color="#ccc" />
+          </view>
         </view>
-        <text class="mine-poem">回首向来萧瑟处</text>
-        <text class="mine-poem">归去</text>
-        <text class="mine-poem">也无风雨也无晴</text>
-        <view class="mine-logout" @click="onLogout">
-          <uni-icons type="redo" size="18" color="#b82e2e" />
-          <text class="mine-logout-text">退出登录</text>
+
+        <!-- 底部诗句 + 退出 -->
+        <view class="mine-footer">
+          <view class="mine-divider-wrap">
+            <view class="mine-divider-line" />
+            <view class="mine-divider-dot" />
+          </view>
+          <text class="mine-poem">回首向来萧瑟处</text>
+          <text class="mine-poem">归去</text>
+          <text class="mine-poem">也无风雨也无晴</text>
+          <view class="mine-logout" @click="onLogout">
+            <uni-icons type="redo" size="18" color="#b82e2e" />
+            <text class="mine-logout-text">退出登录</text>
+          </view>
         </view>
       </view>
       <view style="height:40rpx;" />
@@ -459,7 +474,7 @@
         <uni-icons v-else type="compose" size="24" color="#999" />
         <text class="tab-text" :class="{ 'active-tab-text': currentTab === 'study' }">研习</text>
       </view>
-      <view class="tab" :class="{ 'active-tab': currentTab === 'mine' }" @click="currentTab = 'mine'">
+      <view class="tab" :class="{ 'active-tab': currentTab === 'mine' }" @click="onMineTabClick">
         <view v-if="currentTab === 'mine'" class="tab-icon-wrap">
           <uni-icons type="person" size="22" color="#fff" />
         </view>
@@ -591,6 +606,7 @@ export default {
   },
   data() {
     return {
+      isLoggedIn: false,
       userInfo: null,
       dailyPoem: null,
       currentTab: 'home',
@@ -665,7 +681,7 @@ export default {
       if (newTab === 'library' && this.poemsList.length === 0) {
         this.fetchPoems()
       }
-      if (newTab === 'study') {
+      if (newTab === 'study' && this.isLoggedIn) {
         this.fetchCurrentProject()
         this.fetchDailyTask()
         this.fetchStudyProgress()
@@ -674,12 +690,17 @@ export default {
     }
   },
   onLoad(options) {
-    this.fetchUserProfile()
+    // 初始化登录状态
+    this.isLoggedIn = !!uni.getStorageSync('token')
     this.fetchDailyPoem()
     this.fetchHotAuthors()
     this.fetchRecommendDynasties()
     this.fetchHotPoems()
-    this.fetchAchievements()
+    // 已登录才请求用户相关数据
+    if (this.isLoggedIn) {
+      this.fetchUserProfile()
+      this.fetchAchievements()
+    }
     // 监听合集诗词被移除事件
     uni.$on('onProjectPoemRemoved', (data) => {
       console.log('[首页] 收到合集诗词移除事件', data)
@@ -705,23 +726,19 @@ export default {
     uni.$off('goToMine')
   },
   onShow() {
-    // 每次显示页面时刷新用户信息
-    this.fetchUserProfile()
-    // 刷新我的页面统计
-    this.fetchMineStats()
-    // 每次显示页面时刷新当前选中的学习合集
-    this.fetchCurrentProject()
-    // 每次显示页面时刷新研习进度
-    if (this.currentTab === 'study') {
-      this.fetchStudyProgress()
-      this.fetchDailyTask()
-      this.fetchAchievements()
-    }
-  },
-  computed: {
-    navTitle() {
-      const map = { home: '值得看么', library: '值得看么', study: '研习', mine: '值得看么' }
-      return map[this.currentTab] || '值得看么'
+    // 每次显示页面时，先从 storage 重新读取登录状态
+    this.isLoggedIn = !!uni.getStorageSync('token')
+    // 已登录才刷新用户信息、统计和学习相关数据
+    if (this.isLoggedIn) {
+      this.fetchUserProfile()
+      this.fetchMineStats()
+      this.fetchCurrentProject()
+      // 如果当前在研习Tab，刷新研习数据
+      if (this.currentTab === 'study') {
+        this.fetchStudyProgress()
+        this.fetchDailyTask()
+        this.fetchAchievements()
+      }
     }
   },
   methods: {
@@ -1030,6 +1047,12 @@ export default {
       uni.navigateTo({ url: `/pages/detail/index?id=${poemId}` })
     },
     onMenu(item) {
+      // 需要登录才能使用的功能
+      const needLoginLabels = ['我的学习合集', '我的收藏', '研习历史', '每日打卡']
+      if (needLoginLabels.includes(item.label) && !this.isLoggedIn) {
+        this.goLogin()
+        return
+      }
       if (item.label === '系统设置') {
         uni.navigateTo({ url: '/pages/settings/index' })
         return
@@ -1061,9 +1084,21 @@ export default {
         title: '退出登录',
         content: '确定要退出登录吗？',
         success: (res) => {
-          if (res.confirm) uni.reLaunch({ url: '/pages/login/index' })
+          if (res.confirm) {
+            uni.removeStorageSync('token')
+            uni.removeStorageSync('userInfo')
+            this.userInfo = null
+            this.mineStats = { favCount: 0, studyDays: 0 }
+            uni.showToast({ title: '已退出登录', icon: 'none' })
+          }
         }
       })
+    },
+    onMineTabClick() {
+      this.currentTab = 'mine'
+    },
+    goLogin() {
+      uni.navigateTo({ url: '/pages/login/index' })
     },
     // 切换批量选择模式
     toggleBatchMode() {
@@ -2239,6 +2274,53 @@ $font-bold: 'STSong', 'SimSun', 'Songti SC', 'Source Han Serif CN', serif;
   }
 }
 /* ── 我的页样式 ── */
+.mine-login-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 160rpx;
+
+  .mine-login-icon {
+    width: 160rpx;
+    height: 160rpx;
+    border-radius: 50%;
+    background: rgba(42, 110, 68, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 36rpx;
+  }
+
+  .mine-login-title {
+    font-size: 36rpx;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 12rpx;
+  }
+
+  .mine-login-desc {
+    font-size: 26rpx;
+    color: #999;
+    margin-bottom: 60rpx;
+  }
+
+  .mine-login-btn {
+    width: 480rpx;
+    height: 88rpx;
+    background: #2a6e44;
+    border-radius: 44rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .mine-login-btn-text {
+      font-size: 30rpx;
+      color: #fff;
+      font-weight: 500;
+    }
+  }
+}
+
 .mine-user-area {
   display: flex;
   flex-direction: column;

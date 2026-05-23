@@ -1,6 +1,5 @@
 {
   "pages": [
-    "pages/login/index",
     "pages/index/index",
     "pages/detail/index",
     "pages/recite/index",
@@ -13,7 +12,8 @@
     "pages/projects/index",
     "pages/project-detail/index",
     "pages/author-detail/index",
-    "pages/authors/index"
+    "pages/authors/index",
+    "pages/login/index"
   ],
   "window": {
     "navigationBarTextStyle": "black",

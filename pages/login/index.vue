@@ -1,5 +1,10 @@
 <template>
   <view class="page">
+    <!-- 返回按钮 -->
+    <view class="back-btn" @click="goBack">
+      <uni-icons type="left" size="22" color="#2a6e44" />
+    </view>
+
     <!-- 背景水印 -->
     <text class="watermark">诗</text>
 
@@ -148,7 +153,12 @@ export default {
           const info = { nickname, avatarUrl }
           uni.setStorageSync('userInfo', info)
           uni.removeStorageSync('isNewUser')
-          uni.reLaunch({ url: '/pages/index/index' })
+          // 登录成功后返回上一页（而非reLaunch，让用户回到原浏览位置）
+          uni.navigateBack({
+            fail: () => {
+              uni.reLaunch({ url: '/pages/index/index' })
+            }
+          })
         } else {
           // 服务端无资料，弹出完善信息弹窗
           this.showProfileModal = true
@@ -161,7 +171,11 @@ export default {
         if (isNewUser || !userInfo || !userInfo.nickname) {
           this.showProfileModal = true
         } else {
-          uni.reLaunch({ url: '/pages/index/index' })
+          uni.navigateBack({
+            fail: () => {
+              uni.reLaunch({ url: '/pages/index/index' })
+            }
+          })
         }
       })
     },
@@ -259,12 +273,27 @@ export default {
         uni.hideLoading()
         this.submitting = false
         uni.removeStorageSync('isNewUser')
-        uni.reLaunch({ url: '/pages/index/index' })
+        uni.navigateBack({
+          fail: () => {
+            uni.reLaunch({ url: '/pages/index/index' })
+          }
+        })
       }
     },
     skipProfile() {
       uni.removeStorageSync('isNewUser')
-      uni.reLaunch({ url: '/pages/index/index' })
+      uni.navigateBack({
+        fail: () => {
+          uni.reLaunch({ url: '/pages/index/index' })
+        }
+      })
+    },
+    goBack() {
+      uni.navigateBack({
+        fail: () => {
+          uni.reLaunch({ url: '/pages/index/index' })
+        }
+      })
     },
     goAgreement(type) {
       if (type === 'service') {
@@ -283,6 +312,21 @@ $bg: #f8f5ee;
 $gray: #888888;
 $btn-bg: #e5e7eb;
 $blue: #3b82f6;
+
+/* 返回按钮 */
+.back-btn {
+  position: absolute;
+  top: calc(80rpx + env(safe-area-inset-top));
+  left: 36rpx;
+  z-index: 10;
+  width: 64rpx;
+  height: 64rpx;
+  background: rgba(42,110,68,0.08);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 .page {
   min-height: 100vh;

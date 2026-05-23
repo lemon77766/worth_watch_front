@@ -1,12 +1,7 @@
 <script>
 	export default {
 		onLaunch: function() {
-			// 如果没有token，跳转到登录页
-			const token = uni.getStorageSync('token')
-			if (!token) {
-				uni.reLaunch({ url: '/pages/login/index' })
-			}
-			// 如果有token，直接进入首页（首页会自动验证token有效性）
+			// 不再强制跳转登录页，允许用户先浏览
 		},
 		onShow: function() {},
 		onHide: function() {}

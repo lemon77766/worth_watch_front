@@ -42,6 +42,20 @@ const _sfc_main = {
     }
   },
   onLoad() {
+    if (!common_vendor.index.getStorageSync("token")) {
+      common_vendor.index.showModal({
+        title: "提示",
+        content: "请先登录后使用打卡功能",
+        confirmText: "去登录",
+        success: (res) => {
+          if (res.confirm) {
+            common_vendor.index.navigateTo({ url: "/pages/login/index" });
+          }
+          common_vendor.index.navigateBack();
+        }
+      });
+      return;
+    }
     this.fetchHistory();
   },
   methods: {
@@ -61,7 +75,7 @@ const _sfc_main = {
           this.selectedPoems = [];
         }
       } catch (e) {
-        common_vendor.index.__f__("error", "at pages/checkin/index.vue:195", "获取打卡历史失败", e);
+        common_vendor.index.__f__("error", "at pages/checkin/index.vue:209", "获取打卡历史失败", e);
       }
     },
     prevMonth() {
@@ -97,7 +111,7 @@ const _sfc_main = {
         this.totalDays++;
         common_vendor.index.showToast({ title: "打卡成功！", icon: "success" });
       } catch (e) {
-        common_vendor.index.__f__("error", "at pages/checkin/index.vue:223", "打卡失败", e);
+        common_vendor.index.__f__("error", "at pages/checkin/index.vue:237", "打卡失败", e);
       }
     },
     goToDetail(poemId) {

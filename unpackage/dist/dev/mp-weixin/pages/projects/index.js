@@ -9,6 +9,20 @@ const _sfc_main = {
     };
   },
   onLoad() {
+    if (!common_vendor.index.getStorageSync("token")) {
+      common_vendor.index.showModal({
+        title: "提示",
+        content: "请先登录后查看学习合集",
+        confirmText: "去登录",
+        success: (res) => {
+          if (res.confirm) {
+            common_vendor.index.navigateTo({ url: "/pages/login/index" });
+          }
+          common_vendor.index.navigateBack();
+        }
+      });
+      return;
+    }
     this.fetchProjects();
   },
   methods: {
@@ -16,10 +30,10 @@ const _sfc_main = {
       this.loading = true;
       try {
         const data = await utils_request.getProjects();
-        common_vendor.index.__f__("log", "at pages/projects/index.vue:101", "[获取学习合集] 成功:", data);
+        common_vendor.index.__f__("log", "at pages/projects/index.vue:115", "[获取学习合集] 成功:", data);
         this.projects = data || [];
       } catch (err) {
-        common_vendor.index.__f__("error", "at pages/projects/index.vue:104", "[获取学习合集] 失败:", err);
+        common_vendor.index.__f__("error", "at pages/projects/index.vue:118", "[获取学习合集] 失败:", err);
         common_vendor.index.showToast({ title: "获取合集失败", icon: "none" });
       } finally {
         this.loading = false;
@@ -41,10 +55,10 @@ const _sfc_main = {
         return;
       try {
         await utils_request.selectCurrentProject(project.projectId);
-        common_vendor.index.__f__("log", "at pages/projects/index.vue:124", "[选择合集] 选中成功:", project.name);
+        common_vendor.index.__f__("log", "at pages/projects/index.vue:138", "[选择合集] 选中成功:", project.name);
         this.fetchProjects();
       } catch (err) {
-        common_vendor.index.__f__("error", "at pages/projects/index.vue:127", "[选择合集] 选中失败:", err);
+        common_vendor.index.__f__("error", "at pages/projects/index.vue:141", "[选择合集] 选中失败:", err);
         common_vendor.index.showToast({ title: "选择合集失败", icon: "none" });
       }
     },
@@ -57,11 +71,11 @@ const _sfc_main = {
           if (res.confirm) {
             try {
               await utils_request.deleteProject(project.projectId);
-              common_vendor.index.__f__("log", "at pages/projects/index.vue:140", "[删除合集] 删除成功:", project.name);
+              common_vendor.index.__f__("log", "at pages/projects/index.vue:154", "[删除合集] 删除成功:", project.name);
               common_vendor.index.showToast({ title: "删除成功", icon: "success" });
               this.projects = this.projects.filter((p) => p.projectId !== project.projectId);
             } catch (err) {
-              common_vendor.index.__f__("error", "at pages/projects/index.vue:144", "[删除合集] 删除失败:", err);
+              common_vendor.index.__f__("error", "at pages/projects/index.vue:158", "[删除合集] 删除失败:", err);
               common_vendor.index.showToast({ title: "删除失败", icon: "none" });
             }
           }
@@ -86,11 +100,11 @@ const _sfc_main = {
               return;
             try {
               await utils_request.renameProject(project.projectId, newName);
-              common_vendor.index.__f__("log", "at pages/projects/index.vue:168", "[改名合集] 改名成功:", newName);
+              common_vendor.index.__f__("log", "at pages/projects/index.vue:182", "[改名合集] 改名成功:", newName);
               common_vendor.index.showToast({ title: "改名成功", icon: "success" });
               project.name = newName;
             } catch (err) {
-              common_vendor.index.__f__("error", "at pages/projects/index.vue:172", "[改名合集] 改名失败:", err);
+              common_vendor.index.__f__("error", "at pages/projects/index.vue:186", "[改名合集] 改名失败:", err);
               common_vendor.index.showToast({ title: "改名失败", icon: "none" });
             }
           }

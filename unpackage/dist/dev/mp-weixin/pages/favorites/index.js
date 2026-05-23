@@ -17,6 +17,20 @@ const _sfc_main = {
     }
   },
   onLoad() {
+    if (!common_vendor.index.getStorageSync("token")) {
+      common_vendor.index.showModal({
+        title: "提示",
+        content: "请先登录后查看收藏",
+        confirmText: "去登录",
+        success: (res) => {
+          if (res.confirm) {
+            common_vendor.index.navigateTo({ url: "/pages/login/index" });
+          }
+          common_vendor.index.navigateBack();
+        }
+      });
+      return;
+    }
     this.fetchFavorites();
   },
   methods: {
@@ -32,7 +46,7 @@ const _sfc_main = {
           this.total = res.total;
         }
       } catch (e) {
-        common_vendor.index.__f__("error", "at pages/favorites/index.vue:99", "获取收藏列表失败", e);
+        common_vendor.index.__f__("error", "at pages/favorites/index.vue:113", "获取收藏列表失败", e);
       } finally {
         this.loading = false;
       }
@@ -50,7 +64,7 @@ const _sfc_main = {
               this.total--;
               common_vendor.index.showToast({ title: "已取消收藏", icon: "none" });
             } catch (e) {
-              common_vendor.index.__f__("error", "at pages/favorites/index.vue:117", "取消收藏失败", e);
+              common_vendor.index.__f__("error", "at pages/favorites/index.vue:131", "取消收藏失败", e);
             }
           }
         }

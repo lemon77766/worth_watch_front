@@ -16,6 +16,20 @@ const _sfc_main = {
     };
   },
   onLoad() {
+    if (!common_vendor.index.getStorageSync("token")) {
+      common_vendor.index.showModal({
+        title: "提示",
+        content: "请先登录后查看研习历史",
+        confirmText: "去登录",
+        success: (res) => {
+          if (res.confirm) {
+            common_vendor.index.navigateTo({ url: "/pages/login/index" });
+          }
+          common_vendor.index.navigateBack();
+        }
+      });
+      return;
+    }
     this.fetchHistory();
     this.fetchProgress();
   },
@@ -28,7 +42,7 @@ const _sfc_main = {
           this.overview[1].num = data.learnedCount || 0;
         }
       } catch (e) {
-        common_vendor.index.__f__("error", "at pages/history/index.vue:82", "获取研习进度失败", e);
+        common_vendor.index.__f__("error", "at pages/history/index.vue:96", "获取研习进度失败", e);
       }
     },
     async fetchHistory() {
@@ -87,7 +101,7 @@ const _sfc_main = {
           }
         }
       } catch (e) {
-        common_vendor.index.__f__("error", "at pages/history/index.vue:141", "获取研习历史失败", e);
+        common_vendor.index.__f__("error", "at pages/history/index.vue:155", "获取研习历史失败", e);
       } finally {
         this.loading = false;
       }

@@ -31,7 +31,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 48rpx;
+  margin-bottom: 24rpx;
 }
 .nav-row .nav-btn {
   width: 72rpx;
@@ -227,14 +227,21 @@ to {
     transform: rotate(360deg);
 }
 }
-/* 音色选择 */
-.vcn-wrap {
+/* 音色 / 倍速 选择行 */
+.opt-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 32rpx;
+  margin-bottom: 16rpx;
+  position: relative;
+}
+.opt-wrap {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 32rpx;
 }
-.vcn-wrap .vcn-toggle {
+.opt-toggle {
   display: flex;
   align-items: center;
   gap: 12rpx;
@@ -243,11 +250,11 @@ to {
   background: rgba(255, 255, 255, 0.1);
   border: 1rpx solid rgba(255, 255, 255, 0.15);
 }
-.vcn-wrap .vcn-toggle .vcn-toggle-text {
+.opt-toggle .opt-toggle-text {
   font-size: 24rpx;
   color: rgba(255, 255, 255, 0.7);
 }
-.vcn-wrap .vcn-toggle .vcn-toggle-arrow {
+.opt-toggle .opt-toggle-arrow {
   width: 0;
   height: 0;
   border-left: 10rpx solid transparent;
@@ -255,41 +262,45 @@ to {
   border-top: 10rpx solid rgba(255, 255, 255, 0.5);
   transition: transform 0.2s;
 }
-.vcn-wrap .vcn-toggle .arrow-open {
+.opt-toggle .arrow-open {
   transform: rotate(180deg);
 }
-.vcn-wrap .vcn-panel {
+.speed-toggle .opt-toggle-text {
+  min-width: 64rpx;
+  text-align: center;
+}
+.opt-panel {
   margin-top: 16rpx;
   background: rgba(30, 40, 28, 0.95);
   border: 1rpx solid rgba(255, 255, 255, 0.12);
   border-radius: 20rpx;
   padding: 8rpx 0;
-  min-width: 400rpx;
+  min-width: 320rpx;
 }
-.vcn-wrap .vcn-panel .vcn-item {
+.opt-panel .opt-item {
   display: flex;
   align-items: center;
   padding: 20rpx 32rpx;
   gap: 16rpx;
 }
-.vcn-wrap .vcn-panel .vcn-item .vcn-item-name {
+.opt-panel .opt-item .opt-item-name {
   font-size: 26rpx;
   color: rgba(255, 255, 255, 0.55);
 }
-.vcn-wrap .vcn-panel .vcn-item .vcn-item-name-active {
+.opt-panel .opt-item .opt-item-name-active {
   color: #fff;
 }
-.vcn-wrap .vcn-panel .vcn-item .vcn-item-desc {
+.opt-panel .opt-item .opt-item-desc {
   font-size: 22rpx;
   color: rgba(255, 255, 255, 0.3);
   flex: 1;
 }
-.vcn-wrap .vcn-panel .vcn-item .vcn-check {
+.opt-panel .opt-item .opt-check {
   width: 16rpx;
   height: 16rpx;
   border-radius: 50%;
   background: rgba(42, 110, 68, 0.9);
 }
-.vcn-wrap .vcn-panel .vcn-item-active {
+.opt-panel .opt-item-active {
   background: rgba(42, 110, 68, 0.25);
 }

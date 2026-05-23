@@ -1,4 +1,4 @@
-const BASE_URL = 'https://bighorse.top'
+const BASE_URL ='https://bighorse.top'
 export { BASE_URL }
 
 const request = (options) => {
@@ -25,8 +25,8 @@ const request = (options) => {
           resolve(data)
         } else if (code === 401) {
           uni.removeStorageSync('token')
-          uni.reLaunch({ url: '/pages/login/index' })
-          reject(new Error(message))
+          // 不强制跳转登录页，只静默清除token，让页面自行处理
+          reject(new Error(message || '未登录'))
         } else {
           console.error(`[✗] ${options.url}: ${message}`)
           uni.showToast({ title: message || '请求失败', icon: 'none' })

@@ -21,13 +21,26 @@ const _sfc_main = {
       vcn: "x4_xiaolu",
       vcnOptions: [],
       audioLoading: false,
-      showVcnPanel: false
+      showVcnPanel: false,
+      playbackRate: 1,
+      speedOptions: [
+        { value: 0.5, label: "0.5x" },
+        { value: 0.75, label: "0.75x" },
+        { value: 1, label: "1.0x" },
+        { value: 1.25, label: "1.25x" },
+        { value: 1.5, label: "1.5x" },
+        { value: 2, label: "2.0x" }
+      ],
+      showSpeedPanel: false
     };
   },
   computed: {
     currentVcnLabel() {
       const cur = this.vcnOptions.find((v) => v.value === this.vcn);
       return cur ? cur.label : "音色";
+    },
+    speedLabel() {
+      return this.playbackRate + "x";
     }
   },
   onLoad(options) {
@@ -48,7 +61,7 @@ const _sfc_main = {
           }
         }
       } catch (e) {
-        common_vendor.index.__f__("error", "at pages/recite/index.vue:139", "获取音色列表失败", e);
+        common_vendor.index.__f__("error", "at pages/recite/index.vue:173", "获取音色列表失败", e);
       }
     },
     async fetchPoem(id) {
@@ -65,7 +78,7 @@ const _sfc_main = {
           };
         }
       } catch (e) {
-        common_vendor.index.__f__("error", "at pages/recite/index.vue:156", "获取诗词失败", e);
+        common_vendor.index.__f__("error", "at pages/recite/index.vue:190", "获取诗词失败", e);
       }
     },
     async playTts() {
@@ -95,6 +108,7 @@ const _sfc_main = {
         this.audioCtx = common_vendor.index.createInnerAudioContext();
         this.audioCtx.src = downloadRes.tempFilePath;
         this.audioCtx.autoplay = true;
+        this.audioCtx.playbackRate = this.playbackRate;
         this.audioCtx.onPlay(() => {
           this.playing = true;
           this.audioLoading = false;
@@ -124,13 +138,13 @@ const _sfc_main = {
           this.playing = false;
         });
         this.audioCtx.onError((err) => {
-          common_vendor.index.__f__("error", "at pages/recite/index.vue:220", "TTS播放失败", err);
+          common_vendor.index.__f__("error", "at pages/recite/index.vue:255", "TTS播放失败", err);
           this.playing = false;
           this.audioLoading = false;
           common_vendor.index.showToast({ title: "播放失败", icon: "none" });
         });
       } catch (e) {
-        common_vendor.index.__f__("error", "at pages/recite/index.vue:226", "TTS请求失败", e);
+        common_vendor.index.__f__("error", "at pages/recite/index.vue:261", "TTS请求失败", e);
         this.audioLoading = false;
       }
     },
@@ -213,6 +227,13 @@ const _sfc_main = {
         this.playTts();
       }
     },
+    onSpeedChange(rate) {
+      this.playbackRate = rate;
+      this.showSpeedPanel = false;
+      if (this.audioCtx) {
+        this.audioCtx.playbackRate = rate;
+      }
+    },
     seekToLine(lineIdx) {
       const totalLines = this.poem.lines.length;
       if (totalLines === 0)
@@ -287,37 +308,15 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
       color: "rgba(255,255,255,0.7)"
     }),
     b: common_vendor.o(($event) => common_vendor.index.navigateBack()),
-    c: common_vendor.t($data.poem.title),
-    d: common_vendor.t($data.poem.dynasty),
-    e: common_vendor.t($data.poem.author),
-    f: common_vendor.f($data.poem.lines, (line, i, i0) => {
-      return {
-        a: common_vendor.t(line),
-        b: i,
-        c: i === $data.currentLine ? 1 : "",
-        d: i !== $data.currentLine ? 1 : "",
-        e: common_vendor.o(($event) => $options.seekToLine(i), i)
-      };
+    c: common_vendor.t($options.currentVcnLabel),
+    d: $data.showVcnPanel ? 1 : "",
+    e: common_vendor.o(($event) => {
+      $data.showVcnPanel = !$data.showVcnPanel;
+      $data.showSpeedPanel = false;
     }),
-    g: common_vendor.t($options.formatTime($data.currentTime)),
-    h: common_vendor.t($options.formatTime($data.duration)),
-    i: $data.progress + "%",
-    j: $data.progress + "%",
-    k: common_vendor.o((...args) => $options.onProgressTouchStart && $options.onProgressTouchStart(...args)),
-    l: common_vendor.o((...args) => $options.onProgressTouchMove && $options.onProgressTouchMove(...args)),
-    m: common_vendor.o((...args) => $options.onProgressTouchEnd && $options.onProgressTouchEnd(...args)),
-    n: common_vendor.o((...args) => $options.prev && $options.prev(...args)),
-    o: $data.audioLoading
-  }, $data.audioLoading ? {} : !$data.playing ? {} : {}, {
-    p: !$data.playing,
-    q: common_vendor.o((...args) => $options.togglePlay && $options.togglePlay(...args)),
-    r: common_vendor.o((...args) => $options.next && $options.next(...args)),
-    s: common_vendor.t($options.currentVcnLabel),
-    t: $data.showVcnPanel ? 1 : "",
-    v: common_vendor.o(($event) => $data.showVcnPanel = !$data.showVcnPanel),
-    w: $data.showVcnPanel
+    f: $data.showVcnPanel
   }, $data.showVcnPanel ? {
-    x: common_vendor.f($data.vcnOptions, (v, k0, i0) => {
+    g: common_vendor.f($data.vcnOptions, (v, k0, i0) => {
       return common_vendor.e({
         a: common_vendor.t(v.label),
         b: $data.vcn === v.value ? 1 : "",
@@ -332,7 +331,53 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
         h: common_vendor.o(($event) => $options.onVcnChange(v.value), v.value)
       });
     })
-  } : {});
+  } : {}, {
+    h: common_vendor.t($options.speedLabel),
+    i: $data.showSpeedPanel ? 1 : "",
+    j: common_vendor.o(($event) => {
+      $data.showSpeedPanel = !$data.showSpeedPanel;
+      $data.showVcnPanel = false;
+    }),
+    k: $data.showSpeedPanel
+  }, $data.showSpeedPanel ? {
+    l: common_vendor.f($data.speedOptions, (s, k0, i0) => {
+      return common_vendor.e({
+        a: common_vendor.t(s.label),
+        b: $data.playbackRate === s.value ? 1 : "",
+        c: $data.playbackRate === s.value
+      }, $data.playbackRate === s.value ? {} : {}, {
+        d: s.value,
+        e: $data.playbackRate === s.value ? 1 : "",
+        f: common_vendor.o(($event) => $options.onSpeedChange(s.value), s.value)
+      });
+    })
+  } : {}, {
+    m: common_vendor.t($data.poem.title),
+    n: common_vendor.t($data.poem.dynasty),
+    o: common_vendor.t($data.poem.author),
+    p: common_vendor.f($data.poem.lines, (line, i, i0) => {
+      return {
+        a: common_vendor.t(line),
+        b: i,
+        c: i === $data.currentLine ? 1 : "",
+        d: i !== $data.currentLine ? 1 : "",
+        e: common_vendor.o(($event) => $options.seekToLine(i), i)
+      };
+    }),
+    q: common_vendor.t($options.formatTime($data.currentTime)),
+    r: common_vendor.t($options.formatTime($data.duration)),
+    s: $data.progress + "%",
+    t: $data.progress + "%",
+    v: common_vendor.o((...args) => $options.onProgressTouchStart && $options.onProgressTouchStart(...args)),
+    w: common_vendor.o((...args) => $options.onProgressTouchMove && $options.onProgressTouchMove(...args)),
+    x: common_vendor.o((...args) => $options.onProgressTouchEnd && $options.onProgressTouchEnd(...args)),
+    y: common_vendor.o((...args) => $options.prev && $options.prev(...args)),
+    z: $data.audioLoading
+  }, $data.audioLoading ? {} : !$data.playing ? {} : {}, {
+    A: !$data.playing,
+    B: common_vendor.o((...args) => $options.togglePlay && $options.togglePlay(...args)),
+    C: common_vendor.o((...args) => $options.next && $options.next(...args))
+  });
 }
 const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render]]);
 wx.createPage(MiniProgramPage);

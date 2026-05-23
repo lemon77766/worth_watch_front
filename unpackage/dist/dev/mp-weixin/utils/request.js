@@ -26,8 +26,7 @@ const request = (options) => {
           resolve(data);
         } else if (code === 401) {
           common_vendor.index.removeStorageSync("token");
-          common_vendor.index.reLaunch({ url: "/pages/login/index" });
-          reject(new Error(message));
+          reject(new Error(message || "未登录"));
         } else {
           common_vendor.index.__f__("error", "at utils/request.js:31", `[✗] ${options.url}: ${message}`);
           common_vendor.index.showToast({ title: message || "请求失败", icon: "none" });

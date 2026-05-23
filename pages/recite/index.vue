@@ -11,6 +11,46 @@
       <view style="width:72rpx;" />
     </view>
 
+    <!-- 音色 / 倍速 选择 -->
+    <view class="opt-row">
+      <!-- 音色选择 -->
+      <view class="opt-wrap">
+        <view class="opt-toggle" @click="showVcnPanel = !showVcnPanel; showSpeedPanel = false">
+          <text class="opt-toggle-text">{{ currentVcnLabel }}</text>
+          <view class="opt-toggle-arrow" :class="{ 'arrow-open': showVcnPanel }" />
+        </view>
+        <view v-if="showVcnPanel" class="opt-panel left-panel">
+          <view
+            v-for="v in vcnOptions" :key="v.value"
+            class="opt-item" :class="{ 'opt-item-active': vcn === v.value }"
+            @click="onVcnChange(v.value)"
+          >
+            <text class="opt-item-name" :class="{ 'opt-item-name-active': vcn === v.value }">{{ v.label }}</text>
+            <text v-if="v.desc" class="opt-item-desc">{{ v.desc }}</text>
+            <view v-if="vcn === v.value" class="opt-check" />
+          </view>
+        </view>
+      </view>
+
+      <!-- 倍速选择 -->
+      <view class="opt-wrap">
+        <view class="opt-toggle speed-toggle" @click="showSpeedPanel = !showSpeedPanel; showVcnPanel = false">
+          <text class="opt-toggle-text">{{ speedLabel }}</text>
+          <view class="opt-toggle-arrow" :class="{ 'arrow-open': showSpeedPanel }" />
+        </view>
+        <view v-if="showSpeedPanel" class="opt-panel right-panel">
+          <view
+            v-for="s in speedOptions" :key="s.value"
+            class="opt-item" :class="{ 'opt-item-active': playbackRate === s.value }"
+            @click="onSpeedChange(s.value)"
+          >
+            <text class="opt-item-name" :class="{ 'opt-item-name-active': playbackRate === s.value }">{{ s.label }}</text>
+            <view v-if="playbackRate === s.value" class="opt-check" />
+          </view>
+        </view>
+      </view>
+    </view>
+
     <view class="poem-header">
       <text class="poem-title">{{ poem.title }}</text>
       <text class="poem-author">{{ poem.dynasty }} · {{ poem.author }}</text>
@@ -63,25 +103,6 @@
       </view>
     </view>
 
-    <!-- 音色选择 -->
-    <view class="vcn-wrap">
-      <view class="vcn-toggle" @click="showVcnPanel = !showVcnPanel">
-        <text class="vcn-toggle-text">{{ currentVcnLabel }}</text>
-        <view class="vcn-toggle-arrow" :class="{ 'arrow-open': showVcnPanel }" />
-      </view>
-      <view v-if="showVcnPanel" class="vcn-panel">
-        <view
-          v-for="v in vcnOptions" :key="v.value"
-          class="vcn-item" :class="{ 'vcn-item-active': vcn === v.value }"
-          @click="onVcnChange(v.value)"
-        >
-          <text class="vcn-item-name" :class="{ 'vcn-item-name-active': vcn === v.value }">{{ v.label }}</text>
-          <text v-if="v.desc" class="vcn-item-desc">{{ v.desc }}</text>
-          <view v-if="vcn === v.value" class="vcn-check" />
-        </view>
-      </view>
-    </view>
-
     <view style="height:80rpx;" />
   </view>
 </template>
@@ -109,13 +130,26 @@ export default {
       vcn: 'x4_xiaolu',
       vcnOptions: [],
       audioLoading: false,
-      showVcnPanel: false
+      showVcnPanel: false,
+      playbackRate: 1.0,
+      speedOptions: [
+        { value: 0.5, label: '0.5x' },
+        { value: 0.75, label: '0.75x' },
+        { value: 1.0, label: '1.0x' },
+        { value: 1.25, label: '1.25x' },
+        { value: 1.5, label: '1.5x' },
+        { value: 2.0, label: '2.0x' }
+      ],
+      showSpeedPanel: false
     }
   },
   computed: {
     currentVcnLabel() {
       const cur = this.vcnOptions.find(v => v.value === this.vcn)
       return cur ? cur.label : '音色'
+    },
+    speedLabel() {
+      return this.playbackRate + 'x'
     }
   },
   onLoad(options) {
@@ -183,6 +217,7 @@ export default {
         this.audioCtx = uni.createInnerAudioContext()
         this.audioCtx.src = downloadRes.tempFilePath
         this.audioCtx.autoplay = true
+        this.audioCtx.playbackRate = this.playbackRate
 
         this.audioCtx.onPlay(() => {
           this.playing = true
@@ -307,6 +342,13 @@ export default {
         this.playTts()
       }
     },
+    onSpeedChange(rate) {
+      this.playbackRate = rate
+      this.showSpeedPanel = false
+      if (this.audioCtx) {
+        this.audioCtx.playbackRate = rate
+      }
+    },
     seekToLine(lineIdx) {
       const totalLines = this.poem.lines.length
       if (totalLines === 0) return
@@ -396,7 +438,7 @@ $f:  'PingFang SC', 'Noto Sans SC', -apple-system, sans-serif;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 48rpx;
+  margin-bottom: 24rpx;
 
   .nav-btn {
     width: 72rpx;
@@ -613,81 +655,94 @@ $f:  'PingFang SC', 'Noto Sans SC', -apple-system, sans-serif;
   to { transform: rotate(360deg); }
 }
 
-/* 音色选择 */
-.vcn-wrap {
+/* 音色 / 倍速 选择行 */
+.opt-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 32rpx;
+  margin-bottom: 16rpx;
+  position: relative;
+}
+
+.opt-wrap {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 32rpx;
+}
 
-  .vcn-toggle {
+.opt-toggle {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  padding: 12rpx 32rpx;
+  border-radius: 32rpx;
+  background: rgba(255,255,255,0.1);
+  border: 1rpx solid rgba(255,255,255,0.15);
+
+  .opt-toggle-text {
+    font-size: 24rpx;
+    color: rgba(255,255,255,0.7);
+  }
+
+  .opt-toggle-arrow {
+    width: 0;
+    height: 0;
+    border-left: 10rpx solid transparent;
+    border-right: 10rpx solid transparent;
+    border-top: 10rpx solid rgba(255,255,255,0.5);
+    transition: transform 0.2s;
+  }
+
+  .arrow-open {
+    transform: rotate(180deg);
+  }
+}
+
+.speed-toggle .opt-toggle-text {
+  min-width: 64rpx;
+  text-align: center;
+}
+
+.opt-panel {
+  margin-top: 16rpx;
+  background: rgba(30,40,28,0.95);
+  border: 1rpx solid rgba(255,255,255,0.12);
+  border-radius: 20rpx;
+  padding: 8rpx 0;
+  min-width: 320rpx;
+
+  .opt-item {
     display: flex;
     align-items: center;
-    gap: 12rpx;
-    padding: 12rpx 32rpx;
-    border-radius: 32rpx;
-    background: rgba(255,255,255,0.1);
-    border: 1rpx solid rgba(255,255,255,0.15);
+    padding: 20rpx 32rpx;
+    gap: 16rpx;
 
-    .vcn-toggle-text {
-      font-size: 24rpx;
-      color: rgba(255,255,255,0.7);
+    .opt-item-name {
+      font-size: 26rpx;
+      color: rgba(255,255,255,0.55);
     }
 
-    .vcn-toggle-arrow {
-      width: 0;
-      height: 0;
-      border-left: 10rpx solid transparent;
-      border-right: 10rpx solid transparent;
-      border-top: 10rpx solid rgba(255,255,255,0.5);
-      transition: transform 0.2s;
+    .opt-item-name-active {
+      color: #fff;
     }
 
-    .arrow-open {
-      transform: rotate(180deg);
+    .opt-item-desc {
+      font-size: 22rpx;
+      color: rgba(255,255,255,0.3);
+      flex: 1;
+    }
+
+    .opt-check {
+      width: 16rpx;
+      height: 16rpx;
+      border-radius: 50%;
+      background: rgba(42,110,68,0.9);
     }
   }
 
-  .vcn-panel {
-    margin-top: 16rpx;
-    background: rgba(30,40,28,0.95);
-    border: 1rpx solid rgba(255,255,255,0.12);
-    border-radius: 20rpx;
-    padding: 8rpx 0;
-    min-width: 400rpx;
-
-    .vcn-item {
-      display: flex;
-      align-items: center;
-      padding: 20rpx 32rpx;
-      gap: 16rpx;
-
-      .vcn-item-name {
-        font-size: 26rpx;
-        color: rgba(255,255,255,0.55);
-      }
-
-      .vcn-item-name-active {
-        color: #fff;
-      }
-
-      .vcn-item-desc {
-        font-size: 22rpx;
-        color: rgba(255,255,255,0.3);
-        flex: 1;
-      }
-
-      .vcn-check {
-        width: 16rpx;
-        height: 16rpx;
-        border-radius: 50%;
-        background: rgba(42,110,68,0.9);
-      }
-    }
-
-    .vcn-item-active {
-      background: rgba(42,110,68,0.25);
-    }
+  .opt-item-active {
+    background: rgba(42,110,68,0.25);
   }
 }
 </style>

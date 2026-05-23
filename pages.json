@@ -1,13 +1,6 @@
 {
 	"pages": [
 		{
-			"path": "pages/login/index",
-			"style": {
-				"navigationStyle": "custom",
-				"navigationBarBackgroundColor": "#f8f5ee"
-			}
-		},
-		{
 			"path": "pages/index/index",
 			"style": {
 				"navigationBarTitleText": "值得看么",
@@ -97,6 +90,13 @@
 		},
 		{
 			"path": "pages/authors/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarBackgroundColor": "#f8f5ee"
+			}
+		},
+		{
+			"path": "pages/login/index",
 			"style": {
 				"navigationStyle": "custom",
 				"navigationBarBackgroundColor": "#f8f5ee"

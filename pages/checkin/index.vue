@@ -171,6 +171,20 @@ export default {
     }
   },
   onLoad() {
+    if (!uni.getStorageSync('token')) {
+      uni.showModal({
+        title: '提示',
+        content: '请先登录后使用打卡功能',
+        confirmText: '去登录',
+        success: (res) => {
+          if (res.confirm) {
+            uni.navigateTo({ url: '/pages/login/index' })
+          }
+          uni.navigateBack()
+        }
+      })
+      return
+    }
     this.fetchHistory()
   },
   methods: {

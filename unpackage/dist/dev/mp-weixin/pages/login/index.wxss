@@ -1,5 +1,19 @@
 /* 水平间距 */
 /* 水平间距 */
+/* 返回按钮 */
+.back-btn {
+  position: absolute;
+  top: calc(80rpx + env(safe-area-inset-top));
+  left: 36rpx;
+  z-index: 10;
+  width: 64rpx;
+  height: 64rpx;
+  background: rgba(42, 110, 68, 0.08);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .page {
   min-height: 100vh;
   background-color: #f8f5ee;

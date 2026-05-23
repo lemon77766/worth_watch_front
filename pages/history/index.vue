@@ -67,6 +67,20 @@ export default {
     }
   },
   onLoad() {
+    if (!uni.getStorageSync('token')) {
+      uni.showModal({
+        title: '提示',
+        content: '请先登录后查看研习历史',
+        confirmText: '去登录',
+        success: (res) => {
+          if (res.confirm) {
+            uni.navigateTo({ url: '/pages/login/index' })
+          }
+          uni.navigateBack()
+        }
+      })
+      return
+    }
     this.fetchHistory()
     this.fetchProgress()
   },
