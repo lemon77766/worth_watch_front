@@ -125,20 +125,16 @@ export default {
             this.loading = false
             uni.showToast({ title: '登录成功', icon: 'success' })
             setTimeout(() => this.goHome(), 500)
-          }).catch(() => {
-            console.warn('[登录] 后端返回异常，使用临时 token')
+          }).catch((err) => {
+            console.error('[登录] 后端登录失败:', err)
             this.loading = false
-            uni.setStorageSync('token', 'local_dev_token')
-            uni.showToast({ title: '使用临时登录', icon: 'none' })
-            setTimeout(() => this.goHome(), 500)
+            uni.showToast({ title: '登录失败，请重试', icon: 'none' })
           })
         },
         fail: (err) => {
           console.error('[登录] uni.login 失败:', err)
           this.loading = false
-          uni.setStorageSync('token', 'local_dev_token')
-          uni.showToast({ title: '非微信环境，使用临时登录', icon: 'none' })
-          setTimeout(() => this.goHome(), 500)
+          uni.showToast({ title: '微信登录失败，请重试', icon: 'none' })
         }
       })
     },

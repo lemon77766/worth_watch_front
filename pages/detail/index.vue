@@ -69,14 +69,7 @@
         </view>
       </view>
 
-      <!-- 赏析模块 -->
-      <view class="section">
-        <view class="mod-hd">
-          <view class="mod-bar red-bar" />
-          <text class="mod-title">赏析</text>
-        </view>
-        <text class="analysis-text">{{ poem.appreciation }}</text>
-      </view>
+
 
       <!-- 译文模块 -->
       <view class="section" v-if="poem.translation">
@@ -175,6 +168,15 @@ export default {
       // 读取本地学完状态
       const studiedMap = uni.getStorageSync('studiedPoems') || {}
       this.studied = !!studiedMap[options.id]
+    }
+  },
+  // 转发给朋友
+  onShareAppMessage() {
+    const title = this.poem.title || '值得看么'
+    const author = this.poem.author || ''
+    return {
+      title: author ? `《${title}》— ${author}` : title,
+      path: `/pages/detail/index?id=${this.poem.poemId || ''}`
     }
   },
   methods: {

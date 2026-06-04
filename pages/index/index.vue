@@ -442,10 +442,7 @@
           <text class="mine-poem">回首向来萧瑟处</text>
           <text class="mine-poem">归去</text>
           <text class="mine-poem">也无风雨也无晴</text>
-          <view class="mine-logout" @click="onLogout">
-            <uni-icons type="redo" size="18" color="#b82e2e" />
-            <text class="mine-logout-text">退出登录</text>
-          </view>
+
         </view>
       </view>
       <view style="height:40rpx;" />
@@ -739,6 +736,13 @@ export default {
         this.fetchDailyTask()
         this.fetchAchievements()
       }
+    }
+  },
+  // 转发给朋友
+  onShareAppMessage() {
+    return {
+      title: '值得看么 — 观文字之极美 · 承先贤之雅志',
+      path: '/pages/index/index'
     }
   },
   methods: {
@@ -2476,18 +2480,6 @@ $font-bold: 'STSong', 'SimSun', 'Songti SC', 'Source Han Serif CN', serif;
     letter-spacing: 4rpx;
   }
 
-  .mine-logout {
-    display: flex;
-    align-items: center;
-    gap: 12rpx;
-    margin-top: 56rpx;
-
-    .mine-logout-text {
-      font-size: 32rpx;
-      color: $red;
-      font-family: $font-bold;
-    }
-  }
 }
 
 /* ── 批量处理样式 ── */

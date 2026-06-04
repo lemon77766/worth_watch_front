@@ -31,6 +31,15 @@ const _sfc_main = {
       this.studied = !!studiedMap[options.id];
     }
   },
+  // 转发给朋友
+  onShareAppMessage() {
+    const title = this.poem.title || "值得看么";
+    const author = this.poem.author || "";
+    return {
+      title: author ? `《${title}》— ${author}` : title,
+      path: `/pages/detail/index?id=${this.poem.poemId || ""}`
+    };
+  },
   methods: {
     goToMine() {
       common_vendor.index.$emit("goToMine");
@@ -44,7 +53,7 @@ const _sfc_main = {
           this.faved = data.favorited === true;
         }
       } catch (e) {
-        common_vendor.index.__f__("error", "at pages/detail/index.vue:193", "获取诗词详情失败", e);
+        common_vendor.index.__f__("error", "at pages/detail/index.vue:195", "获取诗词详情失败", e);
       }
       try {
         const list = await utils_request.getRecommendPoems(id);
@@ -52,7 +61,7 @@ const _sfc_main = {
           this.recommendList = list;
         }
       } catch (e) {
-        common_vendor.index.__f__("error", "at pages/detail/index.vue:202", "获取推荐诗词失败", e);
+        common_vendor.index.__f__("error", "at pages/detail/index.vue:204", "获取推荐诗词失败", e);
       }
     },
     async toggleFav() {
@@ -70,7 +79,7 @@ const _sfc_main = {
           common_vendor.index.showToast({ title: res.message || (this.faved ? "已收藏" : "已取消收藏"), icon: "none" });
         }
       } catch (e) {
-        common_vendor.index.__f__("error", "at pages/detail/index.vue:219", "收藏失败", e);
+        common_vendor.index.__f__("error", "at pages/detail/index.vue:221", "收藏失败", e);
       }
     },
     toggleMode(mode) {
@@ -101,7 +110,7 @@ const _sfc_main = {
         common_vendor.index.setStorageSync("studiedPoems", studiedMap);
         common_vendor.index.showToast({ title: "已标记学完", icon: "success" });
       } catch (e) {
-        common_vendor.index.__f__("error", "at pages/detail/index.vue:249", "提交学习记录失败", e);
+        common_vendor.index.__f__("error", "at pages/detail/index.vue:251", "提交学习记录失败", e);
       }
     },
     promptLogin() {
@@ -200,31 +209,30 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
       };
     })
   } : {}, {
-    C: common_vendor.t($data.poem.appreciation),
-    D: $data.poem.translation
+    C: $data.poem.translation
   }, $data.poem.translation ? {
-    E: common_vendor.t($data.poem.translation)
+    D: common_vendor.t($data.poem.translation)
   } : {}, {
-    F: $data.poem.background
+    E: $data.poem.background
   }, $data.poem.background ? {
-    G: common_vendor.t($data.poem.background)
+    F: common_vendor.t($data.poem.background)
   } : {}, {
-    H: $data.poem.authorDescription
+    G: $data.poem.authorDescription
   }, $data.poem.authorDescription ? {
-    I: common_vendor.t($data.poem.authorDescription)
+    H: common_vendor.t($data.poem.authorDescription)
   } : {}, {
-    J: common_vendor.p({
+    I: common_vendor.p({
       type: $data.studied ? "checkmarkempty" : "flag",
       size: "20",
       color: $data.studied ? "#fff" : "#e6a23c"
     }),
-    K: common_vendor.t($data.studied ? "已学完" : "标记学完"),
-    L: $data.studied ? "#fff" : "#e6a23c",
-    M: $data.studied ? 1 : "",
-    N: common_vendor.o((...args) => $options.markStudied && $options.markStudied(...args)),
-    O: $data.recommendList.length
+    J: common_vendor.t($data.studied ? "已学完" : "标记学完"),
+    K: $data.studied ? "#fff" : "#e6a23c",
+    L: $data.studied ? 1 : "",
+    M: common_vendor.o((...args) => $options.markStudied && $options.markStudied(...args)),
+    N: $data.recommendList.length
   }, $data.recommendList.length ? {
-    P: common_vendor.f($data.recommendList, (item, i, i0) => {
+    O: common_vendor.f($data.recommendList, (item, i, i0) => {
       return common_vendor.e({
         a: "32c43d5c-7-" + i0,
         b: common_vendor.p({
@@ -255,5 +263,6 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
   } : {});
 }
 const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render]]);
+_sfc_main.__runtimeHooks = 2;
 wx.createPage(MiniProgramPage);
 //# sourceMappingURL=../../../.sourcemap/mp-weixin/pages/detail/index.js.map

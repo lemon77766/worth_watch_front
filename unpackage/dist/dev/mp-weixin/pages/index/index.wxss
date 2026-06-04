@@ -1268,17 +1268,6 @@
   font-family: "STSong", "SimSun", "Songti SC", "Source Han Serif CN", serif;
   letter-spacing: 4rpx;
 }
-.mine-footer .mine-logout {
-  display: flex;
-  align-items: center;
-  gap: 12rpx;
-  margin-top: 56rpx;
-}
-.mine-footer .mine-logout .mine-logout-text {
-  font-size: 32rpx;
-  color: #b82e2e;
-  font-family: "STSong", "SimSun", "Songti SC", "Source Han Serif CN", serif;
-}
 
 /* ── 批量处理样式 ── */
 /* 选中卡片样式 */

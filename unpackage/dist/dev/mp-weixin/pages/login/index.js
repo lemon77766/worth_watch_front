@@ -33,26 +33,22 @@ const _sfc_main = {
             this.loading = false;
             common_vendor.index.showToast({ title: "登录成功", icon: "success" });
             setTimeout(() => this.goHome(), 500);
-          }).catch(() => {
-            common_vendor.index.__f__("warn", "at pages/login/index.vue:129", "[登录] 后端返回异常，使用临时 token");
+          }).catch((err) => {
+            common_vendor.index.__f__("error", "at pages/login/index.vue:129", "[登录] 后端登录失败:", err);
             this.loading = false;
-            common_vendor.index.setStorageSync("token", "local_dev_token");
-            common_vendor.index.showToast({ title: "使用临时登录", icon: "none" });
-            setTimeout(() => this.goHome(), 500);
+            common_vendor.index.showToast({ title: "登录失败，请重试", icon: "none" });
           });
         },
         fail: (err) => {
-          common_vendor.index.__f__("error", "at pages/login/index.vue:137", "[登录] uni.login 失败:", err);
+          common_vendor.index.__f__("error", "at pages/login/index.vue:135", "[登录] uni.login 失败:", err);
           this.loading = false;
-          common_vendor.index.setStorageSync("token", "local_dev_token");
-          common_vendor.index.showToast({ title: "非微信环境，使用临时登录", icon: "none" });
-          setTimeout(() => this.goHome(), 500);
+          common_vendor.index.showToast({ title: "微信登录失败，请重试", icon: "none" });
         }
       });
     },
     goHome() {
       utils_request.getUserProfile().then((data) => {
-        common_vendor.index.__f__("log", "at pages/login/index.vue:148", "[登录] 服务端用户资料:", data);
+        common_vendor.index.__f__("log", "at pages/login/index.vue:144", "[登录] 服务端用户资料:", data);
         const nickname = data.nickname || data.nickName || "";
         const avatarUrl = data.avatarUrl || data.avatar || "";
         if (nickname) {
@@ -68,7 +64,7 @@ const _sfc_main = {
           this.showProfileModal = true;
         }
       }).catch((err) => {
-        common_vendor.index.__f__("warn", "at pages/login/index.vue:167", "[登录] 获取用户资料失败:", err);
+        common_vendor.index.__f__("warn", "at pages/login/index.vue:163", "[登录] 获取用户资料失败:", err);
         const isNewUser = common_vendor.index.getStorageSync("isNewUser");
         const userInfo = common_vendor.index.getStorageSync("userInfo");
         if (isNewUser || !userInfo || !userInfo.nickname) {
@@ -86,29 +82,29 @@ const _sfc_main = {
       if (this.submitting)
         return;
       const avatarUrl = e.detail.avatarUrl;
-      common_vendor.index.__f__("log", "at pages/login/index.vue:186", "[选择头像] 原始路径:", avatarUrl);
+      common_vendor.index.__f__("log", "at pages/login/index.vue:182", "[选择头像] 原始路径:", avatarUrl);
       this.tempAvatar = avatarUrl;
       const isLocalFile = avatarUrl && (avatarUrl.startsWith("wxfile://") || avatarUrl.includes("/tmp/") || avatarUrl.includes("\\tmp\\"));
-      common_vendor.index.__f__("log", "at pages/login/index.vue:196", "[选择头像] 是否本地临时文件:", isLocalFile);
+      common_vendor.index.__f__("log", "at pages/login/index.vue:192", "[选择头像] 是否本地临时文件:", isLocalFile);
       if (isLocalFile) {
-        common_vendor.index.__f__("log", "at pages/login/index.vue:200", "[选择头像] 开始上传本地文件");
+        common_vendor.index.__f__("log", "at pages/login/index.vue:196", "[选择头像] 开始上传本地文件");
         this.uploading = true;
         common_vendor.index.showLoading({ title: "上传头像..." });
         utils_request.uploadAvatar(avatarUrl).then((res) => {
-          common_vendor.index.__f__("log", "at pages/login/index.vue:205", "[选择头像] 上传Promise成功，永久URL:", res);
+          common_vendor.index.__f__("log", "at pages/login/index.vue:201", "[选择头像] 上传Promise成功，永久URL:", res);
           this.tempAvatar = res;
           this.uploading = false;
           common_vendor.index.hideLoading();
           common_vendor.index.showToast({ title: "头像上传成功", icon: "success" });
         }).catch((err) => {
-          common_vendor.index.__f__("error", "at pages/login/index.vue:211", "[选择头像] 上传Promise失败:", err);
+          common_vendor.index.__f__("error", "at pages/login/index.vue:207", "[选择头像] 上传Promise失败:", err);
           this.uploading = false;
           this.tempAvatar = "";
           common_vendor.index.hideLoading();
           common_vendor.index.showToast({ title: "头像上传失败", icon: "none" });
         });
       } else {
-        common_vendor.index.__f__("log", "at pages/login/index.vue:218", "[选择头像] 已是网络URL或无效路径，跳过上传");
+        common_vendor.index.__f__("log", "at pages/login/index.vue:214", "[选择头像] 已是网络URL或无效路径，跳过上传");
       }
     },
     onNickNameInput(e) {
@@ -117,8 +113,8 @@ const _sfc_main = {
     async submitProfile() {
       if (this.submitting)
         return;
-      common_vendor.index.__f__("log", "at pages/login/index.vue:227", "[提交资料] 当前tempAvatar:", this.tempAvatar);
-      common_vendor.index.__f__("log", "at pages/login/index.vue:228", "[提交资料] 当前tempNickname:", this.tempNickname);
+      common_vendor.index.__f__("log", "at pages/login/index.vue:223", "[提交资料] 当前tempAvatar:", this.tempAvatar);
+      common_vendor.index.__f__("log", "at pages/login/index.vue:224", "[提交资料] 当前tempNickname:", this.tempNickname);
       const isLocalFile = this.tempAvatar && (this.tempAvatar.startsWith("wxfile://") || this.tempAvatar.includes("/tmp/") || this.tempAvatar.includes("\\tmp\\"));
       if (this.uploading) {
         common_vendor.index.showToast({ title: "头像上传中，请稍候", icon: "none" });
@@ -135,16 +131,16 @@ const _sfc_main = {
           nickname: this.tempNickname || "",
           avatarUrl: this.tempAvatar || ""
         };
-        common_vendor.index.__f__("log", "at pages/login/index.vue:257", "[提交资料] 发送的数据:", JSON.stringify(requestData));
+        common_vendor.index.__f__("log", "at pages/login/index.vue:253", "[提交资料] 发送的数据:", JSON.stringify(requestData));
         const data = await utils_request.updateUserProfile(requestData);
-        common_vendor.index.__f__("log", "at pages/login/index.vue:261", "[提交资料] 后端返回:", data);
+        common_vendor.index.__f__("log", "at pages/login/index.vue:257", "[提交资料] 后端返回:", data);
         common_vendor.index.setStorageSync("userInfo", {
           nickname: data.nickname || this.tempNickname,
           avatarUrl: data.avatarUrl || this.tempAvatar
         });
         common_vendor.index.showToast({ title: "资料完善成功", icon: "success" });
       } catch (err) {
-        common_vendor.index.__f__("error", "at pages/login/index.vue:270", "[提交资料失败]", err);
+        common_vendor.index.__f__("error", "at pages/login/index.vue:266", "[提交资料失败]", err);
         common_vendor.index.showToast({ title: "提交失败，请重试", icon: "none" });
       } finally {
         common_vendor.index.hideLoading();

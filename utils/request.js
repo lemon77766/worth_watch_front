@@ -61,9 +61,7 @@ export const uploadAvatar = (filePath) => {
       url: BASE_URL + '/api/user/avatar',
       filePath: filePath,
       name: 'file',
-      header: {
-        Authorization: token ? `Bearer ${token}` : ''
-      },
+      header: token ? { Authorization: `Bearer ${token}` } : {},
       success: (res) => {
         console.log('[上传头像] HTTP状态码:', res.statusCode)
         console.log('[上传头像] 响应内容:', res.data)

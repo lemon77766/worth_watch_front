@@ -49,6 +49,14 @@ const _sfc_main = {
       this.fetchPoem(options.id);
     }
   },
+  // 转发给朋友
+  onShareAppMessage() {
+    const title = this.poem.title || "吟诵模式";
+    return {
+      title: `${title} — 值得看么`,
+      path: `/pages/detail/index?id=${this.poem.poemId || ""}`
+    };
+  },
   methods: {
     async fetchVoices() {
       try {
@@ -61,7 +69,7 @@ const _sfc_main = {
           }
         }
       } catch (e) {
-        common_vendor.index.__f__("error", "at pages/recite/index.vue:173", "获取音色列表失败", e);
+        common_vendor.index.__f__("error", "at pages/recite/index.vue:168", "获取音色列表失败", e);
       }
     },
     async fetchPoem(id) {
@@ -78,7 +86,7 @@ const _sfc_main = {
           };
         }
       } catch (e) {
-        common_vendor.index.__f__("error", "at pages/recite/index.vue:190", "获取诗词失败", e);
+        common_vendor.index.__f__("error", "at pages/recite/index.vue:185", "获取诗词失败", e);
       }
     },
     async playTts() {
@@ -95,7 +103,7 @@ const _sfc_main = {
         const downloadRes = await new Promise((resolve, reject) => {
           common_vendor.index.downloadFile({
             url: ttsUrl,
-            header: { Authorization: token ? `Bearer ${token}` : "" },
+            header: token ? { Authorization: `Bearer ${token}` } : {},
             success: resolve,
             fail: reject
           });
@@ -138,13 +146,13 @@ const _sfc_main = {
           this.playing = false;
         });
         this.audioCtx.onError((err) => {
-          common_vendor.index.__f__("error", "at pages/recite/index.vue:255", "TTS播放失败", err);
+          common_vendor.index.__f__("error", "at pages/recite/index.vue:250", "TTS播放失败", err);
           this.playing = false;
           this.audioLoading = false;
           common_vendor.index.showToast({ title: "播放失败", icon: "none" });
         });
       } catch (e) {
-        common_vendor.index.__f__("error", "at pages/recite/index.vue:261", "TTS请求失败", e);
+        common_vendor.index.__f__("error", "at pages/recite/index.vue:256", "TTS请求失败", e);
         this.audioLoading = false;
       }
     },
@@ -208,6 +216,21 @@ const _sfc_main = {
     togglePlay() {
       if (this.audioLoading)
         return;
+      const token = common_vendor.index.getStorageSync("token");
+      if (!token) {
+        common_vendor.index.showModal({
+          title: "提示",
+          content: "请先登录后再使用吟诵功能",
+          confirmText: "去登录",
+          cancelText: "取消",
+          success: (res) => {
+            if (res.confirm) {
+              common_vendor.index.navigateTo({ url: "/pages/login/index" });
+            }
+          }
+        });
+        return;
+      }
       if (this.playing) {
         if (this.audioCtx) {
           this.audioCtx.pause();
@@ -288,6 +311,12 @@ const _sfc_main = {
       return `${min}:${sec < 10 ? "0" + sec : sec}`;
     }
   },
+  onHide() {
+    this.stopAudio();
+  },
+  onUnload() {
+    this.stopAudio();
+  },
   beforeDestroy() {
     this.stopAudio();
   }
@@ -332,15 +361,19 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
       });
     })
   } : {}, {
-    h: common_vendor.t($options.speedLabel),
-    i: $data.showSpeedPanel ? 1 : "",
-    j: common_vendor.o(($event) => {
+    h: $data.audioLoading
+  }, $data.audioLoading ? {} : !$data.playing ? {} : {}, {
+    i: !$data.playing,
+    j: common_vendor.o((...args) => $options.togglePlay && $options.togglePlay(...args)),
+    k: common_vendor.t($options.speedLabel),
+    l: $data.showSpeedPanel ? 1 : "",
+    m: common_vendor.o(($event) => {
       $data.showSpeedPanel = !$data.showSpeedPanel;
       $data.showVcnPanel = false;
     }),
-    k: $data.showSpeedPanel
+    n: $data.showSpeedPanel
   }, $data.showSpeedPanel ? {
-    l: common_vendor.f($data.speedOptions, (s, k0, i0) => {
+    o: common_vendor.f($data.speedOptions, (s, k0, i0) => {
       return common_vendor.e({
         a: common_vendor.t(s.label),
         b: $data.playbackRate === s.value ? 1 : "",
@@ -352,10 +385,10 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
       });
     })
   } : {}, {
-    m: common_vendor.t($data.poem.title),
-    n: common_vendor.t($data.poem.dynasty),
-    o: common_vendor.t($data.poem.author),
-    p: common_vendor.f($data.poem.lines, (line, i, i0) => {
+    p: common_vendor.t($data.poem.title),
+    q: common_vendor.t($data.poem.dynasty),
+    r: common_vendor.t($data.poem.author),
+    s: common_vendor.f($data.poem.lines, (line, i, i0) => {
       return {
         a: common_vendor.t(line),
         b: i,
@@ -364,21 +397,16 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
         e: common_vendor.o(($event) => $options.seekToLine(i), i)
       };
     }),
-    q: common_vendor.t($options.formatTime($data.currentTime)),
-    r: common_vendor.t($options.formatTime($data.duration)),
-    s: $data.progress + "%",
-    t: $data.progress + "%",
-    v: common_vendor.o((...args) => $options.onProgressTouchStart && $options.onProgressTouchStart(...args)),
-    w: common_vendor.o((...args) => $options.onProgressTouchMove && $options.onProgressTouchMove(...args)),
-    x: common_vendor.o((...args) => $options.onProgressTouchEnd && $options.onProgressTouchEnd(...args)),
-    y: common_vendor.o((...args) => $options.prev && $options.prev(...args)),
-    z: $data.audioLoading
-  }, $data.audioLoading ? {} : !$data.playing ? {} : {}, {
-    A: !$data.playing,
-    B: common_vendor.o((...args) => $options.togglePlay && $options.togglePlay(...args)),
-    C: common_vendor.o((...args) => $options.next && $options.next(...args))
+    t: common_vendor.t($options.formatTime($data.currentTime)),
+    v: common_vendor.t($options.formatTime($data.duration)),
+    w: $data.progress + "%",
+    x: $data.progress + "%",
+    y: common_vendor.o((...args) => $options.onProgressTouchStart && $options.onProgressTouchStart(...args)),
+    z: common_vendor.o((...args) => $options.onProgressTouchMove && $options.onProgressTouchMove(...args)),
+    A: common_vendor.o((...args) => $options.onProgressTouchEnd && $options.onProgressTouchEnd(...args))
   });
 }
 const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render]]);
+_sfc_main.__runtimeHooks = 2;
 wx.createPage(MiniProgramPage);
 //# sourceMappingURL=../../../.sourcemap/mp-weixin/pages/recite/index.js.map

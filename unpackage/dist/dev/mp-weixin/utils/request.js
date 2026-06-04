@@ -56,30 +56,28 @@ const uploadAvatar = (filePath) => {
       url: BASE_URL + "/api/user/avatar",
       filePath,
       name: "file",
-      header: {
-        Authorization: token ? `Bearer ${token}` : ""
-      },
+      header: token ? { Authorization: `Bearer ${token}` } : {},
       success: (res) => {
-        common_vendor.index.__f__("log", "at utils/request.js:68", "[上传头像] HTTP状态码:", res.statusCode);
-        common_vendor.index.__f__("log", "at utils/request.js:69", "[上传头像] 响应内容:", res.data);
+        common_vendor.index.__f__("log", "at utils/request.js:66", "[上传头像] HTTP状态码:", res.statusCode);
+        common_vendor.index.__f__("log", "at utils/request.js:67", "[上传头像] 响应内容:", res.data);
         try {
           const data = JSON.parse(res.data);
-          common_vendor.index.__f__("log", "at utils/request.js:73", "[上传头像] 解析后:", data);
+          common_vendor.index.__f__("log", "at utils/request.js:71", "[上传头像] 解析后:", data);
           if (data.code === 200) {
             const avatarUrl = typeof data.data === "string" ? data.data : data.data.avatarUrl;
-            common_vendor.index.__f__("log", "at utils/request.js:77", "[上传头像] 上传成功，返回URL:", avatarUrl);
+            common_vendor.index.__f__("log", "at utils/request.js:75", "[上传头像] 上传成功，返回URL:", avatarUrl);
             resolve(avatarUrl);
           } else {
-            common_vendor.index.__f__("error", "at utils/request.js:80", "[上传头像] 上传失败:", data.message);
+            common_vendor.index.__f__("error", "at utils/request.js:78", "[上传头像] 上传失败:", data.message);
             reject(new Error(data.message));
           }
         } catch (e) {
-          common_vendor.index.__f__("error", "at utils/request.js:84", "[上传头像] JSON解析失败:", e);
+          common_vendor.index.__f__("error", "at utils/request.js:82", "[上传头像] JSON解析失败:", e);
           reject(new Error("响应解析失败"));
         }
       },
       fail: (err) => {
-        common_vendor.index.__f__("error", "at utils/request.js:89", "[上传头像] 请求失败:", err);
+        common_vendor.index.__f__("error", "at utils/request.js:87", "[上传头像] 请求失败:", err);
         reject(err);
       }
     });

@@ -11,7 +11,7 @@
       <view style="width:72rpx;" />
     </view>
 
-    <!-- 音色 / 倍速 选择 -->
+    <!-- 音色 / 播放 / 倍速 选择 -->
     <view class="opt-row">
       <!-- 音色选择 -->
       <view class="opt-wrap">
@@ -29,6 +29,15 @@
             <text v-if="v.desc" class="opt-item-desc">{{ v.desc }}</text>
             <view v-if="vcn === v.value" class="opt-check" />
           </view>
+        </view>
+      </view>
+
+      <!-- 播放/暂停 -->
+      <view class="play-btn" @click="togglePlay">
+        <view v-if="audioLoading" class="loading-spinner" />
+        <view v-else-if="!playing" class="tri-play" />
+        <view v-else class="pause-bars">
+          <view class="pause-bar" /><view class="pause-bar" />
         </view>
       </view>
 
@@ -78,28 +87,6 @@
       >
         <view class="progress-fill" :style="{ width: progress + '%' }" />
         <view class="progress-thumb" :style="{ left: progress + '%' }" />
-      </view>
-    </view>
-
-    <view class="controls">
-      <view class="ctrl-btn" @click="prev">
-        <view class="ctrl-icon-wrap">
-          <view class="ctrl-bar" />
-          <view class="ctrl-tri ctrl-tri-left" />
-        </view>
-      </view>
-      <view class="play-btn" @click="togglePlay">
-        <view v-if="audioLoading" class="loading-spinner" />
-        <view v-else-if="!playing" class="tri-play" />
-        <view v-else class="pause-bars">
-          <view class="pause-bar" /><view class="pause-bar" />
-        </view>
-      </view>
-      <view class="ctrl-btn" @click="next">
-        <view class="ctrl-icon-wrap">
-          <view class="ctrl-tri ctrl-tri-right" />
-          <view class="ctrl-bar" />
-        </view>
       </view>
     </view>
 
@@ -158,6 +145,14 @@ export default {
       this.fetchPoem(options.id)
     }
   },
+  // 转发给朋友
+  onShareAppMessage() {
+    const title = this.poem.title || '吟诵模式'
+    return {
+      title: `${title} — 值得看么`,
+      path: `/pages/detail/index?id=${this.poem.poemId || ''}`
+    }
+  },
   methods: {
     async fetchVoices() {
       try {
@@ -204,7 +199,7 @@ export default {
         const downloadRes = await new Promise((resolve, reject) => {
           uni.downloadFile({
             url: ttsUrl,
-            header: { Authorization: token ? `Bearer ${token}` : '' },
+            header: token ? { Authorization: `Bearer ${token}` } : {},
             success: resolve,
             fail: reject
           })
@@ -320,6 +315,24 @@ export default {
     },
     togglePlay() {
       if (this.audioLoading) return
+
+      // 未登录 → 弹窗提示
+      const token = uni.getStorageSync('token')
+      if (!token) {
+        uni.showModal({
+          title: '提示',
+          content: '请先登录后再使用吟诵功能',
+          confirmText: '去登录',
+          cancelText: '取消',
+          success: (res) => {
+            if (res.confirm) {
+              uni.navigateTo({ url: '/pages/login/index' })
+            }
+          }
+        })
+        return
+      }
+
       if (this.playing) {
         // 暂停
         if (this.audioCtx) {
@@ -399,6 +412,12 @@ export default {
       const sec = Math.floor(seconds % 60)
       return `${min}:${sec < 10 ? '0' + sec : sec}`
     }
+  },
+  onHide() {
+    this.stopAudio()
+  },
+  onUnload() {
+    this.stopAudio()
   },
   beforeDestroy() {
     this.stopAudio()
@@ -563,91 +582,46 @@ $f:  'PingFang SC', 'Noto Sans SC', -apple-system, sans-serif;
   }
 }
 
-/* 控制区 */
-.controls {
+/* 播放按钮 */
+.play-btn {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 50%;
+  background: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 80rpx;
-  padding-bottom: 16rpx;
+  box-shadow: 0 6rpx 30rpx rgba(0,0,0,0.45);
+  flex-shrink: 0;
 
-  .ctrl-btn {
-    width: 80rpx;
-    height: 80rpx;
+  .tri-play {
+    width: 0;
+    height: 0;
+    border-top: 18rpx solid transparent;
+    border-bottom: 18rpx solid transparent;
+    border-left: 30rpx solid #1a2018;
+    margin-left: 6rpx;
+  }
+
+  .pause-bars {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    gap: 8rpx;
 
-    .ctrl-icon-wrap {
-      display: flex;
-      align-items: center;
-      gap: 8rpx;
-    }
-
-    .ctrl-bar {
-      width: 5rpx;
-      height: 40rpx;
-      background: rgba(255,255,255,0.55);
-      border-radius: 3rpx;
-    }
-
-    .ctrl-tri {
-      width: 0;
-      height: 0;
-    }
-
-    .ctrl-tri-left {
-      border-top: 20rpx solid transparent;
-      border-bottom: 20rpx solid transparent;
-      border-right: 32rpx solid rgba(255,255,255,0.55);
-    }
-
-    .ctrl-tri-right {
-      border-top: 20rpx solid transparent;
-      border-bottom: 20rpx solid transparent;
-      border-left: 32rpx solid rgba(255,255,255,0.55);
+    .pause-bar {
+      width: 8rpx;
+      height: 32rpx;
+      background: #1a2018;
+      border-radius: 4rpx;
     }
   }
 
-  .play-btn {
-    width: 136rpx;
-    height: 136rpx;
+  .loading-spinner {
+    width: 32rpx;
+    height: 32rpx;
+    border: 3rpx solid #1a2018;
+    border-top-color: transparent;
     border-radius: 50%;
-    background: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 8rpx 40rpx rgba(0,0,0,0.45);
-
-    .tri-play {
-      width: 0;
-      height: 0;
-      border-top: 24rpx solid transparent;
-      border-bottom: 24rpx solid transparent;
-      border-left: 40rpx solid #1a2018;
-      margin-left: 8rpx;
-    }
-
-    .pause-bars {
-      display: flex;
-      gap: 12rpx;
-
-      .pause-bar {
-        width: 10rpx;
-        height: 44rpx;
-        background: #1a2018;
-        border-radius: 5rpx;
-      }
-    }
-
-    .loading-spinner {
-      width: 40rpx;
-      height: 40rpx;
-      border: 4rpx solid #1a2018;
-      border-top-color: transparent;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
+    animation: spin 0.8s linear infinite;
   }
 }
 
@@ -655,10 +629,10 @@ $f:  'PingFang SC', 'Noto Sans SC', -apple-system, sans-serif;
   to { transform: rotate(360deg); }
 }
 
-/* 音色 / 倍速 选择行 */
+/* 音色 / 播放 / 倍速 选择行 */
 .opt-row {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   gap: 32rpx;
   margin-bottom: 16rpx;
